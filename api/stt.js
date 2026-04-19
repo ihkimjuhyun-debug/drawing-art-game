@@ -1,28 +1,30 @@
-export const config = { runtime: 'edge' };
-
-export default async function handler(req) {
-  if (req.method !== 'POST') return new Response('Method Not Allowed', { status: 405 });
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'POST 요청만 지원합니다.' });
 
   try {
-    const body = await req.json();
-    
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) throw new Error("Vercel 환경 변수에 OPENAI_API_KEY가 설정되지 않았습니다.");
+
+    // req.body는 Vercel 환경에서 자동으로 파싱되지 않을 수 있으므로 FormData를 그대로 전달
+    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` // Vercel 환경 변수에서 키를 가져옴
+        'Authorization': `Bearer ${apiKey}`
       },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: body.messages,
-        response_format: { type: "json_object" },
-        max_tokens: 500
-      })
+      body: req.body, // 들어온 FormData를 그대로 패스스루
+      duplex: 'half'  // Node 18 이상 fetch 호환성
     });
 
     const data = await response.json();
-    return new Response(JSON.stringify(data), { status: response.status, headers: { 'Content-Type': 'application/json' } });
+    if (!response.ok) return res.status(response.status).json({ error: data.error?.message || "Whisper 변환 오류" });
+    
+    return res.status(200).json(data);
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    return res.status(500).json({ error: error.message });
   }
 }
+
+// Next.js/Vercel에서 기본 Body 파싱을 막고 FormData를 원본대로 받기 위함
+export const config = {
+  api: { bodyParser: false },
+};
