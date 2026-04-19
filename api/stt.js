@@ -1,30 +1,53 @@
+// api/stt.js
+
+export const config = {
+  api: {
+    bodyParser: false,
+    sizeLimit: '10mb',
+  },
+};
+
+// 요청 스트림을 Buffer로 모으는 헬퍼
+async function bufferRequest(readable) {
+  const chunks = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'POST 요청만 지원합니다.' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'POST 요청만 지원합니다.' });
+  }
 
   try {
     const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) throw new Error("Vercel 환경 변수에 OPENAI_API_KEY가 설정되지 않았습니다.");
+    if (!apiKey) throw new Error('OPENAI_API_KEY 환경 변수가 없습니다.');
 
-    // req.body는 Vercel 환경에서 자동으로 파싱되지 않을 수 있으므로 FormData를 그대로 전달
+    // 1. 원본 요청 바이트를 그대로 버퍼링
+    const rawBody = await bufferRequest(req);
+
+    // 2. Content-Type 헤더(boundary 포함)를 그대로 전달 ← 핵심 수정
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': req.headers['content-type'], // boundary 포함!
       },
-      body: req.body, // 들어온 FormData를 그대로 패스스루
-      duplex: 'half'  // Node 18 이상 fetch 호환성
+      body: rawBody,
     });
 
     const data = await response.json();
-    if (!response.ok) return res.status(response.status).json({ error: data.error?.message || "Whisper 변환 오류" });
-    
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: data.error?.message || 'Whisper API 오류',
+      });
+    }
+
     return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 }
-
-// Next.js/Vercel에서 기본 Body 파싱을 막고 FormData를 원본대로 받기 위함
-export const config = {
-  api: { bodyParser: false },
-};
