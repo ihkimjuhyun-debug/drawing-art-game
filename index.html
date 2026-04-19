@@ -67,7 +67,7 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
 .ov-bot.show{display:flex}
 .ov-card{background:var(--card);border-radius:26px;padding:30px 24px;width:calc(100% - 40px);max-width:380px;border:1.5px solid var(--bdr);animation:slideUp .25s cubic-bezier(.15,1.3,.4,1)}
 .ov-card-lt{background:#fff;border-radius:26px;padding:30px 24px;width:calc(100% - 40px);max-width:380px;animation:slideUp .25s cubic-bezier(.15,1.3,.4,1)}
-.ov-sheet{background:var(--bg2);border-radius:24px 24px 0 0;padding:22px 20px 36px;width:100%;max-width:480px;border:1.5px solid var(--bdr);border-bottom:none;animation:slideUpS .25s cubic-bezier(.15,1.3,.4,1);max-height:80vh;overflow-y:auto}
+.ov-sheet{background:var(--bg2);border-radius:24px 24px 0 0;padding:22px 20px 36px;width:100%;max-width:480px;border:1.5px solid var(--bdr);border-bottom:none;animation:slideUpS .25s cubic-bezier(.15,1.3,.4,1);max-height:85vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes slideUpS{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-handle{width:36px;height:4px;background:var(--mut);border-radius:4px;margin:0 auto 18px}
@@ -196,6 +196,10 @@ canvas{touch-action:none;display:block;background:#fff}
 .name-row{display:flex;align-items:center;gap:8px}
 .name-num{width:28px;font-size:13px;font-weight:800;color:var(--mut);text-align:center;flex-shrink:0}
 
+.photo-opts{display:flex;gap:8px}
+.photo-opt{flex:1;height:50px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s}
+.photo-opt.sel{border-color:var(--g1);background:rgba(124,58,237,.1);color:#c4b5fd}
+
 /* ═══ GARTIC PASS SCREEN ═══ */
 #s-g-pass{background:radial-gradient(ellipse at 50% 50%,#1a0060 0%,#0D0D1A 70%);align-items:center;justify-content:center;padding:24px}
 .pass-inner{text-align:center;width:100%;max-width:380px}
@@ -289,7 +293,7 @@ canvas{touch-action:none;display:block;background:#fff}
 .ai-score-ring{width:130px;height:130px;border-radius:50%;border:6px solid var(--bdr);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;overflow:hidden}
 .ai-score-val{font-family:'Black Han Sans',sans-serif;font-size:40px;color:#fff;position:relative;z-index:1}
 .ai-score-pct{font-size:14px;color:var(--mut);position:relative;z-index:1}
-.ai-reason{font-size:14px;color:var(--txt);line-height:1.65;background:var(--card);border-radius:14px;padding:14px 16px;border:1.5px solid var(--bdr);text-align:left}
+.ai-reason{font-size:15px;color:var(--txt);line-height:1.8;background:var(--card);border-radius:14px;padding:20px;border:1.5px solid var(--bdr);text-align:left;white-space:pre-wrap;word-break:keep-all;} /* 글이 길어지므로 여백과 자간 조정 */
 .ai-loading{text-align:center;padding:30px;color:var(--mut);font-size:15px}
 .spinner{display:inline-block;width:32px;height:32px;border:3px solid var(--bdr);border-top-color:var(--g1);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -357,12 +361,22 @@ canvas{touch-action:none;display:block;background:#fff}
     <div class="hdr-sp"></div>
   </div>
   <div class="g-setup-body scrollable" style="flex:1">
+    
+    <div class="g-section" id="startModeSection">
+      <div class="g-section-title">시작 방식 (첫 단계)</div>
+      <div class="photo-opts">
+        <button class="photo-opt sel" id="smWord" onclick="setStartMode('word')">✏️ 제시어 작성</button>
+        <button class="photo-opt" id="smDraw" onclick="setStartMode('draw')">🎨 그림 그리기</button>
+      </div>
+      <div class="pc-label" style="margin-top:8px" id="smDesc">첫 플레이어가 자유롭게 단어를 입력하며 시작합니다.</div>
+    </div>
+
     <div class="g-section">
       <div class="g-section-title" id="pcTitle">인원 수</div>
       <div class="player-count-row">
         <button class="pc-btn" onclick="adjPlayers(-1)">−</button>
         <div style="flex:1;text-align:center">
-          <div class="pc-num" id="pcNum">4</div>
+          <div class="pc-num" id="pcNum">2</div>
           <div class="pc-label" id="pcLabel">명</div>
         </div>
         <button class="pc-btn" onclick="adjPlayers(1)">+</button>
@@ -453,7 +467,7 @@ canvas{touch-action:none;display:block;background:#fff}
     </div>
     <div id="gResultChains"></div>
     <div class="gres-actions">
-      <button class="btn-ai" onclick="runAiEval()">🤖 AI 승패 판정하기</button>
+      <button class="btn-ai" onclick="runAiEval()">🤖 AI 상세 평가하기</button>
       <button class="btn-pu" id="btnNextChain" onclick="nextChain()">더하기 (다음 라운드 진행)</button>
       <button class="btn-ghost" onclick="showScreen('s-main')">그만하기</button>
     </div>
@@ -472,7 +486,7 @@ canvas{touch-action:none;display:block;background:#fff}
 <div class="ov-bot" id="ov-ai-eval">
   <div class="ov-sheet">
     <div class="sheet-handle"></div>
-    <div style="font-family:'Black Han Sans',sans-serif;font-size:20px;margin-bottom:4px">🤖 AI 평가 결과</div>
+    <div style="font-family:'Black Han Sans',sans-serif;font-size:20px;margin-bottom:4px">🤖 깐깐한 AI 평론가</div>
     <div style="font-size:13px;color:var(--mut);margin-bottom:16px" id="aiEvalDesc">첫 제시어와 최종 결과물을 비교합니다</div>
     <div id="aiEvalContent"></div>
     <button class="btn-close" onclick="closeOv('ov-ai-eval')" style="margin-top:12px">← 화면 닫기</button>
@@ -493,18 +507,36 @@ function closeOv(id){document.getElementById(id).classList.remove('show')}
 ══════════════════════════════════════════════════ */
 const G = {
   gameMode: 'draw', 
-  numPlayers: 4,    
+  numPlayers: 2,    
   players: [],      
   chains: [],
   chainIdx: 0,
   stepIdx: 0,
 };
 
+let gStartMode = 'word';
+
+function setStartMode(m){
+  gStartMode = m;
+  document.getElementById('smWord').classList.toggle('sel', m === 'word');
+  document.getElementById('smDraw').classList.toggle('sel', m === 'draw');
+  document.getElementById('smDesc').textContent = m === 'word' 
+    ? '첫 플레이어가 자유롭게 단어를 입력하며 시작합니다.' 
+    : '시스템이 랜덤 단어를 제공하고, 첫 플레이어가 이를 그리며 시작합니다.';
+}
+
 function selectGMode(m){
   G.gameMode = m;
   document.getElementById('setupModeTitle').textContent = 
     m === 'compete' ? '팀 경쟁 모드 (배틀)' : (m === 'draw' ? '그리기&설명 모드' : '순차 설명 모드');
   
+  if(m === 'words') {
+      document.getElementById('startModeSection').style.display = 'none'; 
+      gStartMode = 'word';
+  } else {
+      document.getElementById('startModeSection').style.display = 'block';
+  }
+
   if(m === 'compete'){
     document.getElementById('pcTitle').textContent = '팀 당 인원 수';
     document.getElementById('pcLabel').textContent = '명 / 팀';
@@ -518,14 +550,16 @@ function selectGMode(m){
     document.getElementById('setupTeamA').style.display = 'none';
     document.getElementById('setupTeamB').style.display = 'none';
   }
+  
+  G.numPlayers = m === 'compete' ? 1 : 2;
   adjPlayers(0); 
   showScreen('s-g-setup');
 }
 
 function adjPlayers(d){
-  const min = G.gameMode === 'compete' ? 2 : 4;
-  const max = G.gameMode === 'compete' ? 8 : 16;
-  G.numPlayers = Math.max(min, Math.min(max, G.numPlayers + d));
+  const minPlayers = isCompete() ? 1 : 2;
+  const maxPlayers = isCompete() ? 8 : 16;
+  G.numPlayers = Math.max(minPlayers, Math.min(maxPlayers, G.numPlayers + d));
   document.getElementById('pcNum').textContent = G.numPlayers;
   
   const buildList = (id, prefix) => {
@@ -536,7 +570,7 @@ function adjPlayers(d){
     }
   };
 
-  if(G.gameMode === 'compete'){
+  if(isCompete()){
     buildList('nameListA', '팀1_');
     buildList('nameListB', '팀2_');
   } else {
@@ -545,13 +579,12 @@ function adjPlayers(d){
 }
 
 function isCompete() { return G.gameMode === 'compete'; }
-function getMaxSteps() { return isCompete() ? G.numPlayers + 1 : G.numPlayers; }
+function getMaxSteps() { return G.numPlayers; }
 
 function gPlayerName(){
   if(isCompete()){
-    if(G.stepIdx === 0) return 'SYSTEM';
     const tIdx = G.chainIdx; 
-    const pIdx = G.stepIdx - 1; 
+    const pIdx = G.stepIdx; 
     return G.players[tIdx][pIdx] || `팀${tIdx+1} 플레이어${pIdx+1}`;
   } else {
     const pIdx = (G.chainIdx + G.stepIdx) % G.numPlayers;
@@ -562,11 +595,11 @@ function gChain(){ return G.chains[G.chainIdx]; }
 function gPrevStep(){ const s = gChain().steps; return s.length > 0 ? s[s.length-1] : null; }
 function gStepType(){
   if(G.gameMode === 'words') return 'word';
-  return G.stepIdx % 2 === 0 ? 'word' : 'draw';
+  return (G.stepIdx % 2 === 0) ? (gStartMode === 'draw' ? 'draw' : 'word') : (gStartMode === 'draw' ? 'word' : 'draw');
 }
 function gTaskDesc(){
   const t = gStepType();
-  if(G.stepIdx === 0) return '제시어를 입력해주세요';
+  if(G.stepIdx === 0 && gStartMode === 'word') return '자유롭게 제시어를 입력해주세요';
   if(t === 'draw') return '설명을 보고 그림을 그려주세요';
   return '그림을 보고 무엇인지 글로 설명해주세요';
 }
@@ -587,10 +620,9 @@ async function startGartic(){
     
     const randomWord = W[Math.floor(Math.random() * W.length)].w;
     G.chains = [
-      { steps: [{ type: 'word', content: randomWord, playerName: '시스템(제시어)' }] },
-      { steps: [{ type: 'word', content: randomWord, playerName: '시스템(제시어)' }] }
+      { steps: [], systemWord: randomWord },
+      { steps: [], systemWord: randomWord }
     ];
-    G.stepIdx = 1;
   } else {
     for(let i=0; i<G.numPlayers; i++){
       G.players.push(document.getElementById('P_'+i).value.trim() || `플레이어 ${i+1}`);
@@ -611,7 +643,7 @@ function showPassScreen(){
   if(isCompete()){
     document.getElementById('passTeamBadge').textContent = G.chainIdx === 0 ? "🔥 TEAM A TURN" : "❄️ TEAM B TURN";
     document.getElementById('passTeamBadge').style.color = G.chainIdx === 0 ? "var(--acc2)" : "#38BDF8";
-    document.getElementById('passStepInfo').textContent = `팀 진행률: 단계 ${G.stepIdx}/${G.numPlayers}`;
+    document.getElementById('passStepInfo').textContent = `팀 진행률: 단계 ${G.stepIdx+1}/${G.numPlayers}`;
   } else {
     document.getElementById('passTeamBadge').textContent = "NEXT PLAYER";
     document.getElementById('passTeamBadge').style.color = "var(--mut)";
@@ -724,7 +756,19 @@ function submitWrite(){
 
 function showGDraw(){
   const prev = gPrevStep();
-  document.getElementById('gPrevWord').innerHTML = `<small>이 단어/설명을 그려보세요</small>${escHtml(prev.content)}`;
+  let wordToDraw = "---";
+
+  if (prev && prev.type === 'word') {
+    wordToDraw = prev.content;
+  } else if (G.stepIdx === 0 && gStartMode === 'draw') {
+    if (!G.chains[G.chainIdx].systemWord) {
+       G.chains[G.chainIdx].systemWord = W[Math.floor(Math.random() * W.length)].w;
+    }
+    wordToDraw = G.chains[G.chainIdx].systemWord;
+  }
+
+  document.getElementById('gPrevWord').innerHTML = `<small>이 단어를 그려보세요</small>${escHtml(wordToDraw)}`;
+  
   gTool = 'pencil'; gClr = '#111111'; gSz = 'S';
   document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on');
   ['S','M','L'].forEach(s => document.getElementById('gSz'+s).classList.toggle('on', s==='S'));
@@ -780,7 +824,7 @@ function advanceGartic(){
     if(isCompete()){
       if(G.chainIdx === 0){
         G.chainIdx = 1;
-        G.stepIdx = 1;
+        G.stepIdx = 0; 
         showPassScreen();
       } else {
         showBattleResult();
@@ -851,7 +895,7 @@ function showBattleResult(){
 }
 
 /* ══════════════════════════════════════════════════
-   🤖 Vercel API 연동 평가 (에러 추적 강화)
+   🤖 Vercel API 연동 평가 (미술 평론가 모드 장착!)
 ══════════════════════════════════════════════════ */
 async function fetchEval(messages) {
   const res = await fetch('/api/eval', {
@@ -871,7 +915,10 @@ async function fetchEval(messages) {
 
 async function runAiEval(){
   document.getElementById('aiEvalContent').innerHTML = `
-    <div class="ai-loading"><div class="spinner"></div><div>GPT-4o-mini가 치열하게 심사 중입니다...</div></div>`;
+    <div class="ai-loading">
+      <div class="spinner"></div>
+      <div>깐깐한 AI 평론가가 디테일을 조목조목 뜯어보는 중입니다...<br><small>(길게 쓰느라 시간이 조금 걸릴 수 있습니다!)</small></div>
+    </div>`;
   openOv('ov-ai-eval');
 
   try {
@@ -883,27 +930,35 @@ async function runAiEval(){
   } catch(err) {
     document.getElementById('aiEvalContent').innerHTML = `
       <div style="color:var(--acc2);text-align:center;padding:20px;font-size:14px;word-break:keep-all;line-height:1.5;">
-        <strong>API 연동에 실패했습니다.</strong><br><br>
+        <strong>평가 중 오류가 발생했습니다.</strong><br><br>
         <span style="color:var(--mut)">원인: ${err.message}</span><br><br>
-        <small style="color:#aaa;">※ 로컬 환경이 아닌 Vercel 링크로 접속했는지, <br>Vercel 환경변수(OPENAI_API_KEY) 설정 후 재배포를 했는지 확인해주세요.</small>
+        <small style="color:#aaa;">※ Vercel 서버의 api/eval.js 파일에서 max_tokens를 1500으로 올렸는지 확인해 주세요!</small>
       </div>`;
   }
 }
 
 async function evalCompeteMode(){
-  document.getElementById('aiEvalDesc').textContent = "두 팀 중 원본 제시어에 더 가까운 팀을 가립니다!";
-  const word = G.chains[0].steps[0].content; 
+  document.getElementById('aiEvalDesc').textContent = "두 팀의 그림/단어를 샅샅이 비교 분석합니다!";
   const lastA = G.chains[0].steps[G.chains[0].steps.length-1];
   const lastB = G.chains[1].steps[G.chains[1].steps.length-1];
 
+  const origA = gStartMode === 'draw' ? G.chains[0].systemWord : G.chains[0].steps[0].content;
+  const origB = gStartMode === 'draw' ? G.chains[1].systemWord : G.chains[1].steps[0].content;
+
+  // 💡 장황하고 깐깐한 미술 평론가 프롬프트 적용
   let messages = [
     {
       role: "system", 
-      content: "너는 두 팀의 그림/단어를 비교하는 냉정한 심사위원이야. 원본 제시어(word)와 팀1, 팀2의 최종 결과물을 보고 어느 팀이 원본과 더 비슷한지 0~100점으로 평가해. 결과는 반드시 JSON({\"teamA_score\": 숫자, \"teamB_score\": 숫자, \"winner\": \"TEAM A\" 또는 \"TEAM B\" 또는 \"무승부\", \"reason\": \"한국어 심사평\"})으로 반환해."
+      content: "너는 아주 깐깐하고 말 많은 미술 평론가이자 갈틱폰 심사위원이야. 원본 제시어와 각 팀의 최종 결과물(그림 또는 단어)을 비교해서 0~100점으로 평가해. 특히 'reason' 항목은 아주 길고 장황하게 작성해야 해. 팀 A의 그림/단어는 어떤 선, 색깔, 디테일 때문에 무엇처럼 보이는지(예: '이 네모난 형태와 손잡이 묘사는 냉장고의 특징을 잘 살렸지만~', '이 정체불명의 동그라미는 사과라기보단 토마토에 가깝습니다~'), 팀 B는 어떤 점에서 원본과 멀어졌거나 일치하는지 조목조목 뜯어보면서 팩트 폭력과 칭찬을 섞어 친절하고 길게 설명해. 결과는 무조건 JSON({\"teamA_score\": 숫자, \"teamB_score\": 숫자, \"winner\": \"TEAM A\" 또는 \"TEAM B\" 또는 \"무승부\", \"reason\": \"한국어 심사평(최소 4~5문장 이상 아주 상세하게)\"})으로 반환해."
     }
   ];
 
-  let contentArr = [{ type: "text", text: `원본 제시어는 "${word}"야. 팀 A의 결과와 팀 B의 결과를 비교해서 점수와 승자를 알려줘.` }];
+  let contentArr = [];
+  if (gStartMode === 'draw') {
+     contentArr.push({ type: "text", text: `공통 원본 제시어는 "${origA}"야. 두 팀의 최종 결과를 깐깐하게 비교 분석해줘.` });
+  } else {
+     contentArr.push({ type: "text", text: `팀 A의 시작 단어는 "${origA}", 팀 B의 시작 단어는 "${origB}"야. 각자 자신의 원본을 더 잘 지킨 팀을 승자로 정하고 이유를 상세히 적어줘.` });
+  }
   
   if(lastA.type === 'draw') contentArr.push({ type: "image_url", image_url: { url: lastA.content } });
   else contentArr.push({ type: "text", text: `팀 A의 최종 단어: "${lastA.content}"` });
@@ -912,15 +967,18 @@ async function evalCompeteMode(){
   else contentArr.push({ type: "text", text: `팀 B의 최종 단어: "${lastB.content}"` });
 
   messages.push({ role: "user", content: contentArr });
-
   const result = await fetchEval(messages);
 
   let htmlA = lastA.type === 'draw' ? `<img src="${lastA.content}" class="compare-img">` : `<div class="compare-val">${escHtml(lastA.content)}</div>`;
   let htmlB = lastB.type === 'draw' ? `<img src="${lastB.content}" class="compare-img">` : `<div class="compare-val">${escHtml(lastB.content)}</div>`;
 
+  let titleHtml = gStartMode === 'draw' 
+    ? `공통 제시어: ${escHtml(origA)}` 
+    : `<span style="color:var(--acc2)">A: ${escHtml(origA)}</span> vs <span style="color:#38BDF8">B: ${escHtml(origB)}</span>`;
+
   document.getElementById('aiEvalContent').innerHTML = `
-    <div style="text-align:center; font-family:'Black Han Sans',sans-serif; font-size:24px; margin-bottom:16px; color:var(--acc);">
-      제시어: ${word}
+    <div style="text-align:center; font-family:'Black Han Sans',sans-serif; font-size:20px; margin-bottom:16px; color:var(--acc);">
+      ${titleHtml}
     </div>
     <div class="compare-row">
       <div class="compare-item" style="border-color:${result.winner.includes('A')?'var(--acc2)':'var(--bdr)'}">
@@ -940,20 +998,26 @@ async function evalCompeteMode(){
 }
 
 async function evalNormalMode(){
-  document.getElementById('aiEvalDesc').textContent = "첫 제시어와 최종 결과물을 비교합니다";
+  document.getElementById('aiEvalDesc').textContent = "첫 제시어와 최종 결과물을 세밀하게 분석합니다";
   const chain = G.chains[G.chainIdx];
   const first = chain.steps[0];
   const last = chain.steps[chain.steps.length-1];
 
+  const origText = gStartMode === 'draw' ? chain.systemWord : first.content;
+
+  // 💡 장황하고 깐깐한 미술 평론가 프롬프트 적용
   let messages = [{
       role: "system", 
-      content: "갈틱폰 게임 결과야. 첫 제시어(이미지/단어)가 마지막에 얼마나 남았는지 0~100점 평가하고 이유를 써줘. JSON({\"score\": 숫자, \"reason\": \"문장\"}) 반환."
+      content: "너는 아주 깐깐하고 말 많은 미술 평론가이자 갈틱폰 심사위원이야. 처음 제시어(또는 그림)와 마지막 결과물을 비교해서 0~100점으로 평가해. 특히 'reason' 항목은 아주 길고 장황하게 작성해야 해. 어떤 선, 색깔, 디테일 때문에 이 결과물이 원본과 닮았는지, 혹은 어떤 요소가 왜곡되어서 전혀 다른 물건이나 생물(예: 강아지가 아니라 식빵처럼 보인다 등)처럼 변해버렸는지 하나하나 조목조목 뜯어보며 유머러스하고 친절하게 설명해. 결과는 무조건 JSON({\"score\": 숫자, \"reason\": \"한국어 심사평(최소 4~5문장 이상 아주 상세하게)\"})으로 반환해."
   }];
 
-  let contentArr = [{ type: "text", text: "처음 제시된 것과 마지막 결과를 비교해줘." }];
+  let contentArr = [{ type: "text", text: "처음 제시된 것과 마지막 결과를 상세히 비교해줘." }];
   
-  if(first.type === 'draw') contentArr.push({ type: "image_url", image_url: { url: first.content } });
-  else contentArr.push({ type: "text", text: `처음 단어: "${first.content}"` });
+  if(gStartMode === 'draw') {
+     contentArr.push({ type: "text", text: `처음 제시어: "${origText}"` });
+  } else {
+     contentArr.push({ type: "text", text: `처음 단어: "${origText}"` });
+  }
 
   if(last.type === 'draw') contentArr.push({ type: "image_url", image_url: { url: last.content } });
   else contentArr.push({ type: "text", text: `마지막 단어: "${last.content}"` });
@@ -961,7 +1025,7 @@ async function evalNormalMode(){
   messages.push({ role: "user", content: contentArr });
   const result = await fetchEval(messages);
 
-  let firstHTML = first.type === 'draw' ? `<img src="${first.content}" class="compare-img">` : `<div class="compare-val">${escHtml(first.content)}</div>`;
+  let firstHTML = gStartMode === 'draw' ? `<div class="compare-val">${escHtml(origText)}</div>` : `<div class="compare-val">${escHtml(first.content)}</div>`;
   let lastHTML = last.type === 'draw' ? `<img src="${last.content}" class="compare-img">` : `<div class="compare-val">${escHtml(last.content)}</div>`;
 
   document.getElementById('aiEvalContent').innerHTML = `
