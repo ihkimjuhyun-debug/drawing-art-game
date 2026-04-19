@@ -75,7 +75,7 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
 .ov-sub{font-size:13px;color:var(--mut);text-align:center;margin-bottom:22px}
 .btn-close{width:100%;height:46px;border-radius:var(--r);border:1.5px solid var(--bdr);background:transparent;color:var(--mut);font-size:14px;font-weight:700;cursor:pointer;margin-top:10px}
 
-/* ═══ CATCHMIND ═══ */
+/* ═══ CATCHMIND & GAME COMPONENTS ═══ */
 #s-intro{background:radial-gradient(ellipse at 35% 25%,#1e1070 0%,#0D0D1A 65%);align-items:center;justify-content:center}
 .intro-inner{width:100%;max-width:400px;padding:44px 24px 60px;text-align:center}
 .logo-eye{display:inline-flex;align-items:center;gap:6px;background:rgba(255,225,53,.12);border:1px solid rgba(255,225,53,.3);color:var(--acc);font-size:11px;font-weight:800;letter-spacing:3px;padding:6px 16px;border-radius:40px;margin-bottom:22px}
@@ -105,37 +105,29 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
 .dial-btns{width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px}
 .btn-reroll{height:54px;border-radius:var(--r);border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-family:'Black Han Sans',sans-serif;font-size:16px;cursor:pointer;transition:.12s}
 .btn-reroll:active{transform:scale(.97)}
-.btn-reroll:disabled{opacity:.35;cursor:not-allowed}
 .btn-go{height:62px;border-radius:var(--r);border:none;background:var(--acc);color:#0D0D1A;font-family:'Black Han Sans',sans-serif;font-size:21px;letter-spacing:1px;cursor:pointer;box-shadow:0 6px 28px rgba(255,225,53,.28);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .3s,transform .3s}
 .btn-go.vis{opacity:1;pointer-events:auto;transform:translateY(0)}
-.btn-go:active{transform:scale(.96)!important;box-shadow:none}
 
 #s-draw{background:#1a1a2e}
 .draw-hdr{display:flex;align-items:center;padding:10px 14px;gap:10px;background:#111120;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
 .draw-word{flex:1;text-align:center;font-family:'Black Han Sans',sans-serif;font-size:24px;color:var(--acc);letter-spacing:1px}
-.draw-timer{font-family:'Black Han Sans',sans-serif;font-size:20px;color:#fff;background:var(--card);padding:6px 14px;border-radius:12px;border:1.5px solid var(--bdr);min-width:64px;text-align:center;transition:border-color .3s,color .3s}
-.draw-timer.warn{color:var(--acc2);border-color:var(--acc2);animation:blink .5s step-start infinite}
-@keyframes blink{50%{opacity:.4}}
+.draw-timer{font-family:'Black Han Sans',sans-serif;font-size:20px;color:#fff;background:var(--card);padding:6px 14px;border-radius:12px;border:1.5px solid var(--bdr);min-width:64px;text-align:center}
 canvas{touch-action:none;display:block;background:#fff}
 #drawCanvas{flex:1;width:100%;cursor:crosshair}
 .tools-wrap{background:#111120;border-top:1px solid rgba(255,255,255,.07);padding:10px 12px 14px;flex-shrink:0}
 .tools-top{display:flex;align-items:center;gap:7px;margin-bottom:10px}
-.ti{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:17px;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:.12s}
+.ti{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:17px;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
 .ti.on{border-color:var(--acc);background:rgba(255,225,53,.1)}
-.ti:active{transform:scale(.9)}
 .sz-grp{display:flex;gap:5px}
-.sz-btn{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);cursor:pointer;display:grid;place-items:center;transition:.12s}
+.sz-btn{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);cursor:pointer;display:grid;place-items:center}
 .sz-btn.on{border-color:rgba(255,255,255,.4)}
-.sz-btn:active{transform:scale(.9)}
 .sz-dot{background:#fff;border-radius:50%}
 .ml{margin-left:auto}
 .palette{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
 .palette::-webkit-scrollbar{display:none}
-.clr{width:32px;height:32px;border-radius:50%;flex-shrink:0;cursor:pointer;border:3px solid transparent;outline:2px solid transparent;outline-offset:2px;transition:transform .12s,outline .12s}
+.clr{width:32px;height:32px;border-radius:50%;flex-shrink:0;cursor:pointer;border:3px solid transparent;outline:2px solid transparent;outline-offset:2px}
 .clr.on{outline:2px solid #fff;transform:scale(1.18)}
-.clr:active{transform:scale(.9)}
-.btn-sub{width:100%;height:50px;border-radius:var(--r);border:none;margin-top:10px;background:var(--acc);color:#0D0D1A;font-family:'Black Han Sans',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer;transition:.12s}
-.btn-sub:active{transform:scale(.97)}
+.btn-sub{width:100%;height:50px;border-radius:var(--r);border:none;margin-top:10px;background:var(--acc);color:#0D0D1A;font-family:'Black Han Sans',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer}
 
 #s-view{background:#fff}
 #viewCanvas{flex:1;width:100%;cursor:pointer}
@@ -143,21 +135,7 @@ canvas{touch-action:none;display:block;background:#fff}
 .view-el{font-family:'Black Han Sans',sans-serif;font-size:34px;color:#111;display:flex;align-items:baseline;justify-content:center;gap:4px}
 .view-el small{font-size:16px;color:#888;font-family:'Noto Sans KR',sans-serif}
 .vhdr-btns{display:flex;gap:8px}
-.vhbtn{height:36px;padding:0 12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-size:12px;font-weight:800;color:#444;cursor:pointer;white-space:nowrap}
-.vhbtn:active{background:#eee}
-.guess-q{font-family:'Black Han Sans',sans-serif;font-size:26px;color:#111;text-align:center;margin-bottom:24px}
-.guess-row{display:flex;gap:12px}
-.g-y{flex:1;height:56px;border-radius:16px;border:none;background:#111;color:#fff;font-family:'Black Han Sans',sans-serif;font-size:20px;cursor:pointer}
-.g-y:active{transform:scale(.96)}
-.g-n{flex:1;height:56px;border-radius:16px;border:2px solid #ddd;background:#fff;color:#555;font-family:'Black Han Sans',sans-serif;font-size:20px;cursor:pointer}
-.g-n:active{transform:scale(.96)}
-.h-tabs{display:flex;gap:8px;margin-bottom:14px}
-.h-tab{flex:1;height:44px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:12px;font-weight:800;cursor:pointer;transition:.12s}
-.h-tab.ok{color:var(--txt);border-color:rgba(255,255,255,.15)}
-.h-tab.on{border-color:var(--acc3);background:rgba(77,255,210,.1);color:var(--acc3)}
-.h-box{background:var(--card);border-radius:14px;padding:16px;min-height:56px;border:1.5px solid var(--bdr);margin-bottom:12px}
-.h-box p{font-size:15px;line-height:1.65;font-weight:700}
-.h-box .emp{color:var(--mut);font-weight:400;font-size:13px}
+.vhbtn{height:36px;padding:0 12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-size:12px;font-weight:800;color:#444;cursor:pointer}
 
 #s-result{background:radial-gradient(ellipse at 50% 10%,#1a0060 0%,var(--bg) 65%);overflow-y:auto}
 .res-in{max-width:420px;margin:0 auto;padding:40px 22px 60px}
@@ -174,10 +152,12 @@ canvas{touch-action:none;display:block;background:#fff}
 .rec-inf{flex:1}.rec-w{font-weight:800;font-size:15px}.rec-m{font-size:11px;color:var(--mut);margin-top:1px}
 .rec-t{font-family:'Black Han Sans',sans-serif;font-size:17px;color:var(--acc3)}
 .r1{color:#FFD700}.r2{color:#C0C0C0}.r3{color:#CD7F32}.rN{color:var(--mut)}
+
 #s-records{overflow-y:auto}
 .rec-sb{max-width:460px;margin:0 auto;padding:20px 20px 60px}
 .rec-sb h2{font-family:'Black Han Sans',sans-serif;font-size:24px;margin-bottom:16px}
 .empty-s{text-align:center;padding:60px 20px;color:var(--mut);font-size:15px}
+
 #ov-cd{display:none;position:fixed;inset:0;z-index:100;background:rgba(13,13,26,.95);place-items:center}
 #ov-cd.show{display:grid}
 .cd-n{font-family:'Black Han Sans',sans-serif;font-size:130px;color:var(--acc);animation:popIn .45s cubic-bezier(.15,1.4,.4,1);text-shadow:0 0 60px rgba(255,225,53,.5);line-height:1}
@@ -190,7 +170,6 @@ canvas{touch-action:none;display:block;background:#fff}
 .g-menu-sub{font-size:14px;color:var(--mut);margin-bottom:40px}
 .g-mode-cards{display:flex;flex-direction:column;gap:14px}
 .g-mode-card{border-radius:20px;padding:24px 22px;border:1.5px solid;cursor:pointer;text-align:left;transition:.15s;position:relative}
-.g-mode-card:active{transform:scale(.97)}
 .gmc-draw{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.35)}
 .gmc-words{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.35)}
 .gmc-icon{font-size:36px;margin-bottom:10px}
@@ -206,8 +185,7 @@ canvas{touch-action:none;display:block;background:#fff}
 .g-section{margin-bottom:24px}
 .g-section-title{font-size:11px;font-weight:800;color:var(--mut);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px}
 .player-count-row{display:flex;align-items:center;gap:12px}
-.pc-btn{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:22px;font-weight:800;cursor:pointer;display:grid;place-items:center;transition:.12s;flex-shrink:0}
-.pc-btn:active{transform:scale(.9)}
+.pc-btn{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:22px;font-weight:800;cursor:pointer;display:grid;place-items:center}
 .pc-num{flex:1;text-align:center;font-family:'Black Han Sans',sans-serif;font-size:42px;color:var(--acc)}
 .pc-label{font-size:13px;color:var(--mut);text-align:center;margin-top:4px}
 .toggle-row{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:14px;padding:14px 16px;border:1.5px solid var(--bdr)}
@@ -221,13 +199,11 @@ canvas{touch-action:none;display:block;background:#fff}
 .toggle input:checked+.toggle-slider{background:var(--g1)}
 .toggle input:checked+.toggle-slider::before{transform:translateX(20px);background:#fff}
 .photo-opts{display:flex;gap:8px;margin-top:12px}
-.photo-opt{flex:1;height:50px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:14px;font-weight:700;cursor:pointer;transition:.12s;display:flex;align-items:center;justify-content:center;gap:6px}
+.photo-opt{flex:1;height:50px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .photo-opt.sel{border-color:var(--g1);background:rgba(124,58,237,.1);color:#c4b5fd}
-.photo-opt:active{transform:scale(.96)}
 .name-list{display:flex;flex-direction:column;gap:8px}
-.name-input{width:100%;height:50px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:15px;font-weight:700;padding:0 16px;outline:none;transition:border-color .2s;font-family:'Noto Sans KR',sans-serif}
+.name-input{width:100%;height:50px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:15px;font-weight:700;padding:0 16px;outline:none}
 .name-input:focus{border-color:var(--g1)}
-.name-input::placeholder{color:var(--mut)}
 .name-row{display:flex;align-items:center;gap:8px}
 .name-num{width:28px;font-size:13px;font-weight:800;color:var(--mut);text-align:center;flex-shrink:0}
 
@@ -240,8 +216,7 @@ canvas{touch-action:none;display:block;background:#fff}
 .pass-name{font-family:'Black Han Sans',sans-serif;font-size:46px;color:#fff;margin-bottom:8px;text-shadow:0 0 40px rgba(167,139,250,.5)}
 .pass-task{font-size:15px;color:#c4b5fd;margin-bottom:40px;line-height:1.5}
 .pass-step-info{font-size:12px;color:var(--mut);margin-bottom:20px}
-.pass-ready-btn{width:100%;height:66px;border-radius:22px;border:none;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-family:'Black Han Sans',sans-serif;font-size:24px;cursor:pointer;box-shadow:0 8px 32px rgba(124,58,237,.4);transition:.12s}
-.pass-ready-btn:active{transform:scale(.97);box-shadow:none}
+.pass-ready-btn{width:100%;height:66px;border-radius:22px;border:none;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-family:'Black Han Sans',sans-serif;font-size:24px;cursor:pointer;box-shadow:0 8px 32px rgba(124,58,237,.4)}
 .btn-end-game{margin-top:14px;width:100%;height:44px;border-radius:14px;border:1px solid rgba(255,77,109,.2);background:transparent;color:rgba(255,77,109,.6);font-size:13px;font-weight:700;cursor:pointer}
 
 /* ═══ GARTIC WRITE ═══ */
@@ -254,11 +229,27 @@ canvas{touch-action:none;display:block;background:#fff}
 .gw-prev-photo{width:100%;height:200px;object-fit:cover;display:block}
 .gw-input-wrap{flex:1;display:flex;flex-direction:column;gap:10px}
 .gw-input-lbl{font-size:13px;font-weight:700;color:var(--mut)}
-.gw-textarea{flex:1;min-height:80px;background:var(--card);border:1.5px solid var(--bdr);border-radius:14px;color:var(--txt);font-size:16px;font-family:'Noto Sans KR',sans-serif;font-weight:700;padding:14px;resize:none;outline:none;transition:border-color .2s}
+
+/* 마이크 버튼 (Whisper 연동) */
+.btn-mic {
+  background: rgba(255,255,255,0.08); border: 1px solid var(--bdr); border-radius: 12px;
+  color: var(--txt); padding: 6px 12px; font-size: 13px; cursor: pointer; font-weight: 700;
+  transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 4px;
+}
+.btn-mic:active { transform: scale(0.95); }
+.btn-mic.recording {
+  background: rgba(255,77,109,0.15); border-color: var(--acc2); color: var(--acc2);
+  animation: pulseMic 1.5s infinite;
+}
+@keyframes pulseMic {
+  0% { box-shadow: 0 0 0 0 rgba(255,77,109,0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(255,77,109,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,77,109,0); }
+}
+
+.gw-textarea{flex:1;min-height:80px;background:var(--card);border:1.5px solid var(--bdr);border-radius:14px;color:var(--txt);font-size:16px;font-family:'Noto Sans KR',sans-serif;font-weight:700;padding:14px;resize:none;outline:none}
 .gw-textarea:focus{border-color:var(--g1)}
-.gw-textarea::placeholder{color:var(--mut)}
-.gw-submit{height:54px;border-radius:var(--r);border:none;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-family:'Black Han Sans',sans-serif;font-size:18px;cursor:pointer;transition:.12s;flex-shrink:0}
-.gw-submit:active{transform:scale(.97)}
+.gw-submit{height:54px;border-radius:var(--r);border:none;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-family:'Black Han Sans',sans-serif;font-size:18px;cursor:pointer;flex-shrink:0}
 .gw-submit:disabled{opacity:.4;cursor:not-allowed}
 .gw-char{font-size:12px;color:var(--mut);text-align:right}
 
@@ -294,22 +285,11 @@ canvas{touch-action:none;display:block;background:#fff}
 .ti-draw{background:rgba(77,255,210,.1);color:var(--acc3)}
 .ti-photo{background:rgba(124,58,237,.15);color:#c4b5fd}
 .gres-actions{display:flex;flex-direction:column;gap:10px;margin-top:24px}
-.btn-ai{height:54px;border-radius:var(--r);border:none;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-family:'Black Han Sans',sans-serif;font-size:17px;cursor:pointer;transition:.12s}
-.btn-ai:active{transform:scale(.97)}
-.btn-ai:disabled{opacity:.4;cursor:not-allowed}
+.btn-ai{height:54px;border-radius:var(--r);border:none;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-family:'Black Han Sans',sans-serif;font-size:17px;cursor:pointer}
 
 /* ═══ AI EVAL ═══ */
-.ai-chain-select{display:flex;flex-direction:column;gap:8px;margin:14px 0}
-.ai-chain-item{background:var(--card);border-radius:14px;padding:14px 16px;border:1.5px solid var(--bdr);cursor:pointer;display:flex;align-items:center;gap:12px;transition:.12s}
-.ai-chain-item:active{transform:scale(.97)}
-.ai-chain-item.sel{border-color:var(--g1);background:rgba(124,58,237,.1)}
-.ai-chain-num{font-family:'Black Han Sans',sans-serif;font-size:18px;min-width:30px;color:var(--mut)}
-.ai-chain-info{flex:1}
-.ai-chain-word{font-weight:700;font-size:14px}
-.ai-chain-meta{font-size:12px;color:var(--mut);margin-top:2px}
 .ai-result-wrap{text-align:center;padding:20px 0}
 .ai-score-ring{width:130px;height:130px;border-radius:50%;border:6px solid var(--bdr);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;overflow:hidden}
-.ai-score-fill{position:absolute;inset:0;border-radius:50%;border:6px solid transparent;transition:none}
 .ai-score-val{font-family:'Black Han Sans',sans-serif;font-size:40px;color:#fff;position:relative;z-index:1}
 .ai-score-pct{font-size:14px;color:var(--mut);position:relative;z-index:1}
 .ai-reason{font-size:14px;color:var(--txt);line-height:1.65;background:var(--card);border-radius:14px;padding:14px 16px;border:1.5px solid var(--bdr);text-align:left}
@@ -502,7 +482,6 @@ canvas{touch-action:none;display:block;background:#fff}
         <button class="pc-btn" onclick="adjPlayers(1)">+</button>
       </div>
     </div>
-
     <div class="g-section" id="photoSection">
       <div class="g-section-title">📷 사진 모드</div>
       <div class="toggle-row">
@@ -522,12 +501,10 @@ canvas{touch-action:none;display:block;background:#fff}
         </div>
       </div>
     </div>
-
     <div class="g-section">
       <div class="g-section-title">플레이어 이름</div>
       <div class="name-list" id="nameList"></div>
     </div>
-
     <button class="btn-pu" onclick="startGartic()">게임 시작! 🎲</button>
     <input type="file" id="photoFileInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
   </div>
@@ -554,8 +531,11 @@ canvas{touch-action:none;display:block;background:#fff}
   <div class="gw-body">
     <div class="gw-prev" id="gwPrev" style="display:none"></div>
     <div class="gw-input-wrap">
-      <div class="gw-input-lbl" id="gwInputLbl">제시어를 입력하세요</div>
-      <textarea class="gw-textarea" id="gwInput" placeholder="여기에 입력..." maxlength="100" oninput="gwCheck()"></textarea>
+      <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+        <div class="gw-input-lbl" id="gwInputLbl">제시어를 입력하세요</div>
+        <button id="btnMic" class="btn-mic" onclick="toggleMic()" type="button">🎙️ 음성 입력</button>
+      </div>
+      <textarea class="gw-textarea" id="gwInput" placeholder="여기에 입력하거나 위 버튼을 눌러 말해보세요..." maxlength="100" oninput="gwCheck()"></textarea>
       <div class="gw-char" id="gwChar">0/100</div>
     </div>
     <button class="gw-submit" id="gwSubmit" onclick="submitWrite()" disabled>제출 →</button>
@@ -589,19 +569,19 @@ canvas{touch-action:none;display:block;background:#fff}
 <div id="s-g-results" class="screen">
   <div class="hdr hdr-pu">
     <div class="hdr-sp"></div>
-    <div class="hdr-ttl-pu">게임 결과</div>
+    <div class="hdr-ttl-pu">라운드 완료!</div>
     <button class="btn-bk-pu" onclick="showScreen('s-main')" style="font-size:13px;width:auto;padding:0 10px">홈</button>
   </div>
   <div class="gres-body scrollable" style="flex:1">
     <div class="gres-header">
-      <div class="gres-title">🎉 게임 종료!</div>
-      <div class="gres-sub" id="gResSub">함께한 기록을 확인해보세요</div>
+      <div class="gres-title">🎉 결과 확인</div>
+      <div class="gres-sub" id="gResSub">방금 완료된 라운드 결과입니다</div>
     </div>
     <div id="gResultChains"></div>
     <div class="gres-actions">
-      <button class="btn-ai" id="btnAiEval" onclick="openAiEval()">🤖 AI 평가하기</button>
-      <button class="btn-pu" onclick="goToDial(); showScreen('s-g-setup')">다시 하기</button>
-      <button class="btn-ghost" onclick="showScreen('s-main')">메인으로</button>
+      <button class="btn-ai" onclick="runAiEval()">🤖 AI 평가하기</button>
+      <button class="btn-pu" id="btnNextChain" onclick="nextChain()">더하기 (다음 라운드 진행)</button>
+      <button class="btn-ghost" onclick="showScreen('s-main')">그만하기</button>
     </div>
   </div>
 </div>
@@ -649,8 +629,8 @@ canvas{touch-action:none;display:block;background:#fff}
 <div class="ov" id="ov-end-confirm">
   <div class="ov-card">
     <div class="ov-title">🏁 게임 종료</div>
-    <div class="ov-sub">지금까지의 기록으로 결과를 볼까요?</div>
-    <button class="btn-pu" onclick="forceEndGame()" style="margin-bottom:10px">결과 보기</button>
+    <div class="ov-sub">정말 메인 화면으로 돌아갈까요?</div>
+    <button class="btn-pu" onclick="closeOv('ov-end-confirm'); showScreen('s-main')" style="margin-bottom:10px">그만하기</button>
     <button class="btn-close" onclick="closeOv('ov-end-confirm')">계속 하기</button>
   </div>
 </div>
@@ -659,17 +639,14 @@ canvas{touch-action:none;display:block;background:#fff}
   <div class="ov-sheet">
     <div class="sheet-handle"></div>
     <div style="font-family:'Black Han Sans',sans-serif;font-size:20px;margin-bottom:4px">🤖 AI 평가</div>
-    <div style="font-size:13px;color:var(--mut);margin-bottom:16px">첫 단어와 최종 결과를 비교합니다</div>
+    <div style="font-size:13px;color:var(--mut);margin-bottom:16px">이번 라운드의 첫 제시어와 최종 결과물을 비교합니다</div>
     <div id="aiEvalContent"></div>
-    <button class="btn-close" onclick="closeOv('ov-ai-eval')">닫기</button>
+    <button class="btn-close" onclick="closeOv('ov-ai-eval')" style="margin-top:12px">← 화면 닫기</button>
   </div>
 </div>
 
 <script>
-/* ══════════════════════════════════════════════════
-   WORDS DATABASE
-══════════════════════════════════════════════════ */
-const W=[{w:"사과",c:"ㅅㄱ",u:"과일가게, 냉장고",e:"빨간색이며 의사를 멀리하게 한다고 알려진 과일"},{w:"강아지",c:"ㄱㅇㅈ",u:"집, 공원, 애견숍",e:"꼬리를 흔들며 반기는 사람의 친구"},{w:"자동차",c:"ㅈㄷㅊ",u:"도로, 주차장",e:"네 바퀴로 달리는 교통수단"},{w:"냉장고",c:"ㄴㅈㄱ",u:"주방",e:"음식을 차갑게 유지하는 하얀 박스"},{w:"피자",c:"ㅍㅈ",u:"이탈리아 식당, 배달",e:"둥글고 토핑이 올라간 이탈리아 음식"},{w:"무지개",c:"ㅁㅈㄱ",u:"비 온 후 하늘",e:"일곱 가지 색이 반원 모양으로 펼쳐지는 현상"},{w:"눈사람",c:"ㄴㅅㄹ",u:"겨울, 눈밭",e:"눈을 뭉쳐 만든 인형, 당근이 코"},{w:"고래",c:"ㄱㄹ",u:"바다, 수족관",e:"지구상에서 가장 큰 포유류"},{w:"피아노",c:"ㅍㅇㄴ",u:"음악실, 콘서트홀",e:"흰 건반과 검은 건반이 있는 악기"},{w:"비행기",c:"ㅂㅎㄱ",u:"공항, 하늘",e:"하늘을 날아 먼 곳으로 가는 교통수단"},{w:"축구공",c:"ㅊㄱㄱ",u:"운동장, 경기장",e:"오각형 무늬가 그려진 둥근 공"},{w:"로켓",c:"ㄹㅋ",u:"우주 발사대",e:"불을 뿜으며 우주로 날아가는 것"},{w:"나비",c:"ㄴㅂ",u:"꽃밭, 공원",e:"알록달록한 날개로 꽃 사이를 날아다니는 곤충"},{w:"달팽이",c:"ㄷㅍㅇ",u:"정원, 비 온 후 길",e:"느리게 기어다니며 등에 집을 지고 다니는 생물"},{w:"펭귄",c:"ㅍㄱ",u:"남극, 동물원",e:"날 수 없지만 수영을 잘하는 새"},{w:"해파리",c:"ㅎㅍㄹ",u:"바다, 수족관",e:"투명한 몸으로 둥둥 떠다니며 촉수가 있는 생물"},{w:"트럭",c:"ㅌㄹ",u:"고속도로, 물류창고",e:"짐을 많이 실을 수 있는 큰 차량"},{w:"아이스크림",c:"ㅇㅇㅅㅋㄹ",u:"아이스크림 가게, 편의점",e:"달콤하고 차가운 여름 간식"},{w:"낙타",c:"ㄴㅌ",u:"사막, 동물원",e:"등에 혹이 있고 사막에서 사는 동물"},{w:"태양",c:"ㅌㅇ",u:"하늘, 우주",e:"지구에 빛과 열을 주는 별"},{w:"구름",c:"ㄱㄹ",u:"하늘",e:"하늘에 떠다니는 흰 솜뭉치 같은 것"},{w:"풍선",c:"ㅍㅅ",u:"파티, 놀이공원",e:"바람을 불어넣으면 둥글게 부풀어 오르는 것"},{w:"왕관",c:"ㅇㄱ",u:"왕의 머리 위",e:"왕이나 여왕이 머리에 쓰는 장식품"},{w:"지하철",c:"ㅈㅎㅊ",u:"도시 교통",e:"땅 아래로 다니는 도시 교통수단"},{w:"해바라기",c:"ㅎㅂㄹㄱ",u:"들판, 화원",e:"해를 향해 고개를 돌리는 노란 꽃"},{w:"장미",c:"ㅈㅁ",u:"꽃집, 정원, 선물",e:"빨간색이 유명하고 가시가 있는 꽃"},{w:"기타",c:"ㄱㅌ",u:"음악실, 무대",e:"줄을 튕겨 연주하는 악기"},{w:"잠수함",c:"ㅈㅅㅎ",u:"바다 속",e:"물속을 다니는 배"},{w:"소방차",c:"ㅅㅂㅊ",u:"화재 현장",e:"불을 끄러 달려오는 빨간 차"},{w:"우산",c:"ㅇㅅ",u:"비 오는 날",e:"비를 막아주는 펼쳐지는 도구"},{w:"열기구",c:"ㅇㄱㄱ",u:"하늘, 관광지",e:"큰 풍선에 매달려 하늘을 나는 것"},{w:"문어",c:"ㅁㅇ",u:"바다, 수족관",e:"다리가 여덟 개인 해양 생물"},{w:"선인장",c:"ㅅㅇㅈ",u:"사막, 화분",e:"가시가 있고 물 없이도 사는 식물"},{w:"북극곰",c:"ㅂㄱㄱ",u:"북극, 동물원",e:"흰 털을 가진 세상에서 가장 큰 곰"},{w:"드래곤",c:"ㄷㄹㄱ",u:"판타지 세계",e:"날개가 있고 불을 뿜는 전설의 동물"},{w:"도넛",c:"ㄷㄴ",u:"빵집, 카페",e:"가운데 구멍이 뚫린 동그란 빵"},{w:"수박",c:"ㅅㅂ",u:"여름, 과일가게",e:"초록 줄무늬 껍질에 빨간 속살인 여름 과일"},{w:"잠자리",c:"ㅈㅈㄹ",u:"연못가, 여름 들판",e:"네 날개로 날아다니는 여름 곤충"},{w:"오리",c:"ㅇㄹ",u:"연못, 농장",e:"꽥꽥 울고 물 위에 뜨는 새"},{w:"악어",c:"ㅇㄱ",u:"강, 동물원",e:"큰 입과 날카로운 이빨을 가진 파충류"},{w:"등대",c:"ㄷㄷ",u:"해안가, 항구",e:"배가 암초를 피하도록 빛을 비추는 탑"},{w:"거북이",c:"ㄱㅂㄱ",u:"바다, 동물원",e:"딱딱한 등껍데기를 진 느린 동물"},{w:"열쇠",c:"ㅇㅅ",u:"문, 자물쇠",e:"자물쇠를 여는 데 쓰는 금속 도구"},{w:"화산",c:"ㅎㅅ",u:"지질 활동 지역",e:"마그마가 분출하는 산"},{w:"호랑이",c:"ㅎㄹㅇ",u:"밀림, 동물원",e:"줄무늬가 있는 고양이과 최대 포식자"},{w:"코끼리",c:"ㅋㄲㄹ",u:"아프리카, 동물원",e:"긴 코와 큰 귀를 가진 육지 최대 동물"},{w:"기린",c:"ㄱㄹ",u:"아프리카 초원, 동물원",e:"목이 엄청 길어 나무 꼭대기 잎을 먹는 동물"},{w:"치타",c:"ㅊㅌ",u:"아프리카 초원",e:"지구상에서 가장 빠르게 달리는 동물"},{w:"원숭이",c:"ㅇㅅㅇ",u:"열대 밀림, 동물원",e:"나무를 타고 인간과 가장 가까운 동물"},{w:"토끼",c:"ㅌㄲ",u:"들판, 집",e:"긴 귀와 짧은 꼬리, 빠르게 뛰는 동물"},{w:"다람쥐",c:"ㄷㄹㅈ",u:"공원, 숲",e:"도토리를 모으고 꼬리가 푹신한 작은 동물"},{w:"여우",c:"ㅇㅇ",u:"숲, 동화",e:"교활하다고 알려진 주황색 털의 동물"},{w:"늑대",c:"ㄴㄷ",u:"숲, 초원",e:"무리 지어 사냥하는 개과 동물"},{w:"돼지",c:"ㄷㅈ",u:"농장",e:"꿀꿀 울고 코가 납작한 가축"},{w:"수달",c:"ㅅㄷ",u:"강가, 수족관",e:"물속에서 사는 귀여운 갈색 포유류"},{w:"고슴도치",c:"ㄱㅅㄷㅊ",u:"숲, 집",e:"등에 뾰족한 가시가 있는 작은 동물"},{w:"미어캣",c:"ㅁㅇㅋ",u:"아프리카, 동물원",e:"두 발로 서서 주변을 경계하는 작은 동물"},{w:"플라밍고",c:"ㅍㄹㅁㄱ",u:"열대 호수, 동물원",e:"분홍빛 깃털로 한 발로 서있는 새"},{w:"앵무새",c:"ㅇㅁㅅ",u:"열대 지방, 집",e:"말을 흉내 내는 알록달록한 새"},{w:"독수리",c:"ㄷㅅㄹ",u:"하늘, 산악 지대",e:"날카로운 발톱과 뛰어난 시력을 가진 맹금류"},{w:"올빼미",c:"ㅇㅂㅁ",u:"숲, 밤",e:"밤에 활동하고 눈이 큰 새"},{w:"공작",c:"ㄱㅈ",u:"동물원, 궁전 정원",e:"화려한 무늬의 꼬리깃털을 펼치는 새"},{w:"타조",c:"ㅌㅈ",u:"아프리카 초원, 동물원",e:"날 수 없지만 빠르게 달리는 가장 큰 새"},{w:"카멜레온",c:"ㅋㅁㄹㅇ",u:"열대 밀림",e:"피부색이 환경에 맞게 변하는 도마뱀"},{w:"상어",c:"ㅅㅇ",u:"바다",e:"날카로운 이빨과 지느러미로 유명한 물고기"},{w:"돌고래",c:"ㄷㄱㄹ",u:"바다, 수족관",e:"지능이 높고 사람과 노는 걸 좋아하는 포유류"},{w:"해마",c:"ㅎㅁ",u:"바다, 수족관",e:"말처럼 생긴 머리를 가진 작은 물고기"},{w:"불가사리",c:"ㅂㄱㅅㄹ",u:"바닷가, 수족관",e:"별 모양의 다섯 팔을 가진 해양 동물"},{w:"벚꽃",c:"ㅂㄲ",u:"봄 공원, 가로수",e:"봄에 분홍빛으로 흩날리는 꽃"},{w:"대나무",c:"ㄷㄴㅁ",u:"숲, 팬더 서식지",e:"판다가 먹고 빠르게 자라는 풀 같은 나무"},{w:"단풍",c:"ㄷㅍ",u:"가을 산, 공원",e:"가을에 빨갛고 노랗게 변하는 나뭇잎"},{w:"버섯",c:"ㅂㅅ",u:"숲, 요리",e:"갓 모양에 줄기가 달린 균류"},{w:"파인애플",c:"ㅍㅇㅇㅍ",u:"열대 지방, 마트",e:"거친 껍질에 꼭대기에 잎이 달린 열대 과일"},{w:"망고",c:"ㅁㄱ",u:"열대 지방, 마트",e:"달콤하고 노란 열대 과일"},{w:"포도",c:"ㅍㄷ",u:"포도밭, 마트",e:"작고 둥근 알이 송이로 달리는 과일"},{w:"딸기",c:"ㄷㄱ",u:"딸기밭, 마트",e:"빨갛고 씨가 겉에 박힌 봄 과일"},{w:"옥수수",c:"ㅇㅅㅅ",u:"밭, 마트",e:"알갱이가 빼곡히 박힌 노란 곡물"},{w:"고구마",c:"ㄱㄱㅁ",u:"밭, 군고구마 가게",e:"껍질은 자주색 속은 주황색인 뿌리채소"},{w:"당근",c:"ㄷㄱ",u:"밭, 마트",e:"토끼가 좋아하는 주황색 뿌리채소"},{w:"브로콜리",c:"ㅂㄹㅋㄹ",u:"마트, 식탁",e:"초록 나무처럼 생긴 채소"},{w:"햄버거",c:"ㅎㅂㄱ",u:"패스트푸드점",e:"번 빵 사이에 패티와 채소를 넣은 음식"},{w:"라면",c:"ㄹㅁ",u:"집, 편의점",e:"끓는 물에 면과 스프를 넣어 만드는 간식"},{w:"김밥",c:"ㄱㅂ",u:"분식집, 도시락",e:"밥과 재료를 김으로 싸서 자른 한국 음식"},{w:"떡볶이",c:"ㄷㅂㄱ",u:"분식집, 포장마차",e:"빨간 소스로 볶은 쫄깃한 떡"},{w:"초밥",c:"ㅊㅂ",u:"일식 레스토랑",e:"식초 밥 위에 생선을 얹은 일본 음식"},{w:"카레",c:"ㅋㄹ",u:"집, 카레 전문점",e:"노란 향신료 소스에 밥을 곁들인 음식"},{w:"초콜릿",c:"ㅊㅋㄹ",u:"과자점, 선물 가게",e:"달콤하고 쌉싸름한 갈색 간식"},{w:"케이크",c:"ㅋㅇㅋ",u:"빵집, 카페, 생일 파티",e:"생크림과 스펀지 빵으로 층층이 만든 디저트"},{w:"마카롱",c:"ㅁㅋㄹ",u:"카페, 디저트 가게",e:"두 개의 쿠키 사이에 크림이 든 프랑스 과자"},{w:"붕어빵",c:"ㅂㅇㅂ",u:"겨울 길거리",e:"붕어 틀에 구운 팥 앙금 빵"},{w:"삼겹살",c:"ㅅㄱㅅ",u:"고깃집",e:"불판에 구워 쌈 싸 먹는 돼지 뱃살"},{w:"치킨",c:"ㅊㅋ",u:"치킨 가게, 배달",e:"튀김옷을 입혀 기름에 튀긴 닭고기"},{w:"짜장면",c:"ㅉㅈㅁ",u:"중국집",e:"검은 소스가 면에 뿌려진 중식 국수"},{w:"계란",c:"ㄱㄹ",u:"냉장고, 요리 재료",e:"닭이 낳는 둥근 흰 껍데기 식재료"},{w:"김치",c:"ㄱㅊ",u:"냉장고, 식탁",e:"배추를 고춧가루에 절인 한국 발효 음식"},{w:"꿀",c:"ㄲ",u:"주방, 약국",e:"벌이 꽃에서 모아 만든 달콤한 액체"},{w:"팝콘",c:"ㅍㅋ",u:"영화관, 놀이공원",e:"옥수수를 가열해 터뜨린 간식"},{w:"커피",c:"ㅋㅍ",u:"카페, 집",e:"원두를 볶아 추출한 쌉싸름한 음료"},{w:"기차",c:"ㄱㅊ",u:"기차역, 철도",e:"레일 위를 달리는 긴 교통수단"},{w:"버스",c:"ㅂㅅ",u:"버스 정류장, 도로",e:"많은 사람이 함께 타는 대중교통"},{w:"오토바이",c:"ㅇㅌㅂㅇ",u:"도로, 배달",e:"두 바퀴로 달리는 엔진이 달린 탈것"},{w:"자전거",c:"ㅈㅈㄱ",u:"공원, 도로",e:"두 발로 페달을 밟아 움직이는 탈것"},{w:"헬리콥터",c:"ㅎㄹㅋㅍ",u:"하늘, 병원 옥상",e:"날개를 회전시켜 뜨는 비행체"},{w:"우주선",c:"ㅇㅈㅅ",u:"우주, 발사대",e:"우주인을 태우고 지구 밖을 나는 탈것"},{w:"시계",c:"ㅅㄱ",u:"손목, 벽, 탁자 위",e:"시간을 알려주는 도구"},{w:"안경",c:"ㅇㄱ",u:"얼굴, 안경점",e:"눈이 나쁜 사람이 시력을 교정하는 도구"},{w:"모자",c:"ㅁㅈ",u:"머리, 야외",e:"햇빛을 막거나 패션으로 머리에 쓰는 것"},{w:"가방",c:"ㄱㅂ",u:"어깨, 등, 손",e:"물건을 넣어 들고 다니는 용기"},{w:"칫솔",c:"ㅊㅅ",u:"욕실",e:"치약을 묻혀 이를 닦는 솔"},{w:"침대",c:"ㅊㄷ",u:"침실",e:"잠을 자는 데 사용하는 가구"},{w:"소파",c:"ㅅㅍ",u:"거실",e:"폭신하게 기대거나 누울 수 있는 가구"},{w:"냄비",c:"ㄴㅂ",u:"주방",e:"음식을 끓이는 데 쓰는 조리 도구"},{w:"컵",c:"ㅋ",u:"식탁, 주방",e:"음료를 담아 마시는 용기"},{w:"가위",c:"ㄱㅇ",u:"학교, 집",e:"두 날을 교차해 종이나 천을 자르는 도구"},{w:"연필",c:"ㅇㅍ",u:"학교, 책상 위",e:"흑연 심이 들어간 글 쓰는 도구"},{w:"책",c:"ㅊ",u:"서재, 도서관",e:"종이에 글과 그림이 인쇄된 묶음"},{w:"양초",c:"ㅇㅊ",u:"생일 케이크",e:"불을 붙이면 천천히 타며 빛을 내는 것"},{w:"나침반",c:"ㄴㅊㅂ",u:"등산, 항해",e:"항상 북쪽을 가리키는 방향 안내 도구"},{w:"드럼",c:"ㄷㄹ",u:"음악실, 무대",e:"채로 두드려 소리를 내는 타악기"},{w:"바이올린",c:"ㅂㅇㅂㄹ",u:"오케스트라",e:"활로 줄을 그어 연주하는 현악기"},{w:"마이크",c:"ㅁㅇㅋ",u:"무대, 녹음실",e:"목소리를 증폭하는 데 쓰는 기기"},{w:"카메라",c:"ㅋㅁㄹ",u:"여행, 촬영 현장",e:"사진이나 영상을 찍는 기기"},{w:"텔레비전",c:"ㅌㄹㅂㅈ",u:"거실",e:"방송을 보는 화면이 달린 가전제품"},{w:"세탁기",c:"ㅅㅌㄱ",u:"세탁실",e:"옷을 빨래하는 가전제품"},{w:"에어컨",c:"ㅇㅇㅋ",u:"실내, 여름",e:"실내 온도를 낮춰주는 냉방 기기"},{w:"노트북",c:"ㄴㅌㅂ",u:"카페, 사무실",e:"접어서 들고 다닐 수 있는 컴퓨터"},{w:"스마트폰",c:"ㅅㅁㅌㅍ",u:"주머니, 어디서나",e:"통화와 인터넷을 할 수 있는 휴대 기기"},{w:"폭포",c:"ㅍㅍ",u:"산, 관광지",e:"높은 곳에서 물이 쏟아져 내리는 것"},{w:"사막",c:"ㅅㅁ",u:"아프리카, 중동",e:"비가 거의 오지 않는 모래 지대"},{w:"빙하",c:"ㅂㅎ",u:"남극, 북극",e:"수천 년 동안 쌓인 거대한 얼음덩어리"},{w:"오로라",c:"ㅇㄹㄹ",u:"북극, 남극 근처",e:"하늘에 초록, 보라, 빨간 빛이 물결치는 현상"},{w:"다리",c:"ㄷㄹ",u:"강, 계곡",e:"강이나 계곡 위를 건너가도록 만든 구조물"},{w:"분수",c:"ㅂㅅ",u:"광장, 공원",e:"물을 위로 쏘아 올려 아름답게 보이는 장치"},{w:"도서관",c:"ㄷㅅㄱ",u:"학교, 도심",e:"책을 모아 빌려주는 공간"},{w:"의사",c:"ㅇㅅ",u:"병원",e:"환자를 진찰하고 치료하는 전문직"},{w:"소방관",c:"ㅅㅂㄱ",u:"소방서, 화재 현장",e:"불을 끄고 사람을 구하는 직업"},{w:"요리사",c:"ㅇㄹㅅ",u:"식당 주방",e:"음식을 만드는 직업"},{w:"우주인",c:"ㅇㅈㅇ",u:"우주, 우주선 안",e:"우주로 나가 임무를 수행하는 사람"},{w:"마술사",c:"ㅁㅅㅅ",u:"무대, 행사",e:"신기한 마술을 보여주는 사람"},{w:"배구",c:"ㅂㄱ",u:"체육관, 모래사장",e:"네트 너머로 공을 쳐 넘기는 스포츠"},{w:"농구",c:"ㄴㄱ",u:"체육관, 야외 코트",e:"골대에 공을 넣는 스포츠"},{w:"스키",c:"ㅅㅋ",u:"스키장",e:"눈 위를 두 판을 발에 달고 내려오는 스포츠"},{w:"서핑",c:"ㅅㅍ",u:"바다, 해변",e:"파도를 타며 판 위에서 균형을 잡는 스포츠"},{w:"낚시",c:"ㄴㅅ",u:"강, 바다",e:"낚싯대로 물고기를 잡는 취미"},{w:"캠핑",c:"ㅋㅁㅍ",u:"숲, 계곡, 캠핑장",e:"텐트를 치고 야외에서 자는 여가 활동"},{w:"태권도",c:"ㅌㄱㄷ",u:"도장, 체육관",e:"발차기와 주먹을 사용하는 한국 전통 무술"},{w:"텐트",c:"ㅌㄴㅌ",u:"캠핑장",e:"천으로 만든 임시 집"},{w:"화분",c:"ㅎㅂ",u:"창가, 베란다",e:"식물을 심어 기르는 그릇"},{w:"주사위",c:"ㅈㅅㅇ",u:"보드게임, 카지노",e:"1~6 점이 찍힌 정육면체 도구"},{w:"인형",c:"ㅇㅎ",u:"방, 장난감 가게",e:"천이나 플라스틱으로 만든 사람·동물 모양 장난감"},{w:"줄넘기",c:"ㅈㄴㄱ",u:"운동장, 체육 시간",e:"줄을 돌려 뛰어 넘는 운동 도구"},{w:"연",c:"ㅇ",u:"바람 부는 들판",e:"바람의 힘으로 하늘 높이 날리는 것"},{w:"팽이",c:"ㅍㅇ",u:"운동장, 명절",e:"끝이 뾰족하고 돌려서 회전시키는 장난감"},{w:"부채",c:"ㅂㅊ",u:"여름, 행사",e:"손으로 흔들어 바람을 일으키는 것"},{w:"풍차",c:"ㅍㅊ",u:"들판, 네덜란드 풍경",e:"바람을 이용해 날개가 돌아가는 구조물"},{w:"지구본",c:"ㅈㄱㅂ",u:"교실, 서재",e:"지구를 축소해 공 모양으로 만든 모형"},{w:"망치",c:"ㅁㅊ",u:"공사장, 목공실",e:"못을 박거나 물체를 부수는 도구"},{w:"신호등",c:"ㅅㅎㄷ",u:"교차로, 도로",e:"빨강·노랑·초록 빛으로 교통을 제어하는 장치"},{w:"소화기",c:"ㅅㅎㄱ",u:"건물 복도",e:"초기 화재를 진압하는 빨간 원통형 기기"},{w:"온도계",c:"ㅇㄷㄱ",u:"병원, 기상대",e:"온도를 측정하는 도구"},{w:"모래시계",c:"ㅁㄹㅅㄱ",u:"탁자 위, 게임",e:"모래가 위에서 아래로 흘러 시간을 재는 도구"},{w:"공룡",c:"ㄱㄹ",u:"박물관, 영화",e:"수천만 년 전 지구를 지배했던 거대 파충류"},{w:"피라미드",c:"ㅍㄹㅁㄷ",u:"이집트 사막",e:"삼각형 모양의 고대 이집트 무덤"},{w:"인어",c:"ㅇㅇ",u:"바다, 전설",e:"상반신은 사람, 하반신은 물고기인 전설의 생물"},{w:"유니콘",c:"ㅇㄴㅋ",u:"동화, 판타지",e:"이마에 뿔이 하나 달린 전설의 말"},{w:"무당벌레",c:"ㅁㄷㅂㄹ",u:"풀밭, 꽃 위",e:"빨간 날개에 검은 점이 있는 작은 곤충"},{w:"사슴",c:"ㅅㅅ",u:"숲, 동물원",e:"우아한 뿔을 가진 초식 동물"},{w:"다이아몬드",c:"ㄷㅇㅁㄷ",u:"반지, 왕관",e:"가장 단단한 보석"},{w:"소시지",c:"ㅅㅅㅈ",u:"마트, 아침 식사",e:"고기를 갈아 원통형으로 만든 가공식품"},{w:"선글라스",c:"ㅅㄱㄹㅅ",u:"여름, 야외",e:"햇빛을 가리기 위해 쓰는 어두운 렌즈 안경"},{w:"스케이트",c:"ㅅㅋㅇㅌ",u:"아이스링크",e:"얼음 위에서 날이 달린 신발로 미끄러지는 스포츠"}];
+const W=[{w:"사과",c:"ㅅㄱ",u:"과일가게, 냉장고",e:"빨간색이며 의사를 멀리하게 한다고 알려진 과일"},{w:"강아지",c:"ㄱㅇㅈ",u:"집, 공원, 애견숍",e:"꼬리를 흔들며 반기는 사람의 친구"},{w:"자동차",c:"ㅈㄷㅊ",u:"도로, 주차장",e:"네 바퀴로 달리는 교통수단"},{w:"냉장고",c:"ㄴㅈㄱ",u:"주방",e:"음식을 차갑게 유지하는 하얀 박스"},{w:"피자",c:"ㅍㅈ",u:"이탈리아 식당, 배달",e:"둥글고 토핑이 올라간 이탈리아 음식"},{w:"무지개",c:"ㅁㅈㄱ",u:"비 온 후 하늘",e:"일곱 가지 색이 반원 모양으로 펼쳐지는 현상"},{w:"눈사람",c:"ㄴㅅㄹ",u:"겨울, 눈밭",e:"눈을 뭉쳐 만든 인형, 당근이 코"},{w:"고래",c:"ㄱㄹ",u:"바다, 수족관",e:"지구상에서 가장 큰 포유류"},{w:"피아노",c:"ㅍㅇㄴ",u:"음악실, 콘서트홀",e:"흰 건반과 검은 건반이 있는 악기"},{w:"비행기",c:"ㅂㅎㄱ",u:"공항, 하늘",e:"하늘을 날아 먼 곳으로 가는 교통수단"},{w:"축구공",c:"ㅊㄱㄱ",u:"운동장, 경기장",e:"오각형 무늬가 그려진 둥근 공"},{w:"로켓",c:"ㄹㅋ",u:"우주 발사대",e:"불을 뿜으며 우주로 날아가는 것"},{w:"나비",c:"ㄴㅂ",u:"꽃밭, 공원",e:"알록달록한 날개로 꽃 사이를 날아다니는 곤충"},{w:"달팽이",c:"ㄷㅍㅇ",u:"정원, 비 온 후 길",e:"느리게 기어다니며 등에 집을 지고 다니는 생물"},{w:"펭귄",c:"ㅍㄱ",u:"남극, 동물원",e:"날 수 없지만 수영을 잘하는 새"},{w:"해파리",c:"ㅎㅍㄹ",u:"바다, 수족관",e:"투명한 몸으로 둥둥 떠다니며 촉수가 있는 생물"},{w:"트럭",c:"ㅌㄹ",u:"고속도로, 물류창고",e:"짐을 많이 실을 수 있는 큰 차량"},{w:"아이스크림",c:"ㅇㅇㅅㅋㄹ",u:"아이스크림 가게, 편의점",e:"달콤하고 차가운 여름 간식"},{w:"낙타",c:"ㄴㅌ",u:"사막, 동물원",e:"등에 혹이 있고 사막에서 사는 동물"},{w:"태양",c:"ㅌㅇ",u:"하늘, 우주",e:"지구에 빛과 열을 주는 별"},{w:"구름",c:"ㄱㄹ",u:"하늘",e:"하늘에 떠다니는 흰 솜뭉치 같은 것"},{w:"풍선",c:"ㅍㅅ",u:"파티, 놀이공원",e:"바람을 불어넣으면 둥글게 부풀어 오르는 것"},{w:"왕관",c:"ㅇㄱ",u:"왕의 머리 위",e:"왕이나 여왕이 머리에 쓰는 장식품"},{w:"지하철",c:"ㅈㅎㅊ",u:"도시 교통",e:"땅 아래로 다니는 도시 교통수단"},{w:"해바라기",c:"ㅎㅂㄹㄱ",u:"들판, 화원",e:"해를 향해 고개를 돌리는 노란 꽃"},{w:"장미",c:"ㅈㅁ",u:"꽃집, 정원, 선물",e:"빨간색이 유명하고 가시가 있는 꽃"},{w:"기타",c:"ㄱㅌ",u:"음악실, 무대",e:"줄을 튕겨 연주하는 악기"},{w:"잠수함",c:"ㅈㅅㅎ",u:"바다 속",e:"물속을 다니는 배"},{w:"소방차",c:"ㅅㅂㅊ",u:"화재 현장",e:"불을 끄러 달려오는 빨간 차"},{w:"우산",c:"ㅇㅅ",u:"비 오는 날",e:"비를 막아주는 펼쳐지는 도구"},{w:"열기구",c:"ㅇㄱㄱ",u:"하늘, 관광지",e:"큰 풍선에 매달려 하늘을 나는 것"},{w:"문어",c:"ㅁㅇ",u:"바다, 수족관",e:"다리가 여덟 개인 해양 생물"},{w:"선인장",c:"ㅅㅇㅈ",u:"사막, 화분",e:"가시가 있고 물 없이도 사는 식물"},{w:"북극곰",c:"ㅂㄱㄱ",u:"북극, 동물원",e:"흰 털을 가진 세상에서 가장 큰 곰"},{w:"드래곤",c:"ㄷㄹㄱ",u:"판타지 세계",e:"날개가 있고 불을 뿜는 전설의 동물"},{w:"도넛",c:"ㄷㄴ",u:"빵집, 카페",e:"가운데 구멍이 뚫린 동그란 빵"},{w:"수박",c:"ㅅㅂ",u:"여름, 과일가게",e:"초록 줄무늬 껍질에 빨간 속살인 여름 과일"},{w:"잠자리",c:"ㅈㅈㄹ",u:"연못가, 여름 들판",e:"네 날개로 날아다니는 여름 곤충"},{w:"오리",c:"ㅇㄹ",u:"연못, 농장",e:"꽥꽥 울고 물 위에 뜨는 새"},{w:"악어",c:"ㅇㄱ",u:"강, 동물원",e:"큰 입과 날카로운 이빨을 가진 파충류"},{w:"등대",c:"ㄷㄷ",u:"해안가, 항구",e:"배가 암초를 피하도록 빛을 비추는 탑"},{w:"거북이",c:"ㄱㅂㄱ",u:"바다, 동물원",e:"딱딱한 등껍데기를 진 느린 동물"},{w:"열쇠",c:"ㅇㅅ",u:"문, 자물쇠",e:"자물쇠를 여는 데 쓰는 금속 도구"},{w:"화산",c:"ㅎㅅ",u:"지질 활동 지역",e:"마그마가 분출하는 산"},{w:"호랑이",c:"ㅎㄹㅇ",u:"밀림, 동물원",e:"줄무늬가 있는 고양이과 최대 포식자"},{w:"코끼리",c:"ㅋㄲㄹ",u:"아프리카, 동물원",e:"긴 코와 큰 귀를 가진 육지 최대 동물"},{w:"기린",c:"ㄱㄹ",u:"아프리카 초원, 동물원",e:"목이 엄청 길어 나무 꼭대기 정상을 먹는 동물"}];
 
 const CLRS=[{n:'검정',h:'#111111'},{n:'흰색',h:'#FFFFFF'},{n:'빨강',h:'#EF4444'},{n:'주황',h:'#F97316'},{n:'노랑',h:'#FACC15'},{n:'연두',h:'#84CC16'},{n:'초록',h:'#22C55E'},{n:'청록',h:'#14B8A6'},{n:'하늘',h:'#38BDF8'},{n:'파랑',h:'#3B82F6'},{n:'남색',h:'#4338CA'},{n:'보라',h:'#8B5CF6'},{n:'분홍',h:'#EC4899'},{n:'갈색',h:'#92400E'},{n:'회색',h:'#9CA3AF'},{n:'금색',h:'#F59E0B'}];
 const SZ={S:3,M:8,L:18};
@@ -682,7 +659,7 @@ function openOv(id){document.getElementById(id).classList.add('show')}
 function closeOv(id){document.getElementById(id).classList.remove('show')}
 
 /* ══════════════════════════════════════════════════
-   CATCHMIND GAME
+   CATCHMIND GAME (변경 없음)
 ══════════════════════════════════════════════════ */
 let selMode=1,wordObj=null,dialItems=[],rerollUsed=0,settled=false;
 let drawTimerIv=null,drawSec=0,snaps=[],tool='pencil',clr='#111111',sz='S';
@@ -736,23 +713,21 @@ function renderCMFull(){const r=getRecs();document.getElementById('recFull').inn
 function openCMRecs(){showScreen('s-records');renderCMFull()}
 
 /* ══════════════════════════════════════════════════
-   GARTIC PHONE GAME
+   GARTIC PHONE & OPENAI 연동 (Whisper + GPT-4o-mini)
 ══════════════════════════════════════════════════ */
-
-// Game state
 const G = {
-  gameMode: 'draw',   // 'draw' | 'words'
+  gameMode: 'draw', 
   photoMode: false,
   photoSrc: 'internet',
   numPlayers: 4,
   players: [],
-  chains: [],  // [{photo:null|dataUrl, steps:[{type,content,playerIdx,playerName}]}]
-  chainIdx: 0, // current chain being played
-  stepIdx: 0,  // current step within the chain
-  preloadedPhotos: [], // dataUrls for each chain's photo
+  chains: [],
+  chainIdx: 0,
+  stepIdx: 0, 
+  preloadedPhotos: [],
 };
 
-// Current task helpers
+// 헬퍼 함수
 function gI(){return{playerIdx:(G.chainIdx+G.stepIdx)%G.numPlayers,chainIdx:G.chainIdx,stepIdx:G.stepIdx}}
 function gPlayerName(idx){return G.players[idx!==undefined?idx:gI().playerIdx]||`플레이어 ${(idx!==undefined?idx:gI().playerIdx)+1}`}
 function gChain(){return G.chains[gI().chainIdx]}
@@ -766,9 +741,24 @@ function gTaskDesc(){
   return'그림을 보고 무엇인지 설명해주세요';
 }
 function gTaskIcon(){const t=gStepType(),si=gI().stepIdx;if(si===0&&G.photoMode)return'📷';if(t==='draw')return'🎨';return'✏️'}
-function gRoundLabel(){return`체인 ${G.chainIdx+1}/${G.numPlayers} · 단계 ${G.stepIdx+1}/${G.numPlayers}`}
+function gRoundLabel(){return`라운드 ${G.chainIdx+1}/${G.numPlayers} · 단계 ${G.stepIdx+1}/${G.numPlayers}`}
 
-// Setup
+// API 키 관리
+function getApiKey() {
+  let key = localStorage.getItem('openai_api_key');
+  if (!key) {
+    key = prompt("고품질 음성 인식(Whisper) 및 AI 평가를 위해 OpenAI API 키를 입력해주세요 (sk-...):\n*키는 안전하게 브라우저에만 저장됩니다.");
+    if (key && key.trim().startsWith('sk-')) {
+      localStorage.setItem('openai_api_key', key.trim());
+    } else if (key) {
+      alert("올바른 형태의 API 키가 아닙니다.");
+      return null;
+    }
+  }
+  return key;
+}
+
+// 설정 및 초기화
 function selectGMode(m){G.gameMode=m;document.getElementById('setupModeTitle').textContent=m==='draw'?'그리기&설명 모드':'순차 설명 모드';document.getElementById('photoSection').style.display=m==='draw'?'block':'none';if(m==='words'){document.getElementById('photoToggle').checked=false;G.photoMode=false;document.getElementById('photoSrcOpts').style.display='none'}showScreen('s-g-setup');buildNameList()}
 function adjPlayers(d){G.numPlayers=Math.max(4,Math.min(16,G.numPlayers+d));document.getElementById('pcNum').textContent=G.numPlayers;buildNameList()}
 function buildNameList(){const nl=document.getElementById('nameList');nl.innerHTML='';for(let i=0;i<G.numPlayers;i++){const row=document.createElement('div');row.className='name-row';row.innerHTML=`<div class="name-num">${i+1}</div><input class="name-input" id="name${i}" placeholder="플레이어 ${i+1}" value="${G.players[i]||''}">`;nl.appendChild(row)}}
@@ -778,13 +768,11 @@ let uploadedPhotoData=null;
 function handlePhotoUpload(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{uploadedPhotoData=ev.target.result};reader.readAsDataURL(file)}
 
 async function startGartic(){
-  // Collect names
   G.players=[];
   for(let i=0;i<G.numPlayers;i++){const val=document.getElementById('name'+i).value.trim();G.players.push(val||`플레이어 ${i+1}`)}
-  // Init chains
   G.chains=Array.from({length:G.numPlayers},()=>({photo:null,steps:[]}));
   G.chainIdx=0; G.stepIdx=0;
-  // Preload photos if photo mode
+  
   if(G.photoMode&&G.gameMode==='draw'){
     document.getElementById('btnGo')&&(document.getElementById('btnGo').disabled=true);
     G.preloadedPhotos=[];
@@ -801,9 +789,11 @@ async function startGartic(){
 
 async function imgToDataUrl(src){return new Promise((res,rej)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{try{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);res(c.toDataURL('image/jpeg',.8))}catch(e){rej(e)}};img.onerror=rej;img.src=src+'?t='+Date.now()})}
 
-// Pass screen
+// 패스 스크린
 function showPassScreen(){
-  const {playerIdx,chainIdx,stepIdx}=gI();
+  if(mediaRecorder && isRecording) forceStopRecording(); // 넘어갈 때 녹음 강제 종료
+  
+  const {playerIdx}=gI();
   document.getElementById('passIcon').textContent=gTaskIcon();
   document.getElementById('passName').textContent=gPlayerName(playerIdx);
   document.getElementById('passTask').textContent=gTaskDesc();
@@ -816,14 +806,103 @@ function readyForTask(){
   else showGWrite();
 }
 
-// Write screen
+// 🎙️ 고품질 마이크 입력 (OpenAI Whisper API 연동)
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+
+async function toggleMic() {
+  const btn = document.getElementById('btnMic');
+  
+  if (isRecording) {
+    mediaRecorder.stop();
+    return;
+  }
+
+  const apiKey = getApiKey();
+  if (!apiKey) return;
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    
+    // 크로스 브라우징을 위한 MIME 타입 확인 (iOS 사파리는 mp4/m4a 선호)
+    const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
+    mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+    audioChunks = [];
+
+    mediaRecorder.ondataavailable = e => {
+      if (e.data.size > 0) audioChunks.push(e.data);
+    };
+
+    mediaRecorder.onstart = () => {
+      isRecording = true;
+      btn.classList.add('recording');
+      btn.innerHTML = '🔴 듣고 있어요... (누르면 완료)';
+    };
+
+    mediaRecorder.onstop = async () => {
+      isRecording = false;
+      btn.classList.remove('recording');
+      btn.innerHTML = '⏳ 텍스트 변환 중...';
+      btn.disabled = true;
+
+      stream.getTracks().forEach(track => track.stop()); // 마이크 사용 해제
+
+      const ext = mimeType.includes('webm') ? 'webm' : 'm4a';
+      const audioBlob = new Blob(audioChunks, { type: mimeType });
+      const formData = new FormData();
+      formData.append('file', audioBlob, `recording.${ext}`);
+      formData.append('model', 'whisper-1');
+      formData.append('language', 'ko');
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${apiKey}` },
+          body: formData
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem('openai_api_key');
+            throw new Error("API 키가 유효하지 않거나 만료되었습니다.");
+          }
+          const err = await response.json();
+          throw new Error(err.error?.message || "변환 실패");
+        }
+
+        const data = await response.json();
+        const inp = document.getElementById('gwInput');
+        // 기존 텍스트 뒤에 자연스럽게 띄어쓰기 후 추가
+        inp.value = (inp.value + " " + data.text).trim();
+        gwCheck();
+      } catch (err) {
+        alert("음성 인식 오류: " + err.message);
+      } finally {
+        btn.innerHTML = '🎙️ 음성 입력';
+        btn.disabled = false;
+      }
+    };
+
+    mediaRecorder.start();
+  } catch (err) {
+    alert("마이크 접근이 거부되었거나 지원하지 않는 브라우저입니다.");
+  }
+}
+
+function forceStopRecording() {
+  if (mediaRecorder && isRecording) {
+    mediaRecorder.stop();
+  }
+}
+
+// 글쓰기 화면
 function showGWrite(){
   const {stepIdx,chainIdx}=gI();
   const prev=gPrevStep();
   const prevEl=document.getElementById('gwPrev');
   const inp=document.getElementById('gwInput');
   inp.value='';gwCheck();
-  // Title
   if(G.gameMode==='words'){
     document.getElementById('gwTitle').textContent=stepIdx===0?'제시어 입력':'설명 전달';
     document.getElementById('gwInputLbl').textContent=stepIdx===0?'제시어를 입력하세요':'앞 사람의 설명을 이어서 적으세요';
@@ -831,7 +910,6 @@ function showGWrite(){
     document.getElementById('gwTitle').textContent=stepIdx===0?'제시어 입력':'그림 설명';
     document.getElementById('gwInputLbl').textContent=stepIdx===0?'제시어를 입력하세요':'그림을 보고 무엇인지 설명하세요';
   }
-  // Show previous content
   prevEl.innerHTML='';
   prevEl.style.display='none';
   const chain=G.chains[chainIdx];
@@ -847,10 +925,12 @@ function showGWrite(){
     prevEl.style.display='block';
   }
   showScreen('s-g-write');
-  setTimeout(()=>inp.focus(),300);
 }
+
 function gwCheck(){const v=document.getElementById('gwInput').value.trim();document.getElementById('gwChar').textContent=`${v.length}/100`;document.getElementById('gwSubmit').disabled=v.length<1}
+
 function submitWrite(){
+  forceStopRecording(); // 강제 중지 방어코드
   const val=document.getElementById('gwInput').value.trim();
   if(!val)return;
   const {playerIdx,chainIdx}=gI();
@@ -858,11 +938,10 @@ function submitWrite(){
   advanceGartic();
 }
 
-// Gartic draw screen
+// 그리기 화면
 let gCvs=null,gCtx=null,gDrawing=false,gLastP=null,gSnaps=[],gTool='pencil',gClr='#111111',gSz='S';
 function showGDraw(){
   const prev=gPrevStep();
-  // Show prev word
   const pw=document.getElementById('gPrevWord');
   if(prev&&prev.type==='word'){pw.innerHTML=`<small>이 단어/설명을 그려보세요</small>${escHtml(prev.content)}`}
   else{pw.innerHTML='<small>그림을 그려주세요</small>---'}
@@ -870,7 +949,6 @@ function showGDraw(){
   document.getElementById('gPen').classList.add('on');document.getElementById('gErs').classList.remove('on');
   ['S','M','L'].forEach(s=>document.getElementById('gSz'+s).classList.toggle('on',s==='S'));
   gSnaps=[];
-  // Build palette
   const pal=document.getElementById('gPalette');pal.innerHTML='';
   CLRS.forEach(c=>{const el=document.createElement('div');el.className='clr'+(c.h===gClr?' on':'');el.style.background=c.h;if(c.h==='#FFFFFF')el.style.border='3px solid #ccc';el.title=c.n;el.addEventListener('pointerdown',e=>{e.stopPropagation();gClr=c.h;gTool='pencil';document.getElementById('gPen').classList.add('on');document.getElementById('gErs').classList.remove('on');pal.querySelectorAll('.clr').forEach(x=>x.classList.remove('on'));el.classList.add('on')});pal.appendChild(el)});
   showScreen('s-g-draw');
@@ -896,112 +974,170 @@ function submitGDraw(){
   advanceGartic();
 }
 
-// Game flow
+// 턴 진행 및 결과 로직
 function advanceGartic(){
   G.stepIdx++;
-  if(G.stepIdx>=G.numPlayers){G.stepIdx=0;G.chainIdx++}
-  if(G.chainIdx>=G.numPlayers){showGResults();return}
+  if(G.stepIdx >= G.numPlayers){
+    showChainResult();
+    return;
+  }
   showPassScreen();
 }
-function confirmEndGame(){openOv('ov-end-confirm')}
-function forceEndGame(){closeOv('ov-end-confirm');gDetach();showGResults()}
 
-// Results
-function showGResults(){
-  document.getElementById('gResSub').textContent=`${G.numPlayers}명 · ${G.gameMode==='draw'?'그리기&설명':'순차 설명'} 모드`;
-  renderGResults();
+function nextChain(){
+  G.chainIdx++;
+  G.stepIdx = 0;
+  if(G.chainIdx >= G.numPlayers){
+      goToDial();
+      showScreen('s-g-setup');
+      return;
+  }
+  showPassScreen();
+}
+
+function confirmEndGame(){openOv('ov-end-confirm')}
+
+// 현재 라운드 결과 화면
+function showChainResult(){
+  const isLast = G.chainIdx >= G.numPlayers - 1;
+  document.getElementById('gResSub').textContent = `라운드 ${G.chainIdx + 1} / ${G.numPlayers} 완료`;
+
+  const container = document.getElementById('gResultChains');
+  container.innerHTML = '';
+  
+  const ci = G.chainIdx;
+  const chain = G.chains[ci];
+  const starter = G.players[ci] || `플레이어 ${ci+1}`;
+
+  const block = document.createElement('div');
+  block.className = 'chain-block';
+  block.innerHTML = `<div class="chain-header"><div class="chain-line"></div><div class="chain-badge">체인 ${ci+1} · ${starter}님 시작</div><div class="chain-line"></div></div>`;
+
+  if(chain.photo){
+    const b = document.createElement('div'); b.className = 'chat-bubble';
+    b.innerHTML = `<div class="bubble-meta"><span class="type-icon ti-photo">PHOTO</span> 원본 사진</div><div class="bubble-body"><div class="bubble-photo-lbl">📷 시작 사진</div><img src="${chain.photo}" class="bubble-photo"></div>`;
+    block.appendChild(b);
+  }
+
+  chain.steps.forEach((step, si) => {
+    const isFirst = si === 0 && !chain.photo, isLastStep = si === chain.steps.length - 1;
+    const b = document.createElement('div'); b.className = 'chat-bubble';
+    const icon = step.type === 'draw' ? '🎨' : '✏️';
+    const typeLabel = step.type === 'draw' ? 'DRAW' : 'WORD';
+    const typeClass = step.type === 'draw' ? 'ti-draw' : 'ti-word';
+    let bodyHTML = '';
+    
+    if(step.type === 'draw') {
+        bodyHTML = `<img src="${step.content}" class="bubble-img">`;
+    } else {
+        bodyHTML = `<div class="bubble-txt">${escHtml(step.content)}</div>`;
+    }
+    
+    b.innerHTML = `<div class="bubble-meta"><span class="type-icon ${typeClass}">${typeLabel}</span> ${icon} ${step.playerName}</div><div class="bubble-body${isFirst ? ' first' : ''}${isLastStep ? ' last' : ''}">${bodyHTML}</div>`;
+    block.appendChild(b);
+  });
+  container.appendChild(block);
+
+  const btnNext = document.getElementById('btnNextChain');
+  btnNext.textContent = isLast ? "새 게임하기 (더하기)" : "다음 라운드 진행 (더하기)";
+  
   showScreen('s-g-results');
 }
-function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function renderGResults(){
-  const container=document.getElementById('gResultChains');container.innerHTML='';
-  G.chains.forEach((chain,ci)=>{
-    if(chain.steps.length===0)return;
-    const starter=G.players[ci]||`플레이어 ${ci+1}`;
-    const block=document.createElement('div');block.className='chain-block';
-    block.innerHTML=`<div class="chain-header"><div class="chain-line"></div><div class="chain-badge">체인 ${ci+1} · ${starter}님 시작</div><div class="chain-line"></div></div>`;
-    // Photo
-    if(chain.photo){
-      const b=document.createElement('div');b.className='chat-bubble';
-      b.innerHTML=`<div class="bubble-meta"><span class="type-icon ti-photo">PHOTO</span> 원본 사진</div><div class="bubble-body"><div class="bubble-photo-lbl">📷 시작 사진</div><img src="${chain.photo}" class="bubble-photo"></div>`;block.appendChild(b)}
-    // Steps
-    chain.steps.forEach((step,si)=>{
-      const isFirst=si===0&&!chain.photo,isLast=si===chain.steps.length-1;
-      const b=document.createElement('div');b.className='chat-bubble';
-      const icon=step.type==='draw'?'🎨':'✏️';
-      const typeLabel=step.type==='draw'?'DRAW':'WORD';
-      const typeClass=step.type==='draw'?'ti-draw':'ti-word';
-      let bodyHTML='';
-      if(step.type==='draw'){bodyHTML=`<img src="${step.content}" class="bubble-img">`}
-      else{bodyHTML=`<div class="bubble-txt">${escHtml(step.content)}</div>`}
-      b.innerHTML=`<div class="bubble-meta"><span class="type-icon ${typeClass}">${typeLabel}</span> ${icon} ${step.playerName}</div><div class="bubble-body${isFirst?' first':''}${isLast?' last':''}">${bodyHTML}</div>`;
-      block.appendChild(b);
-    });
-    container.appendChild(block);
-  });
-}
 
-// AI Evaluation
-function openAiEval(){
-  document.getElementById('aiEvalContent').innerHTML=renderAiChainSelect();
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// 🤖 찐 AI 평가 (GPT-4o-mini 연동)
+async function runAiEval(){
+  const apiKey = getApiKey();
+  if (!apiKey) return;
+  
+  const ci = G.chainIdx;
+  const chain = G.chains[ci];
+  const first = chain.steps[0];
+  const last = chain.steps[chain.steps.length-1];
+
+  document.getElementById('aiEvalContent').innerHTML = `
+    <div class="ai-loading">
+      <div class="spinner"></div>
+      <div>GPT-4o-mini가 문맥과 이미지를 정밀 분석 중입니다...</div>
+    </div>`;
   openOv('ov-ai-eval');
-}
-function renderAiChainSelect(){
-  const chains=G.chains.filter(c=>c.steps.length>0);
-  if(!chains.length)return'<div style="color:var(--mut);text-align:center;padding:20px">기록이 없습니다</div>';
-  let html='<div style="font-size:13px;color:var(--mut);margin-bottom:12px">평가할 체인을 선택하세요</div><div class="ai-chain-select">';
-  G.chains.forEach((chain,ci)=>{
-    if(!chain.steps.length)return;
-    const first=chain.steps[0];const last=chain.steps[chain.steps.length-1];
-    const starter=G.players[ci]||`플레이어 ${ci+1}`;
-    html+=`<div class="ai-chain-item" onclick="runAiEval(${ci})"><div class="ai-chain-num">#${ci+1}</div><div class="ai-chain-info"><div class="ai-chain-word">${starter}님 체인 · ${chain.steps.length}단계</div><div class="ai-chain-meta">시작: ${first.type==='word'?escHtml(first.content):'(사진)'}  →  끝: ${last.type==='draw'?'그림':escHtml(last.content)}</div></div><div style="color:var(--mut);font-size:18px">→</div></div>`;
-  });
-  html+='</div>';
-  return html;
-}
-async function runAiEval(chainIdx){
-  const chain=G.chains[chainIdx];
-  const first=chain.steps[0];const last=chain.steps[chain.steps.length-1];
-  // Show loading
-  document.getElementById('aiEvalContent').innerHTML=`<div class="ai-loading"><div class="spinner"></div><div>AI가 분석 중입니다…</div></div>`;
+
   try {
-    // Compare content
-    const firstIsPhoto=chain.photo&&!first;
-    const firstContent=chain.photo||first.content;
-    const isFirstImg=!!chain.photo||(first&&first.type==='draw');
-    const isLastImg=last.type==='draw';
-    let msgContent;
-    if(isFirstImg&&isLastImg){
-      // Both images
-      const firstData=chain.photo?chain.photo.split(',')[1]:first.content.split(',')[1];
-      const lastData=last.content.split(',')[1];
-      msgContent=[{type:'text',text:'갈틱폰 게임 평가: 시작 이미지(왼쪽)와 최종 그림(오른쪽)을 비교해서 얼마나 비슷한지 0-100점으로 평가해주세요. 반드시 JSON만: {"score":숫자,"reason":"한국어 설명 2~3문장"}'},{type:'image',source:{type:'base64',media_type:'image/jpeg',data:firstData}},{type:'text',text:'위가 시작 이미지, 아래가 최종 그림입니다:'},{type:'image',source:{type:'base64',media_type:'image/png',data:lastData}}];
-    } else if(isLastImg){
-      // First is text, last is drawing
-      const lastData=last.content.split(',')[1];
-      msgContent=[{type:'text',text:`갈틱폰 게임 평가: 원래 단어/설명은 "${escHtml(firstContent)}"이었습니다. 아래 최종 그림이 원래 단어와 얼마나 비슷한지 0-100점으로 평가해주세요. 반드시 JSON만: {"score":숫자,"reason":"한국어 설명 2~3문장"}`},{type:'image',source:{type:'base64',media_type:'image/png',data:lastData}}];
+    const firstContent = chain.photo || first.content;
+    const isFirstImg = !!chain.photo || (first && first.type === 'draw');
+    const isLastImg = last.type === 'draw';
+
+    let messages = [
+      {
+        role: "system", 
+        content: "너는 갈틱폰 게임의 결과를 유머러스하게 평가하는 심사위원이야. 첫 제시어(혹은 사진/그림)가 마지막 결과물에 얼마나 잘 남아있는지 0~100점으로 평가하고, 이유를 한국어 2~3문장으로 설명해. 반드시 JSON 형식({\"score\": 숫자, \"reason\": \"문장\"})으로 반환해."
+      }
+    ];
+
+    let contentArr = [];
+    
+    // GPT-4o-mini Vision API 형식에 맞게 데이터 세팅
+    if (isFirstImg && isLastImg) {
+      contentArr.push({ type: "text", text: "위쪽이 처음 제시된 이미지, 아래쪽이 마지막으로 그린 그림이야. 얼마나 비슷한지 평가해줘." });
+      contentArr.push({ type: "image_url", image_url: { url: chain.photo ? chain.photo : first.content } });
+      contentArr.push({ type: "image_url", image_url: { url: last.content } });
+    } else if (isLastImg) {
+      contentArr.push({ type: "text", text: `처음 제시어는 "${firstContent}"였어. 아래 그림이 이 단어를 얼마나 잘 표현하고 있는지 평가해줘.` });
+      contentArr.push({ type: "image_url", image_url: { url: last.content } });
+    } else if (isFirstImg) {
+      contentArr.push({ type: "text", text: `처음 제시된 이미지는 아래와 같아. 마지막 사람은 이걸 보고 "${last.content}"라고 설명했어. 얼마나 정확하게 짚어냈는지 평가해줘.` });
+      contentArr.push({ type: "image_url", image_url: { url: chain.photo ? chain.photo : first.content } });
     } else {
-      // Text to text
-      msgContent=`갈틱폰 게임 평가: 원래 단어는 "${firstContent}"이었는데 최종적으로 "${last.content}"가 되었습니다. 얼마나 의미가 유지되었는지 0-100점으로 평가해주세요. 반드시 JSON만: {"score":숫자,"reason":"한국어 설명 2~3문장"}`;
+      contentArr.push({ type: "text", text: `처음 제시어는 "${firstContent}"였는데, 돌고 돌아서 마지막엔 "${last.content}"가 되었어. 의미가 얼마나 훼손되지 않고 잘 전달되었는지 평가해줘.` });
     }
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:msgContent}]})});
-    const data=await resp.json();
-    const raw=data.content.map(x=>x.text||'').join('').replace(/```json|```/g,'').trim();
-    const result=JSON.parse(raw);
-    showAiResult(chainIdx,result.score,result.reason,chain,first,last);
-  } catch(e){
-    document.getElementById('aiEvalContent').innerHTML=`<div style="color:var(--acc2);text-align:center;padding:20px;font-size:14px">평가 중 오류가 발생했습니다.<br><small>${e.message}</small></div><button class="btn-close" onclick="openAiEval()">← 다시 선택</button>`;
+
+    messages.push({ role: "user", content: contentArr });
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: messages,
+        response_format: { type: "json_object" },
+        max_tokens: 300
+      })
+    });
+
+    if (!response.ok) {
+        if (response.status === 401) localStorage.removeItem('openai_api_key');
+        throw new Error("API 호출 권한이 없거나 키가 잘못되었습니다.");
+    }
+
+    const data = await response.json();
+    const result = JSON.parse(data.choices[0].message.content);
+    showAiResult(ci, result.score, result.reason, chain, first, last);
+
+  } catch (err) {
+    document.getElementById('aiEvalContent').innerHTML = `
+      <div style="color:var(--acc2);text-align:center;padding:20px;font-size:14px">
+        평가 중 오류가 발생했습니다.<br><small>${err.message}</small>
+      </div>
+      <button class="btn-close" onclick="closeOv('ov-ai-eval')">닫기</button>`;
   }
 }
-function showAiResult(ci,score,reason,chain,first,last){
-  const scoreColor=score>=70?'#4ade80':score>=40?'var(--acc)':'var(--acc2)';
-  let firstHTML,lastHTML;
-  if(chain.photo){firstHTML=`<img src="${chain.photo}" class="compare-img">`}
-  else if(first.type==='draw'){firstHTML=`<img src="${first.content}" class="compare-img">`}
-  else{firstHTML=`<div class="compare-val">${escHtml(first.content)}</div>`}
-  if(last.type==='draw'){lastHTML=`<img src="${last.content}" class="compare-img">`}
-  else{lastHTML=`<div class="compare-val">${escHtml(last.content)}</div>`}
-  document.getElementById('aiEvalContent').innerHTML=`
+
+function showAiResult(ci, score, reason, chain, first, last){
+  const scoreColor = score >= 80 ? '#4ade80' : score >= 60 ? 'var(--acc)' : 'var(--acc2)';
+  let firstHTML, lastHTML;
+  
+  if(chain.photo){ firstHTML = `<img src="${chain.photo}" class="compare-img">` }
+  else if(first.type==='draw'){ firstHTML = `<img src="${first.content}" class="compare-img">` }
+  else{ firstHTML = `<div class="compare-val">${escHtml(first.content)}</div>` }
+  
+  if(last.type==='draw'){ lastHTML = `<img src="${last.content}" class="compare-img">` }
+  else{ lastHTML = `<div class="compare-val">${escHtml(last.content)}</div>` }
+  
+  document.getElementById('aiEvalContent').innerHTML = `
     <div class="compare-row">
       <div class="compare-item"><div class="compare-lbl">처음</div>${firstHTML}</div>
       <div class="compare-item"><div class="compare-lbl">최종</div>${lastHTML}</div>
@@ -1014,7 +1150,6 @@ function showAiResult(ci,score,reason,chain,first,last){
       <div style="font-size:12px;color:var(--mut);margin-bottom:12px">100점 만점 유사도</div>
     </div>
     <div class="ai-reason">${reason}</div>
-    <button class="btn-close" onclick="openAiEval()" style="margin-top:12px">← 다른 체인 평가</button>
   `;
 }
 </script>
