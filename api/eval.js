@@ -24,7 +24,8 @@ export default async function handler(req, res) {
         model: 'gpt-4o-mini',
         messages: req.body.messages,
         response_format: { type: "json_object" },
-        max_tokens: 500
+        // 👇 이 부분이 500에서 1500으로 변경되었습니다! (말 길게 하기)
+        max_tokens: 1500
       })
     });
 
