@@ -58,7 +58,6 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
 .btn-pu:disabled{opacity:.4;cursor:not-allowed}
 .btn-ghost{width:100%;height:50px;border-radius:var(--r);border:1.5px solid var(--bdr);background:transparent;color:var(--mut);font-size:14px;font-weight:700;cursor:pointer;transition:.12s}
 .btn-ghost:active{opacity:.6}
-.btn-danger{width:100%;height:48px;border-radius:var(--r);border:1.5px solid rgba(255,77,109,.3);background:transparent;color:var(--acc2);font-size:14px;font-weight:800;cursor:pointer}
 
 /* ═══ OVERLAYS ═══ */
 .ov{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);place-items:center}
@@ -66,7 +65,6 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
 .ov-bot{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center}
 .ov-bot.show{display:flex}
 .ov-card{background:var(--card);border-radius:26px;padding:30px 24px;width:calc(100% - 40px);max-width:380px;border:1.5px solid var(--bdr);animation:slideUp .25s cubic-bezier(.15,1.3,.4,1)}
-.ov-card-lt{background:#fff;border-radius:26px;padding:30px 24px;width:calc(100% - 40px);max-width:380px;animation:slideUp .25s cubic-bezier(.15,1.3,.4,1)}
 .ov-sheet{background:var(--bg2);border-radius:24px 24px 0 0;padding:22px 20px 36px;width:100%;max-width:480px;border:1.5px solid var(--bdr);border-bottom:none;animation:slideUpS .25s cubic-bezier(.15,1.3,.4,1);max-height:85vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes slideUpS{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -75,18 +73,12 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
 .ov-sub{font-size:13px;color:var(--mut);text-align:center;margin-bottom:22px}
 .btn-close{width:100%;height:46px;border-radius:var(--r);border:1.5px solid var(--bdr);background:transparent;color:var(--mut);font-size:14px;font-weight:700;cursor:pointer;margin-top:10px}
 
-/* ═══ CATCHMIND & GAME COMPONENTS ═══ */
+/* ═══ CATCHMIND COMPONENTS ═══ */
 #s-intro{background:radial-gradient(ellipse at 35% 25%,#1e1070 0%,#0D0D1A 65%);align-items:center;justify-content:center}
 .intro-inner{width:100%;max-width:400px;padding:44px 24px 60px;text-align:center}
 .logo-eye{display:inline-flex;align-items:center;gap:6px;background:rgba(255,225,53,.12);border:1px solid rgba(255,225,53,.3);color:var(--acc);font-size:11px;font-weight:800;letter-spacing:3px;padding:6px 16px;border-radius:40px;margin-bottom:22px}
 .logo-title{font-family:'Black Han Sans',sans-serif;font-size:54px;line-height:1;color:#fff;margin-bottom:8px;text-shadow:0 0 50px rgba(255,225,53,.35)}
 .logo-sub{font-size:14px;color:var(--mut);margin-bottom:46px}
-.mode-head{font-size:11px;font-weight:800;color:var(--mut);letter-spacing:2.5px;margin-bottom:12px;text-transform:uppercase}
-.mode-row{display:flex;gap:10px;margin-bottom:28px}
-.mode-chip{flex:1;height:54px;border-radius:14px;border:1.5px solid var(--bdr);background:var(--card);color:var(--mut);cursor:pointer;font-family:'Black Han Sans',sans-serif;font-size:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:.15s}
-.mode-chip span{font-size:10px;font-family:'Noto Sans KR',sans-serif;font-weight:700}
-.mode-chip.sel{border-color:var(--acc);background:rgba(255,225,53,.08);color:var(--acc)}
-.mode-chip:active{transform:scale(.95)}
 
 #s-dial{background:radial-gradient(ellipse at 60% 90%,#180050 0%,var(--bg) 65%)}
 .dial-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px}
@@ -97,11 +89,7 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
 .slot-hl{position:absolute;left:14px;right:14px;top:50%;transform:translateY(-50%);height:58px;border-radius:14px;background:rgba(255,225,53,.07);border:1.5px solid rgba(255,225,53,.22);z-index:1;pointer-events:none}
 .slot-track{position:absolute;width:100%;will-change:transform;display:flex;flex-direction:column}
 .slot-item{height:58px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--mut);flex-shrink:0}
-.slot-item.ctr{color:var(--acc);font-size:30px;font-family:'Black Han Sans',sans-serif}
-.reroll-info{font-size:13px;color:var(--mut);font-weight:700;margin-bottom:6px;letter-spacing:.5px;height:20px;text-align:center}
-.reroll-dots{display:flex;gap:6px;justify-content:center;margin-bottom:20px}
-.rdot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--mut);background:transparent;transition:.2s}
-.rdot.used{background:var(--mut)}
+.slot-item.ctr{color:var(--acc);font-size:30px;font-family:'Black Han Sans',sans-serif;text-shadow: 0 0 20px rgba(255,225,53,0.4)}
 .dial-btns{width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px}
 .btn-reroll{height:54px;border-radius:var(--r);border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-family:'Black Han Sans',sans-serif;font-size:16px;cursor:pointer;transition:.12s}
 .btn-reroll:active{transform:scale(.97)}
@@ -112,56 +100,14 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
 .draw-hdr{display:flex;align-items:center;padding:10px 14px;gap:10px;background:#111120;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
 .draw-word{flex:1;text-align:center;font-family:'Black Han Sans',sans-serif;font-size:24px;color:var(--acc);letter-spacing:1px}
 .draw-timer{font-family:'Black Han Sans',sans-serif;font-size:20px;color:#fff;background:var(--card);padding:6px 14px;border-radius:12px;border:1.5px solid var(--bdr);min-width:64px;text-align:center}
-canvas{touch-action:none;display:block;background:#fff}
-#drawCanvas{flex:1;width:100%;cursor:crosshair}
-.tools-wrap{background:#111120;border-top:1px solid rgba(255,255,255,.07);padding:10px 12px 14px;flex-shrink:0}
-.tools-top{display:flex;align-items:center;gap:7px;margin-bottom:10px}
-.ti{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:17px;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
-.ti.on{border-color:var(--acc);background:rgba(255,225,53,.1)}
-.sz-grp{display:flex;gap:5px}
-.sz-btn{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);cursor:pointer;display:grid;place-items:center}
-.sz-btn.on{border-color:rgba(255,255,255,.4)}
-.sz-dot{background:#fff;border-radius:50%}
-.ml{margin-left:auto}
-.palette{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
-.palette::-webkit-scrollbar{display:none}
-.clr{width:32px;height:32px;border-radius:50%;flex-shrink:0;cursor:pointer;border:3px solid transparent;outline:2px solid transparent;outline-offset:2px}
-.clr.on{outline:2px solid #fff;transform:scale(1.18)}
-.btn-sub{width:100%;height:50px;border-radius:var(--r);border:none;margin-top:10px;background:var(--acc);color:#0D0D1A;font-family:'Black Han Sans',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer}
 
-#s-view{background:#fff}
-#viewCanvas{flex:1;width:100%;cursor:pointer}
-.view-bot{background:#f4f4f4;border-top:1px solid #e0e0e0;padding:14px 20px;flex-shrink:0;text-align:center}
-.view-el{font-family:'Black Han Sans',sans-serif;font-size:34px;color:#111;display:flex;align-items:baseline;justify-content:center;gap:4px}
-.view-el small{font-size:16px;color:#888;font-family:'Noto Sans KR',sans-serif}
-.vhdr-btns{display:flex;gap:8px}
-.vhbtn{height:36px;padding:0 12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-size:12px;font-weight:800;color:#444;cursor:pointer}
-
-#s-result{background:radial-gradient(ellipse at 50% 10%,#1a0060 0%,var(--bg) 65%);overflow-y:auto}
-.res-in{max-width:420px;margin:0 auto;padding:40px 22px 60px}
-.res-badge{display:inline-block;background:var(--acc);color:#0D0D1A;font-size:10px;font-weight:900;letter-spacing:3px;padding:5px 14px;border-radius:30px;margin-bottom:16px}
-.res-h{font-family:'Black Han Sans',sans-serif;font-size:36px;margin-bottom:4px}
-.res-wl{font-size:14px;color:var(--mut);margin-bottom:24px}
-.res-wl strong{color:var(--acc)}
-.res-tc{background:var(--card);border-radius:20px;padding:22px;border:1.5px solid var(--bdr);margin-bottom:20px;text-align:center}
-.rt-lbl{font-size:11px;font-weight:800;color:var(--mut);letter-spacing:2px;margin-bottom:6px}
-.rt-val{font-family:'Black Han Sans',sans-serif;font-size:54px;color:var(--acc3);line-height:1}
-.rec-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-.rec-item{background:var(--card);border-radius:14px;padding:13px 16px;border:1.5px solid var(--bdr);display:flex;align-items:center;gap:12px}
-.rec-rk{font-family:'Black Han Sans',sans-serif;font-size:20px;min-width:30px}
-.rec-inf{flex:1}.rec-w{font-weight:800;font-size:15px}.rec-m{font-size:11px;color:var(--mut);margin-top:1px}
-.rec-t{font-family:'Black Han Sans',sans-serif;font-size:17px;color:var(--acc3)}
-.r1{color:#FFD700}.r2{color:#C0C0C0}.r3{color:#CD7F32}.rN{color:var(--mut)}
-
-#s-records{overflow-y:auto}
-.rec-sb{max-width:460px;margin:0 auto;padding:20px 20px 60px}
-.rec-sb h2{font-family:'Black Han Sans',sans-serif;font-size:24px;margin-bottom:16px}
-.empty-s{text-align:center;padding:60px 20px;color:var(--mut);font-size:15px}
-
-#ov-cd{display:none;position:fixed;inset:0;z-index:100;background:rgba(13,13,26,.95);place-items:center}
-#ov-cd.show{display:grid}
-.cd-n{font-family:'Black Han Sans',sans-serif;font-size:130px;color:var(--acc);animation:popIn .45s cubic-bezier(.15,1.4,.4,1);text-shadow:0 0 60px rgba(255,225,53,.5);line-height:1}
-@keyframes popIn{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+#s-view{background:var(--bg)}
+.view-img-wrap {flex:1; display:flex; align-items:center; justify-content:center; padding:20px; background:#fff;}
+#cResultImg {max-width:100%; max-height:100%; object-fit:contain; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+.view-bot{background:var(--card); border-top:1px solid var(--bdr); padding:24px 20px; flex-shrink:0; text-align:center}
+.view-ans-box {display:none; margin-bottom:16px; padding:16px; border-radius:16px; background:rgba(255,225,53,0.1); border:1.5px solid rgba(255,225,53,0.3);}
+.view-ans-lbl {font-size:12px; color:var(--mut); font-weight:800; margin-bottom:4px;}
+.view-ans-val {font-family:'Black Han Sans', sans-serif; font-size:32px; color:var(--acc);}
 
 /* ═══ GARTIC MENU ═══ */
 #s-g-menu{background:radial-gradient(ellipse at 40% 20%,#2d0070 0%,#0D0D1A 65%);align-items:center;justify-content:center;overflow-y:auto}
@@ -171,14 +117,12 @@ canvas{touch-action:none;display:block;background:#fff}
 .g-mode-cards{display:flex;flex-direction:column;gap:14px}
 .g-mode-card{border-radius:20px;padding:24px 22px;border:1.5px solid;cursor:pointer;text-align:left;transition:.15s;position:relative}
 .gmc-draw{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.35)}
-.gmc-words{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.35)}
 .gmc-compete{background:rgba(255,77,109,.1);border-color:rgba(255,77,109,.35)}
 .gmc-icon{font-size:36px;margin-bottom:10px}
 .gmc-title{font-family:'Black Han Sans',sans-serif;font-size:22px;margin-bottom:4px;color:#fff}
 .gmc-desc{font-size:13px;color:var(--mut);line-height:1.55}
 .gmc-tag{position:absolute;top:18px;right:18px;font-size:10px;font-weight:800;letter-spacing:2px;padding:3px 10px;border-radius:20px}
 .gmc-draw .gmc-tag{background:rgba(167,139,250,.2);color:#c4b5fd}
-.gmc-words .gmc-tag{background:rgba(96,165,250,.2);color:#93c5fd}
 .gmc-compete .gmc-tag{background:rgba(255,77,109,.2);color:var(--acc2)}
 
 /* ═══ GARTIC SETUP ═══ */
@@ -243,12 +187,8 @@ canvas{touch-action:none;display:block;background:#fff}
 .gw-submit:disabled{opacity:.4;cursor:not-allowed}
 .gw-char{font-size:12px;color:var(--mut);text-align:right}
 
-/* ═══ GARTIC DRAW ═══ */
-#s-g-draw{background:#1a1a2e}
-#gCvs{flex:1;width:100%;cursor:crosshair;touch-action:none;background:#fff}
-.g-draw-hdr{display:flex;align-items:center;padding:10px 12px;gap:8px;background:#0e0e1e;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
-.g-prev-word{flex:1;text-align:center;font-family:'Black Han Sans',sans-serif;font-size:18px;color:#c4b5fd;letter-spacing:.5px;line-height:1.3}
-.g-prev-word small{display:block;font-size:11px;font-family:'Noto Sans KR',sans-serif;font-weight:700;color:var(--mut);letter-spacing:1px;margin-bottom:2px}
+/* ═══ DRAWING SHARED TOOLS ═══ */
+canvas{touch-action:none;display:block;background:#fff}
 .tools-wrap{background:#111120;border-top:1px solid rgba(255,255,255,.07);padding:10px 12px 14px;flex-shrink:0}
 .tools-top{display:flex;align-items:center;gap:7px;margin-bottom:10px}
 .ti{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:17px;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
@@ -263,6 +203,13 @@ canvas{touch-action:none;display:block;background:#fff}
 .clr{width:32px;height:32px;border-radius:50%;flex-shrink:0;cursor:pointer;border:3px solid transparent;outline:2px solid transparent;outline-offset:2px}
 .clr.on{outline:2px solid #fff;transform:scale(1.18)}
 .btn-sub{width:100%;height:50px;border-radius:var(--r);border:none;margin-top:10px;background:var(--acc);color:#0D0D1A;font-family:'Black Han Sans',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer}
+
+/* ═══ GARTIC DRAW SPECIFIC ═══ */
+#s-g-draw{background:#1a1a2e}
+#gCvs{flex:1;width:100%;cursor:crosshair;}
+.g-draw-hdr{display:flex;align-items:center;padding:10px 12px;gap:8px;background:#0e0e1e;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.g-prev-word{flex:1;text-align:center;font-family:'Black Han Sans',sans-serif;font-size:18px;color:#c4b5fd;letter-spacing:.5px;line-height:1.3}
+.g-prev-word small{display:block;font-size:11px;font-family:'Noto Sans KR',sans-serif;font-weight:700;color:var(--mut);letter-spacing:1px;margin-bottom:2px}
 
 /* ═══ GARTIC RESULTS ═══ */
 #s-g-results{overflow-y:auto;background:var(--bg)}
@@ -293,7 +240,7 @@ canvas{touch-action:none;display:block;background:#fff}
 .ai-score-ring{width:130px;height:130px;border-radius:50%;border:6px solid var(--bdr);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;overflow:hidden}
 .ai-score-val{font-family:'Black Han Sans',sans-serif;font-size:40px;color:#fff;position:relative;z-index:1}
 .ai-score-pct{font-size:14px;color:var(--mut);position:relative;z-index:1}
-.ai-reason{font-size:15px;color:var(--txt);line-height:1.8;background:var(--card);border-radius:14px;padding:20px;border:1.5px solid var(--bdr);text-align:left;white-space:pre-wrap;word-break:keep-all;} /* 글이 길어지므로 여백과 자간 조정 */
+.ai-reason{font-size:15px;color:var(--txt);line-height:1.8;background:var(--card);border-radius:14px;padding:20px;border:1.5px solid var(--bdr);text-align:left;white-space:pre-wrap;word-break:keep-all;} 
 .ai-loading{text-align:center;padding:30px;color:var(--mut);font-size:15px}
 .spinner{display:inline-block;width:32px;height:32px;border:3px solid var(--bdr);border-top-color:var(--g1);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -313,15 +260,93 @@ canvas{touch-action:none;display:block;background:#fff}
     <div class="main-title">그림 게임</div>
     <div class="main-sub">친구들과 함께 즐기는 드로잉 게임 모음</div>
     <div class="game-cards">
+      
+      <div class="game-card gc-catch" onclick="showScreen('s-intro')">
+        <div class="gc-badge">1인/다인 모드</div>
+        <div class="gc-icon">✏️</div>
+        <div class="gc-title" style="color:var(--acc)">캐치마인드</div>
+        <div class="gc-desc">제시어를 뽑고 그림을 그려서<br>친구들에게 맞춰보라고 하세요!</div>
+      </div>
+
       <div class="game-card gc-gartic" onclick="showScreen('s-g-menu')">
         <div class="gc-badge">다인 모드</div>
         <div class="gc-icon">🎲</div>
         <div class="gc-title" style="color:#c4b5fd">갈틱폰</div>
         <div class="gc-desc">그리기, 설명하기, 팀 대항전 등<br>돌아가며 즐기는 전달 게임</div>
       </div>
+
     </div>
   </div>
 </div>
+
+<div id="s-intro" class="screen">
+  <div class="hdr"><button class="btn-bk" onclick="showScreen('s-main')">←</button><div class="hdr-sp"></div></div>
+  <div class="intro-inner">
+    <div class="logo-eye">👁️ 맞춰보세요</div>
+    <div class="logo-title">캐치마인드</div>
+    <div class="logo-sub">제시어를 그림으로 표현하고 맞춰보세요</div>
+    <button class="btn-primary" onclick="initDial()">단어 뽑기 시작 →</button>
+  </div>
+</div>
+
+<div id="s-dial" class="screen">
+  <div class="hdr hdr-dk"><button class="btn-bk" onclick="showScreen('s-intro')">←</button><div class="hdr-sp"></div></div>
+  <div class="dial-body">
+    <div style="font-family:'Black Han Sans',sans-serif;font-size:24px;color:#fff;margin-bottom:20px;">무엇을 그릴까요?</div>
+    <div class="slot-wrap">
+      <div class="slot-hl"></div>
+      <div class="slot-track" id="cTrack"></div>
+    </div>
+    <div class="dial-btns">
+      <button class="btn-reroll" onclick="spinDial()">🎲 무작위 단어 뽑기</button>
+      <button class="btn-go" id="cBtnGo" onclick="startCDraw()">그리기 시작!</button>
+    </div>
+  </div>
+</div>
+
+<div id="s-draw" class="screen">
+  <div class="draw-hdr">
+    <button class="btn-bk" onclick="confirmEndGame()" style="font-size:13px;width:auto;padding:0 10px">종료</button>
+    <div class="draw-word" id="cDrawWord">---</div>
+    <div class="draw-timer" id="cTimer">60</div>
+  </div>
+  <canvas id="cCanvas" style="flex:1;width:100%;cursor:crosshair;"></canvas>
+  <div class="tools-wrap">
+    <div class="tools-top">
+      <button class="ti on" id="cPen" onclick="cSetTool('pencil')">✏️</button>
+      <button class="ti"    id="cErs" onclick="cSetTool('eraser')">◻️</button>
+      <div class="sz-grp">
+        <button class="sz-btn on" id="cSzS" onclick="cSetSize('S')"><div class="sz-dot" style="width:5px;height:5px"></div></button>
+        <button class="sz-btn"    id="cSzM" onclick="cSetSize('M')"><div class="sz-dot" style="width:10px;height:10px"></div></button>
+        <button class="sz-btn"    id="cSzL" onclick="cSetSize('L')"><div class="sz-dot" style="width:16px;height:16px"></div></button>
+      </div>
+      <button class="ti ml" onclick="cUndo()">↩️</button>
+      <button class="ti"    onclick="cClear()">🗑️</button>
+    </div>
+    <div class="palette" id="cPalette"></div>
+    <button class="btn-sub" onclick="submitCDraw()">그림 완성! 🎨</button>
+  </div>
+</div>
+
+<div id="s-view" class="screen">
+  <div class="hdr hdr-dk">
+    <div class="hdr-sp"></div>
+    <div class="hdr-ttl" style="color:#fff;">정답을 맞춰보세요!</div>
+    <button class="btn-bk" onclick="showScreen('s-main')" style="font-size:13px;width:auto;padding:0 10px">홈</button>
+  </div>
+  <div class="view-img-wrap">
+    <img id="cResultImg">
+  </div>
+  <div class="view-bot">
+    <div class="view-ans-box" id="cAnsBox">
+      <div class="view-ans-lbl">정답 제시어</div>
+      <div class="view-ans-val" id="cAnsVal">---</div>
+    </div>
+    <button class="btn-primary" id="cBtnShowAns" onclick="showCAnswer()">정답 확인하기</button>
+    <button class="btn-ghost" style="margin-top:10px" onclick="initDial()">새로운 단어로 다시하기</button>
+  </div>
+</div>
+
 
 <div id="s-g-menu" class="screen">
   <div class="hdr hdr-pu">
@@ -344,12 +369,7 @@ canvas{touch-action:none;display:block;background:#fff}
           <div class="gmc-title">그리기&설명 모드</div>
           <div class="gmc-desc">단어 → 그림 → 설명 순으로 전달하는<br>가장 기본적인 협동 모드</div>
         </div>
-        <div class="g-mode-card gmc-words" onclick="selectGMode('words')">
-          <div class="gmc-icon">💬</div>
-          <div class="gmc-title">순차 설명 모드</div>
-          <div class="gmc-desc">오직 글로만 설명하며 전달합니다.</div>
         </div>
-      </div>
     </div>
   </div>
 </div>
@@ -501,6 +521,135 @@ const SZ={S:3,M:8,L:18};
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function openOv(id){document.getElementById(id).classList.add('show')}
 function closeOv(id){document.getElementById(id).classList.remove('show')}
+function confirmEndGame(){ openOv('ov-end-confirm'); }
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ══════════════════════════════════════════════════
+   CATCHMIND LOGIC (복구됨)
+══════════════════════════════════════════════════ */
+let cWord = "";
+let cTimerInt = null;
+let cTimeLeft = 60;
+let cSnaps = [];
+
+function initDial() {
+  document.getElementById('cBtnGo').classList.remove('vis');
+  const track = document.getElementById('cTrack');
+  track.style.transition = 'none';
+  track.style.transform = 'translateY(0)';
+  track.innerHTML = '<div class="slot-item">준비</div>';
+  showScreen('s-dial');
+}
+
+function spinDial() {
+  const track = document.getElementById('cTrack');
+  const btnGo = document.getElementById('cBtnGo');
+  btnGo.classList.remove('vis');
+  
+  // 랜덤 단어 20개 세팅 (마지막 단어가 당첨 단어)
+  track.innerHTML = '';
+  let words = [];
+  for(let i=0; i<20; i++) words.push(W[Math.floor(Math.random()*W.length)].w);
+  cWord = words[19]; // 최종 선택 단어
+  
+  words.forEach((w, i) => {
+    track.innerHTML += `<div class="slot-item ${i===19?'ctr':''}">${w}</div>`;
+  });
+  
+  track.style.transition = 'none';
+  track.style.transform = 'translateY(0)';
+  
+  setTimeout(() => {
+    track.style.transition = 'transform 3s cubic-bezier(0.15, 1.1, 0.2, 1)';
+    track.style.transform = `translateY(-${58 * 19}px)`;
+  }, 50);
+
+  setTimeout(() => {
+    btnGo.classList.add('vis');
+  }, 3000);
+}
+
+function startCDraw() {
+  document.getElementById('cDrawWord').textContent = cWord;
+  cTimeLeft = 60;
+  document.getElementById('cTimer').textContent = cTimeLeft;
+  
+  cTool = 'pencil'; cClr = '#111111'; cSz = 'S';
+  document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on');
+  ['S','M','L'].forEach(s => document.getElementById('cSz'+s).classList.toggle('on', s==='S'));
+  cSnaps = [];
+  
+  const pal = document.getElementById('cPalette'); pal.innerHTML = '';
+  CLRS.forEach(c => {
+    const el = document.createElement('div'); el.className = 'clr'+(c.h===cClr?' on':''); el.style.background = c.h;
+    if(c.h==='#FFFFFF') el.style.border = '3px solid #ccc';
+    el.addEventListener('pointerdown', e => {
+      e.stopPropagation(); cClr = c.h; cTool = 'pencil';
+      document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on');
+      pal.querySelectorAll('.clr').forEach(x => x.classList.remove('on')); el.classList.add('on');
+    });
+    pal.appendChild(el);
+  });
+  
+  showScreen('s-draw');
+  requestAnimationFrame(() => initCCvs());
+  
+  clearInterval(cTimerInt);
+  cTimerInt = setInterval(() => {
+    cTimeLeft--;
+    document.getElementById('cTimer').textContent = cTimeLeft;
+    if(cTimeLeft <= 0) {
+      clearInterval(cTimerInt);
+      submitCDraw(); // 시간 초과 시 자동 제출
+    }
+  }, 1000);
+}
+
+// 캐치마인드 전용 드로잉 변수
+let cCvs, cCtx, cDrawing=false, cLastP=null, cTool='pencil', cClr='#111111', cSz='S';
+
+function initCCvs() {
+  cCvs = document.getElementById('cCanvas'); const r = cCvs.getBoundingClientRect(); const dpr = window.devicePixelRatio||1;
+  cCvs.width = Math.round(r.width*dpr); cCvs.height = Math.round(r.height*dpr);
+  cCvs.style.width = r.width+'px'; cCvs.style.height = r.height+'px';
+  cCtx = cCvs.getContext('2d'); cCtx.scale(dpr,dpr); cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,r.width,r.height);
+  cSaveSnap();
+  cCvs.addEventListener('pointerdown', cdDown); cCvs.addEventListener('pointermove', cdMove);
+  cCvs.addEventListener('pointerup', cdUp); cCvs.addEventListener('pointercancel', cdUp);
+}
+function cGetP(e){ const r = cCvs.getBoundingClientRect(); return {x: e.clientX-r.left, y: e.clientY-r.top}; }
+function cdDown(e){ e.preventDefault(); cDrawing=true; cCvs.setPointerCapture(e.pointerId); const p=cGetP(e); cLastP=p; cCtx.beginPath(); cCtx.arc(p.x,p.y,cBr()/2,0,Math.PI*2); cCtx.fillStyle=cTool==='eraser'?'#fff':cClr; cCtx.fill(); }
+function cdMove(e){ e.preventDefault(); if(!cDrawing) return; const p=cGetP(e); cCtx.beginPath(); cCtx.lineCap='round'; cCtx.lineJoin='round'; cCtx.lineWidth=cBr(); cCtx.strokeStyle=cTool==='eraser'?'#fff':cClr; cCtx.moveTo(cLastP.x,cLastP.y); cCtx.lineTo(p.x,p.y); cCtx.stroke(); cLastP=p; }
+function cdUp(){ if(!cDrawing) return; cDrawing=false; cLastP=null; cSaveSnap(); }
+function cBr(){ return (cTool==='eraser'?3.5:1)*SZ[cSz]; }
+function cSaveSnap(){ if(!cCvs) return; cSnaps.push(cCvs.toDataURL()); if(cSnaps.length>30) cSnaps.shift(); }
+function cUndo(){ if(cSnaps.length<=1) return; cSnaps.pop(); const img=new Image(); img.onload=() => { const r=cCvs.getBoundingClientRect(); cCtx.clearRect(0,0,r.width,r.height); cCtx.drawImage(img,0,0,r.width,r.height); }; img.src=cSnaps[cSnaps.length-1]; }
+function cClear(){ if(!cCvs) return; const r=cCvs.getBoundingClientRect(); cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,r.width,r.height); cSaveSnap(); }
+function cSetTool(t){ cTool=t; document.getElementById('cPen').classList.toggle('on',t==='pencil'); document.getElementById('cErs').classList.toggle('on',t==='eraser'); }
+function cSetSize(s){ cSz=s; ['S','M','L'].forEach(x => document.getElementById('cSz'+x).classList.toggle('on',x===s)); }
+
+function submitCDraw() {
+  clearInterval(cTimerInt);
+  if(cCvs) {
+    cCvs.removeEventListener('pointerdown', cdDown); cCvs.removeEventListener('pointermove', cdMove);
+    cCvs.removeEventListener('pointerup', cdUp); cCvs.removeEventListener('pointercancel', cdUp);
+  }
+  const dataUrl = cCvs.toDataURL('image/png', 0.8);
+  document.getElementById('cResultImg').src = dataUrl;
+  
+  // 정답 가리기 초기화
+  document.getElementById('cAnsBox').style.display = 'none';
+  document.getElementById('cBtnShowAns').style.display = 'block';
+  document.getElementById('cAnsVal').textContent = cWord;
+  
+  showScreen('s-view');
+}
+
+function showCAnswer() {
+  document.getElementById('cBtnShowAns').style.display = 'none';
+  document.getElementById('cAnsBox').style.display = 'block';
+}
+
 
 /* ══════════════════════════════════════════════════
    GARTIC PHONE & TEAM BATTLE LOGIC
@@ -528,14 +677,9 @@ function setStartMode(m){
 function selectGMode(m){
   G.gameMode = m;
   document.getElementById('setupModeTitle').textContent = 
-    m === 'compete' ? '팀 경쟁 모드 (배틀)' : (m === 'draw' ? '그리기&설명 모드' : '순차 설명 모드');
+    m === 'compete' ? '팀 경쟁 모드 (배틀)' : '그리기&설명 모드';
   
-  if(m === 'words') {
-      document.getElementById('startModeSection').style.display = 'none'; 
-      gStartMode = 'word';
-  } else {
-      document.getElementById('startModeSection').style.display = 'block';
-  }
+  document.getElementById('startModeSection').style.display = 'block';
 
   if(m === 'compete'){
     document.getElementById('pcTitle').textContent = '팀 당 인원 수';
@@ -594,7 +738,6 @@ function gPlayerName(){
 function gChain(){ return G.chains[G.chainIdx]; }
 function gPrevStep(){ const s = gChain().steps; return s.length > 0 ? s[s.length-1] : null; }
 function gStepType(){
-  if(G.gameMode === 'words') return 'word';
   return (G.stepIdx % 2 === 0) ? (gStartMode === 'draw' ? 'draw' : 'word') : (gStartMode === 'draw' ? 'word' : 'draw');
 }
 function gTaskDesc(){
@@ -693,13 +836,17 @@ async function toggleMic() {
       const audioBlob = new Blob(audioChunks, { type: mimeType });
       const formData = new FormData();
       formData.append('file', audioBlob, `recording.${ext}`);
+      
+      // ✅ STT 에러 수정 반영 (필수 파라미터)
+      formData.append('model', 'whisper-1');
+      formData.append('language', 'ko');
 
       try {
         const response = await fetch('/api/stt', { method: 'POST', body: formData });
         const data = await response.json().catch(() => null);
         
         if (!response.ok) {
-            const errMsg = data?.error || response.statusText || '알 수 없는 서버 오류';
+            const errMsg = data?.error?.message || data?.error || response.statusText || '알 수 없는 서버 오류';
             throw new Error(`[${response.status}] ${errMsg}`);
         }
         
@@ -753,6 +900,9 @@ function submitWrite(){
   G.chains[G.chainIdx].steps.push({ type: 'word', content: val, playerName: gPlayerName() });
   advanceGartic();
 }
+
+// 갈틱폰 전용 드로잉 변수
+let gCvs, gCtx, gDrawing=false, gLastP=null, gTool='pencil', gClr='#111111', gSz='S', gSnaps=[];
 
 function showGDraw(){
   const prev = gPrevStep();
@@ -812,7 +962,7 @@ function gSetSize(s){ gSz=s; ['S','M','L'].forEach(x => document.getElementById(
 
 function submitGDraw(){
   gDetach();
-  const dataUrl = gCvs.toDataURL('image/png', 0.7);
+  const dataUrl = gCvs.toDataURL('image/png', 0.8);
   G.chains[G.chainIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() });
   advanceGartic();
 }
@@ -850,9 +1000,6 @@ function nextChain(){
   }
   showPassScreen();
 }
-
-function confirmEndGame(){ openOv('ov-end-confirm'); }
-function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function renderChainHTML(chain, title, badgeColor){
   let html = `<div class="chain-block"><div class="chain-header"><div class="chain-line"></div><div class="chain-badge" style="color:${badgeColor};border-color:${badgeColor}40">${title}</div><div class="chain-line"></div></div>`;
@@ -945,7 +1092,6 @@ async function evalCompeteMode(){
   const origA = gStartMode === 'draw' ? G.chains[0].systemWord : G.chains[0].steps[0].content;
   const origB = gStartMode === 'draw' ? G.chains[1].systemWord : G.chains[1].steps[0].content;
 
-  // 💡 장황하고 깐깐한 미술 평론가 프롬프트 적용
   let messages = [
     {
       role: "system", 
@@ -1005,7 +1151,6 @@ async function evalNormalMode(){
 
   const origText = gStartMode === 'draw' ? chain.systemWord : first.content;
 
-  // 💡 장황하고 깐깐한 미술 평론가 프롬프트 적용
   let messages = [{
       role: "system", 
       content: "너는 아주 깐깐하고 말 많은 미술 평론가이자 갈틱폰 심사위원이야. 처음 제시어(또는 그림)와 마지막 결과물을 비교해서 0~100점으로 평가해. 특히 'reason' 항목은 아주 길고 장황하게 작성해야 해. 어떤 선, 색깔, 디테일 때문에 이 결과물이 원본과 닮았는지, 혹은 어떤 요소가 왜곡되어서 전혀 다른 물건이나 생물(예: 강아지가 아니라 식빵처럼 보인다 등)처럼 변해버렸는지 하나하나 조목조목 뜯어보며 유머러스하고 친절하게 설명해. 결과는 무조건 JSON({\"score\": 숫자, \"reason\": \"한국어 심사평(최소 4~5문장 이상 아주 상세하게)\"})으로 반환해."
