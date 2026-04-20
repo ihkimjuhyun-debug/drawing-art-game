@@ -6,128 +6,156 @@
 <title>그림 게임 모음</title>
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0D0D1A;--bg2:#13132A;--card:#1C1C36;--acc:#FFE135;--acc2:#FF4D6D;--acc3:#4DFFD2;--g1:#7C3AED;--g2:#2563EB;--txt:#F0F0FF;--mut:#5858A0;--bdr:rgba(255,255,255,0.09);--r:18px}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);touch-action:manipulation}
-body{font-family:'Noto Sans KR',sans-serif;color:var(--txt)}
-.screen{display:none;position:fixed;inset:0;flex-direction:column;overflow:hidden}
-.screen.active{display:flex}
-.scrollable{overflow-y:auto;-webkit-overflow-scrolling:touch}
+:root {--bg:#0D0D1A; --bg2:#13132A; --card:#1C1C36; --acc:#FFE135; --acc2:#FF4D6D; --acc3:#4DFFD2; --g1:#7C3AED; --g2:#2563EB; --txt:#F0F0FF; --mut:#5858A0; --bdr:rgba(255,255,255,0.12); --r:18px;}
+*, *::before, *::after {box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+html, body {width:100%; height:100%; overflow:hidden; background:var(--bg); touch-action:manipulation;}
+body {font-family:'Noto Sans KR', sans-serif; color:var(--txt);}
+.screen {display:none; position:fixed; inset:0; flex-direction:column; overflow:hidden;}
+.screen.active {display:flex;}
+.scrollable {overflow-y:auto; -webkit-overflow-scrolling:touch;}
+
+/* ═══ TYPOGRAPHY & SHARED ═══ */
+.font-black {font-family:'Black Han Sans', sans-serif;}
+.text-center {text-align:center;}
+.flex-1 {flex:1; min-height:0;} /* min-height:0 is crucial for flexbox overflow limits */
+
+/* ═══ BUTTONS ═══ */
+.btn-bk {width:42px; height:42px; border-radius:12px; border:1.5px solid var(--bdr); background:rgba(28,28,54,0.6); color:var(--txt); font-size:18px; cursor:pointer; display:grid; place-items:center; flex-shrink:0; transition:0.15s; backdrop-filter:blur(8px);}
+.btn-bk:active {transform:scale(0.92);}
+.btn-primary {width:100%; height:60px; border-radius:var(--r); border:none; background:var(--acc); color:#0D0D1A; font-family:'Black Han Sans',sans-serif; font-size:20px; letter-spacing:1px; cursor:pointer; box-shadow:0 6px 24px rgba(255,225,53,0.25); transition:0.15s;}
+.btn-primary:active {transform:scale(0.96); box-shadow:none;}
+.btn-pu {width:100%; height:60px; border-radius:var(--r); border:none; background:linear-gradient(135deg,#7C3AED,#2563EB); color:#fff; font-family:'Black Han Sans',sans-serif; font-size:20px; cursor:pointer; box-shadow:0 6px 24px rgba(124,58,237,0.3); transition:0.15s;}
+.btn-pu:active {transform:scale(0.96); box-shadow:none;}
+
+/* ═══ HEADERS (Glassmorphism Applied) ═══ */
+.hdr {display:flex; align-items:center; padding:12px 16px; gap:12px; flex-shrink:0; z-index:10;}
+.hdr-glass {background:rgba(19, 19, 42, 0.75); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--bdr);}
+.hdr-pu {background:rgba(26, 0, 96, 0.75); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid rgba(124,58,237,0.3);}
+.hdr-sp {width:42px; flex-shrink:0;}
+.hdr-ttl {flex:1; text-align:center; font-family:'Black Han Sans',sans-serif; font-size:20px; letter-spacing:0.5px;}
 
 /* ═══ MAIN MENU ═══ */
-#s-main{background:radial-gradient(ellipse at 30% 20%,#1a1060 0%,#0D0D1A 70%);align-items:center;justify-content:center;padding:0 20px}
-.main-inner{width:100%;max-width:420px;padding:50px 0 40px;text-align:center}
-.main-logo{font-family:'Black Han Sans',sans-serif;font-size:16px;letter-spacing:4px;color:var(--mut);margin-bottom:16px}
-.main-title{font-family:'Black Han Sans',sans-serif;font-size:48px;color:#fff;margin-bottom:6px;text-shadow:0 0 60px rgba(255,225,53,.3)}
-.main-sub{font-size:13px;color:var(--mut);margin-bottom:48px}
-.game-cards{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
-.game-card{border-radius:22px;padding:26px 24px;border:1.5px solid var(--bdr);cursor:pointer;text-align:left;transition:all .15s;position:relative;overflow:hidden}
-.game-card:active{transform:scale(.97)}
-.gc-catch{background:linear-gradient(135deg,rgba(255,225,53,.08) 0%,rgba(255,77,109,.05) 100%);border-color:rgba(255,225,53,.2)}
-.gc-gartic{background:linear-gradient(135deg,rgba(124,58,237,.12) 0%,rgba(37,99,235,.08) 100%);border-color:rgba(124,58,237,.3)}
-.gc-icon{font-size:38px;margin-bottom:12px}
-.gc-title{font-family:'Black Han Sans',sans-serif;font-size:24px;margin-bottom:4px}
-.gc-desc{font-size:13px;color:var(--mut);line-height:1.5}
-.gc-badge{position:absolute;top:18px;right:18px;font-size:10px;font-weight:800;letter-spacing:2px;padding:4px 10px;border-radius:20px}
-.gc-catch .gc-badge{background:rgba(255,225,53,.15);color:var(--acc)}
-.gc-gartic .gc-badge{background:rgba(124,58,237,.2);color:#a78bfa}
+#s-main {background:radial-gradient(ellipse at 30% 20%,#1a1060 0%,#0D0D1A 70%); align-items:center; justify-content:center; padding:0 20px;}
+.main-inner {width:100%; max-width:420px; text-align:center;}
+.main-logo {font-family:'Black Han Sans',sans-serif; font-size:16px; letter-spacing:4px; color:var(--mut); margin-bottom:16px;}
+.main-title {font-family:'Black Han Sans',sans-serif; font-size:52px; color:#fff; margin-bottom:6px; text-shadow:0 0 60px rgba(255,225,53,0.3); line-height:1.1;}
+.main-sub {font-size:13.5px; color:var(--mut); margin-bottom:48px;}
+.game-card {border-radius:24px; padding:28px 24px; border:1.5px solid var(--bdr); cursor:pointer; text-align:left; transition:all 0.2s cubic-bezier(0.15,1.1,0.2,1); position:relative; overflow:hidden; margin-bottom:16px; background:var(--card);}
+.game-card:active {transform:scale(0.96);}
+.gc-catch {background:linear-gradient(135deg,rgba(255,225,53,0.08) 0%,rgba(255,77,109,0.05) 100%); border-color:rgba(255,225,53,0.25);}
+.gc-gartic {background:linear-gradient(135deg,rgba(124,58,237,0.1) 0%,rgba(37,99,235,0.08) 100%); border-color:rgba(124,58,237,0.3);}
+.gc-icon {font-size:42px; margin-bottom:14px; line-height:1;}
+.gc-title {font-family:'Black Han Sans',sans-serif; font-size:26px; margin-bottom:6px;}
+.gc-desc {font-size:13px; color:var(--mut); line-height:1.55;}
+.gc-badge {position:absolute; top:20px; right:20px; font-size:10px; font-weight:800; letter-spacing:2px; padding:5px 12px; border-radius:20px;}
+.gc-catch .gc-badge {background:rgba(255,225,53,0.15); color:var(--acc);}
+.gc-gartic .gc-badge {background:rgba(124,58,237,0.2); color:#c4b5fd;}
 
-/* ═══ SHARED COMPONENTS ═══ */
-.hdr{display:flex;align-items:center;padding:12px 16px;gap:10px;flex-shrink:0}
-.hdr-pu{background:#1a0060;border-bottom:1px solid rgba(124,58,237,.3)}
-.btn-bk{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:18px;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
-.hdr-sp{width:40px;flex-shrink:0}
-.hdr-ttl{flex:1;text-align:center;font-family:'Black Han Sans',sans-serif;font-size:20px}
-.btn-primary{width:100%;height:60px;border-radius:var(--r);border:none;background:var(--acc);color:#0D0D1A;font-family:'Black Han Sans',sans-serif;font-size:20px;letter-spacing:1px;cursor:pointer;box-shadow:0 6px 28px rgba(255,225,53,.25)}
-.btn-primary:active{transform:scale(.97)}
-.btn-pu{width:100%;height:60px;border-radius:var(--r);border:none;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-family:'Black Han Sans',sans-serif;font-size:20px;cursor:pointer;box-shadow:0 6px 28px rgba(124,58,237,.35)}
-.btn-ghost{width:100%;height:50px;border-radius:var(--r);border:1.5px solid var(--bdr);background:transparent;color:var(--mut);font-size:14px;font-weight:700;cursor:pointer}
+/* ═══ CATCHMIND & SETTINGS ═══ */
+.logo-eye {display:inline-flex; align-items:center; gap:6px; background:rgba(255,225,53,0.12); border:1px solid rgba(255,225,53,0.3); color:var(--acc); font-size:11px; font-weight:800; letter-spacing:3px; padding:6px 16px; border-radius:40px; margin-bottom:22px;}
+.opt-group {margin:30px auto; text-align:left; width:100%; max-width:360px;}
+.opt-label {font-size:11px; font-weight:800; color:var(--mut); letter-spacing:2px; margin-bottom:12px; text-transform:uppercase;}
+.opt-btns {display:flex; gap:10px;}
+.opt-btn {flex:1; height:48px; border-radius:14px; border:1.5px solid var(--bdr); background:var(--card); color:var(--mut); font-weight:800; cursor:pointer; font-size:14px; transition:0.15s;}
+.opt-btn.sel {border-color:var(--acc); background:rgba(255,225,53,0.12); color:var(--acc);}
 
-/* ═══ CATCHMIND ═══ */
-.opt-group {margin-bottom:24px; text-align:left; width:100%; max-width:340px;}
-.opt-label {font-size:11px; font-weight:800; color:var(--mut); letter-spacing:2px; margin-bottom:10px; text-transform:uppercase;}
-.opt-btns {display:flex; gap:8px;}
-.opt-btn {flex:1; height:46px; border-radius:12px; border:1.5px solid var(--bdr); background:var(--card); color:var(--mut); font-weight:700; cursor:pointer; font-size:13px;}
-.opt-btn.sel {border-color:var(--acc); background:rgba(255,225,53,0.1); color:var(--acc);}
+/* ═══ DIAL (Perfect Centering Fix) ═══ */
+.dial-body {flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 24px;}
+.slot-wrap {width:100%; max-width:340px; position:relative; height:240px; border-radius:24px; overflow:hidden; background:var(--card); border:1.5px solid var(--bdr); margin-bottom:28px;}
+.slot-wrap::before, .slot-wrap::after {content:''; position:absolute; left:0; right:0; height:80px; z-index:2; pointer-events:none;}
+.slot-wrap::before {top:0; background:linear-gradient(to bottom,var(--card),transparent);}
+.slot-wrap::after {bottom:0; background:linear-gradient(to top,var(--card),transparent);}
+.slot-hl {position:absolute; left:14px; right:14px; top:50%; margin-top:-34px; height:68px; border-radius:16px; background:rgba(255,225,53,0.08); border:1.5px solid rgba(255,225,53,0.3); z-index:1; pointer-events:none;}
+.slot-track {position:absolute; width:100%; top:86px; will-change:transform; display:flex; flex-direction:column;} /* Centered perfectly: 240/2 - 68/2 = 86px */
+.slot-item {height:68px; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:var(--mut); flex-shrink:0;}
+.slot-item.ctr {color:var(--acc); font-size:34px; font-family:'Black Han Sans',sans-serif; text-shadow:0 0 24px rgba(255,225,53,0.4);}
 
-.slot-wrap{width:100%;max-width:340px;position:relative;height:220px;border-radius:24px;overflow:hidden;background:var(--card);border:1.5px solid var(--bdr);margin-bottom:24px}
-.slot-wrap::before,.slot-wrap::after{content:'';position:absolute;left:0;right:0;height:70px;z-index:2;pointer-events:none}
-.slot-wrap::before{top:0;background:linear-gradient(to bottom,var(--card),transparent)}
-.slot-wrap::after{bottom:0;background:linear-gradient(to top,var(--card),transparent)}
-.slot-hl{position:absolute;left:14px;right:14px;top:50%;margin-top:-31px;height:62px;border-radius:14px;background:rgba(255,225,53,0.07);border:1.5px solid rgba(255,225,53,0.25);z-index:1;pointer-events:none}
-.slot-track{position:absolute;width:100%;top:79px;will-change:transform;display:flex;flex-direction:column}
-.slot-item{height:62px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--mut);flex-shrink:0}
-.slot-item.ctr{color:var(--acc);font-size:32px;font-family:'Black Han Sans',sans-serif;text-shadow: 0 0 20px rgba(255,225,53,0.4)}
+.btn-go {height:66px; width:100%; max-width:340px; border-radius:var(--r); border:none; background:var(--acc); color:#0D0D1A; font-family:'Black Han Sans',sans-serif; font-size:22px; letter-spacing:1px; cursor:pointer; box-shadow:0 6px 28px rgba(255,225,53,0.28); opacity:0; pointer-events:none; transform:translateY(12px); transition:all 0.4s cubic-bezier(0.15,1.1,0.2,1);}
+.btn-go.vis {opacity:1; pointer-events:auto; transform:translateY(0);}
 
-.timer-tag {background:var(--acc2); color:#fff; padding:4px 10px; border-radius:8px; font-family:'Black Han Sans',sans-serif; font-size:18px;}
-.stopwatch-box {display:none; font-family:'Black Han Sans',sans-serif; font-size:24px; color:var(--acc3); margin-bottom:10px;}
+/* ═══ DRAWING CANVAS UI ═══ */
+canvas {touch-action:none; display:block; background:#fff;}
+.canvas-hdr {padding:12px 16px; display:flex; align-items:center; gap:12px; background:#0e0e1e; border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0;}
+.timer-tag {background:var(--acc2); color:#fff; padding:6px 14px; border-radius:10px; font-family:'Black Han Sans',sans-serif; font-size:18px; letter-spacing:1px; flex-shrink:0;}
+.tools-wrap {background:#111120; border-top:1px solid rgba(255,255,255,0.08); padding:12px 16px 20px; flex-shrink:0; z-index:10;}
+.tools-top {display:flex; align-items:center; gap:8px; margin-bottom:14px;}
+.ti {width:44px; height:44px; border-radius:14px; border:1.5px solid var(--bdr); background:var(--card); color:var(--txt); font-size:18px; cursor:pointer; display:grid; place-items:center; flex-shrink:0; transition:0.15s;}
+.ti.on {border-color:var(--acc); background:rgba(255,225,53,0.12);}
+.ti:active {transform:scale(0.9);}
+.sz-grp {display:flex; gap:6px;}
+.sz-btn {width:44px; height:44px; border-radius:14px; border:1.5px solid var(--bdr); background:var(--card); cursor:pointer; display:grid; place-items:center;}
+.sz-btn.on {border-color:rgba(255,255,255,0.5);}
+.sz-dot {background:#fff; border-radius:50%;}
+.palette {display:flex; gap:8px; overflow-x:auto; padding-bottom:6px;}
+.palette::-webkit-scrollbar {display:none;}
+.clr {width:36px; height:36px; border-radius:50%; flex-shrink:0; cursor:pointer; border:3px solid transparent; outline:2px solid transparent;}
+.clr.on {outline:2px solid #fff; transform:scale(1.15);}
 
-#s-view {background:var(--bg);}
-.view-img-wrap {flex:1; display:flex; align-items:center; justify-content:center; padding:20px; background:#fff; position:relative;}
-#cResultImg {max-width:100%; max-height:100%; object-fit:contain; border-radius:8px;}
-.preview-ans-badge {position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.7); color:var(--acc); padding:6px 12px; border-radius:20px; font-size:12px; font-weight:800; border:1px solid var(--acc);}
+/* ═══ CATCHMIND RESULT & MATCHING ═══ */
+.view-img-wrap {flex:1; display:flex; align-items:center; justify-content:center; padding:24px; background:var(--bg); position:relative;}
+#cResultImg {max-width:100%; max-height:100%; object-fit:contain; border-radius:16px; box-shadow:0 12px 40px rgba(0,0,0,0.3);}
+.preview-ans-badge {position:absolute; top:20px; right:20px; background:rgba(13,13,26,0.85); backdrop-filter:blur(8px); color:var(--acc); padding:8px 16px; border-radius:24px; font-size:12px; font-weight:800; border:1.5px solid rgba(255,225,53,0.4); letter-spacing:0.5px;}
+.view-bot {background:var(--card); border-top:1px solid var(--bdr); padding:28px 24px; flex-shrink:0; text-align:center;}
+.stopwatch-box {display:none; font-family:'Black Han Sans',sans-serif; font-size:28px; color:var(--acc3); margin-bottom:16px; letter-spacing:1px;}
+.btn-row {display:flex; gap:12px; margin-bottom:12px;}
+.btn-yes {flex:1.5; height:64px; border-radius:18px; border:none; background:var(--acc3); color:#0D0D1A; font-family:'Black Han Sans',sans-serif; font-size:20px; cursor:pointer; box-shadow:0 6px 20px rgba(77,255,210,0.25); transition:0.15s;}
+.btn-yes:active {transform:scale(0.96); box-shadow:none;}
+.btn-no {flex:1; height:64px; border-radius:18px; border:1.5px solid var(--bdr); background:rgba(255,255,255,0.05); color:var(--mut); font-family:'Black Han Sans',sans-serif; font-size:18px; cursor:pointer; transition:0.15s;}
+.btn-no:active {transform:scale(0.96);}
 
-.view-bot{background:var(--card); border-top:1px solid var(--bdr); padding:24px 20px; flex-shrink:0; text-align:center}
-.btn-row {display:flex; gap:10px; margin-bottom:12px;}
-.btn-yes {flex:1.5; height:60px; border-radius:16px; border:none; background:var(--acc3); color:#0D0D1A; font-family:'Black Han Sans',sans-serif; font-size:20px; cursor:pointer;}
-.btn-no {flex:1; height:60px; border-radius:16px; border:1.5px solid var(--bdr); background:rgba(255,255,255,0.05); color:var(--mut); font-family:'Black Han Sans',sans-serif; font-size:18px; cursor:pointer;}
+/* ═══ GARTIC SETUP ═══ */
+.g-setup-body {max-width:440px; margin:0 auto; padding:24px 20px 60px;}
+.g-section {margin-bottom:28px;}
+.g-section-title {font-size:11px; font-weight:800; color:var(--mut); letter-spacing:2.5px; text-transform:uppercase; margin-bottom:14px;}
+.player-count-row {display:flex; align-items:center; gap:16px;}
+.pc-btn {width:50px; height:50px; border-radius:14px; border:1.5px solid var(--bdr); background:var(--card); color:var(--txt); font-size:24px; font-weight:800; cursor:pointer; display:grid; place-items:center; transition:0.15s;}
+.pc-btn:active {transform:scale(0.9);}
+.pc-num {flex:1; text-align:center; font-family:'Black Han Sans',sans-serif; font-size:46px; color:var(--acc); line-height:1;}
+.name-list {display:flex; flex-direction:column; gap:10px;}
+.name-row {display:flex; align-items:center; gap:10px;}
+.name-num {width:30px; font-size:14px; font-weight:800; color:var(--mut); text-align:center; flex-shrink:0;}
+.name-input {flex:1; height:54px; border-radius:14px; border:1.5px solid var(--bdr); background:var(--card); color:var(--txt); font-size:15px; font-weight:700; padding:0 18px; outline:none; transition:0.2s;}
+.name-input:focus {border-color:var(--g1); background:rgba(124,58,237,0.05);}
+.photo-opts {display:flex; gap:10px;}
+.photo-opt {flex:1; height:54px; border-radius:14px; border:1.5px solid var(--bdr); background:var(--card); color:var(--mut); font-size:15px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:0.15s;}
+.photo-opt.sel {border-color:var(--g1); background:rgba(124,58,237,0.15); color:#c4b5fd;}
 
-/* ═══ GARTIC ═══ */
-#s-g-menu{background:radial-gradient(ellipse at 40% 20%,#2d0070 0%,#0D0D1A 65%);align-items:center;justify-content:center;overflow-y:auto}
-.g-mode-card{border-radius:20px;padding:24px 22px;border:1.5px solid;cursor:pointer;text-align:left;transition:.15s;position:relative;margin-bottom:14px;}
-.gmc-draw{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.35)}
-.gmc-compete{background:rgba(255,77,109,.1);border-color:rgba(255,77,109,.35)}
+/* ═══ GARTIC PASS & WRITE ═══ */
+.pass-inner {text-align:center; width:100%; max-width:380px; margin:auto; padding:24px;}
+.pass-icon {font-size:68px; margin-bottom:24px; animation:bounce 1.5s ease-in-out infinite;}
+@keyframes bounce {0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)}}
+.gw-body {flex:1; display:flex; flex-direction:column; padding:20px; gap:16px; overflow-y:auto; background:var(--bg2);}
+.gw-prev {background:var(--card); border-radius:16px; overflow:hidden; border:1.5px solid var(--bdr); flex-shrink:0;}
+.gw-textarea {flex:1; min-height:120px; background:var(--card); border:1.5px solid var(--bdr); border-radius:16px; color:var(--txt); font-size:16px; font-weight:700; padding:18px; resize:none; outline:none; line-height:1.6; transition:0.2s;}
+.gw-textarea:focus {border-color:var(--g1); box-shadow:0 0 0 4px rgba(124,58,237,0.15);}
+.btn-mic {background:rgba(255,255,255,0.08); border:1.5px solid var(--bdr); border-radius:14px; color:var(--txt); padding:8px 16px; font-size:13px; cursor:pointer; font-weight:800; transition:all 0.2s ease; display:inline-flex; align-items:center; gap:6px;}
 
-/* ═══ DRAWING SHARED TOOLS ═══ */
-canvas{touch-action:none;display:block;background:#fff}
-.tools-wrap{background:#111120;border-top:1px solid rgba(255,255,255,.07);padding:10px 12px 14px;flex-shrink:0}
-.tools-top{display:flex;align-items:center;gap:7px;margin-bottom:10px}
-.ti{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);font-size:17px;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
-.ti.on{border-color:var(--acc);background:rgba(255,225,53,0.1)}
-.sz-grp{display:flex;gap:5px}
-.sz-btn{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);cursor:pointer;display:grid;place-items:center}
-.sz-btn.on{border-color:rgba(255,255,255,0.4)}
-.sz-dot{background:#fff;border-radius:50%}
-.palette{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
-.clr{width:32px;height:32px;border-radius:50%;flex-shrink:0;cursor:pointer;border:3px solid transparent;outline:2px solid transparent}
-.clr.on{outline:2px solid #fff;transform:scale(1.18)}
+/* ═══ GARTIC RESULTS & OVERLAYS ═══ */
+.gres-body {max-width:500px; margin:0 auto; padding:20px 20px 80px;}
+.chain-block {margin-bottom:36px;}
+.chain-header {display:flex; align-items:center; gap:12px; margin-bottom:20px;}
+.chain-line {flex:1; height:1.5px; background:var(--bdr);}
+.chain-badge {font-size:11px; font-weight:800; color:var(--mut); letter-spacing:2px; background:var(--card); padding:6px 16px; border-radius:20px; border:1.5px solid var(--bdr);}
+.chat-bubble {display:flex; flex-direction:column; margin-bottom:16px;}
+.bubble-meta {font-size:11px; color:var(--mut); font-weight:800; margin-bottom:6px; padding:0 6px; letter-spacing:0.5px;}
+.bubble-body {background:var(--card); border-radius:18px; overflow:hidden; border:1.5px solid var(--bdr); max-width:95%;}
+.bubble-txt {font-size:16px; font-weight:700; padding:16px 18px; line-height:1.6; color:var(--txt);}
+.bubble-img {width:100%; max-height:260px; object-fit:contain; display:block; background:#fff; border-radius:16px; border:2px solid var(--bdr);}
 
-/* ═══ OVERLAYS & RESULTS ═══ */
-.ov{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);place-items:center}
-.ov.show{display:grid}
-.ov-sheet{background:var(--bg2);border-radius:24px 24px 0 0;padding:22px 20px 36px;width:100%;max-width:480px;border:1.5px solid var(--bdr);max-height:85vh;overflow-y:auto}
-
-#s-g-results{overflow-y:auto;background:var(--bg)}
-.gres-body{max-width:480px;margin:0 auto;padding:16px 16px 80px}
-.gres-header{text-align:center;padding:20px 0 28px}
-.gres-title{font-family:'Black Han Sans',sans-serif;font-size:32px;color:#fff;margin-bottom:4px}
-.gres-sub{font-size:13px;color:var(--mut)}
-.chain-block{margin-bottom:32px}
-.chain-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.chain-line{flex:1;height:1px;background:var(--bdr)}
-.chain-badge{font-size:11px;font-weight:800;color:var(--mut);letter-spacing:2px;white-space:nowrap;background:var(--card);padding:4px 12px;border-radius:20px;border:1px solid var(--bdr)}
-.chat-bubble{display:flex;flex-direction:column;margin-bottom:12px}
-.bubble-meta{font-size:11px;color:var(--mut);font-weight:700;margin-bottom:4px;padding:0 4px}
-.bubble-body{background:var(--card);border-radius:16px;overflow:hidden;border:1.5px solid var(--bdr);max-width:92%}
-.bubble-body.draw-bubble{background:transparent;border:none}
-.bubble-txt{font-size:15px;font-weight:700;padding:12px 14px;line-height:1.5;color:var(--txt)}
-.bubble-img{width:100%;max-height:240px;object-fit:contain;display:block;background:#fff;border-radius:14px;border:2px solid var(--bdr)}
-.type-icon{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1.5px;padding:2px 8px;border-radius:10px;margin-bottom:4px}
-.ti-word{background:rgba(255,225,53,.12);color:var(--acc)}
-.ti-draw{background:rgba(77,255,210,.1);color:var(--acc3)}
+.ov {display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); place-items:center;}
+.ov.show {display:grid;}
+.ov-card {background:var(--card); border-radius:28px; padding:32px 24px; width:calc(100% - 40px); max-width:380px; border:1.5px solid var(--bdr); animation:slideUp 0.3s cubic-bezier(0.15,1.1,0.2,1); box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+.ov-bot {display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.7); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); align-items:flex-end; justify-content:center;}
+.ov-bot.show {display:flex;}
+.ov-sheet {background:var(--bg2); border-radius:28px 28px 0 0; padding:24px 24px 40px; width:100%; max-width:500px; border:1.5px solid var(--bdr); border-bottom:none; animation:slideUpS 0.3s cubic-bezier(0.15,1.1,0.2,1); max-height:88vh; overflow-y:auto;}
+@keyframes slideUp {from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1}}
+@keyframes slideUpS {from{transform:translateY(100%)} to{transform:translateY(0)}}
 
 /* ═══ AI EVAL DETAILS ═══ */
-.ai-core-word-box {background:rgba(124,58,237,0.15); border:1px solid rgba(124,58,237,0.4); border-radius:12px; padding:12px; margin-bottom:16px; text-align:center;}
-.ai-core-label {font-size:11px; color:#c4b5fd; font-weight:800; letter-spacing:1px; margin-bottom:4px;}
-.ai-core-val {font-family:'Black Han Sans',sans-serif; font-size:24px; color:#fff;}
-.ai-reason {font-size:15px; color:var(--txt); line-height:1.8; background:var(--card); border-radius:14px; padding:20px; border:1.5px solid var(--bdr); text-align:left; white-space:pre-wrap; word-break:keep-all; margin-top:16px;} 
-.ai-loading {text-align:center; padding:30px; color:var(--mut); font-size:15px}
-.compare-row {display:flex; gap:12px; margin-bottom:16px}
-.compare-item {flex:1; background:var(--card); border-radius:14px; overflow:hidden; border:1.5px solid var(--bdr)}
-.compare-lbl {font-size:10px; font-weight:800; color:var(--mut); letter-spacing:2px; padding:8px 10px 0; text-transform:uppercase}
-.compare-val {font-size:14px; font-weight:700; padding:6px 10px 10px; line-height:1.4}
-.compare-img {width:100%; max-height:100px; object-fit:contain; background:#fff; display:block}
-.winner-badge {display:inline-block; background:var(--acc); color:#000; font-size:12px; font-weight:900; padding:4px 12px; border-radius:20px; margin-bottom:10px}
+.ai-core-word-box {background:rgba(124,58,237,0.12); border:1.5px solid rgba(124,58,237,0.4); border-radius:16px; padding:16px; margin-bottom:20px; text-align:center;}
+.ai-core-label {font-size:11px; color:#c4b5fd; font-weight:800; letter-spacing:1px; margin-bottom:6px;}
+.ai-core-val {font-family:'Black Han Sans',sans-serif; font-size:26px; color:#fff;}
+.ai-reason {font-size:15px; color:var(--txt); line-height:1.7; background:var(--card); border-radius:16px; padding:22px; border:1.5px solid var(--bdr); text-align:left; white-space:pre-wrap; word-break:keep-all; margin-top:20px;}
 </style>
 </head>
 <body>
@@ -136,7 +164,7 @@ canvas{touch-action:none;display:block;background:#fff}
   <div class="main-inner">
     <div class="main-logo">🎨 GAME HUB</div>
     <div class="main-title">그림 게임</div>
-    <div class="main-sub">친구들과 함께 즐기는 드로잉 게임 모음</div>
+    <div class="main-sub">친구들과 함께 즐기는 완벽한 드로잉 게임 모음</div>
     <div class="game-cards">
       <div class="game-card gc-catch" onclick="showScreen('s-intro')">
         <div class="gc-badge">1인/다인 모드</div>
@@ -155,11 +183,11 @@ canvas{touch-action:none;display:block;background:#fff}
 </div>
 
 <div id="s-intro" class="screen">
-  <div class="hdr"><button class="btn-bk" onclick="showScreen('s-main')">←</button><div class="hdr-sp"></div></div>
-  <div class="intro-inner scrollable">
+  <div class="hdr hdr-glass"><button class="btn-bk" onclick="showScreen('s-main')">←</button><div class="hdr-sp"></div></div>
+  <div class="flex-1 scrollable" style="padding:40px 24px; text-align:center;">
     <div class="logo-eye">👁️ 맞춰보세요</div>
-    <div class="logo-title" style="font-size:46px">캐치마인드</div>
-    <div class="opt-group" style="margin: 30px auto;">
+    <div class="main-title" style="font-size:48px">캐치마인드</div>
+    <div class="opt-group">
         <div class="opt-label">제한 시간 선택</div>
         <div class="opt-btns">
             <button class="opt-btn sel" onclick="cSetLimit(1, this)">1분</button>
@@ -172,24 +200,29 @@ canvas{touch-action:none;display:block;background:#fff}
 </div>
 
 <div id="s-dial" class="screen">
-  <div class="hdr"><button class="btn-bk" onclick="showScreen('s-intro')">←</button><div class="hdr-sp"></div></div>
+  <div class="hdr hdr-glass"><button class="btn-bk" onclick="showScreen('s-intro')">←</button><div class="hdr-sp"></div></div>
   <div class="dial-body">
-    <div style="font-family:'Black Han Sans',sans-serif;font-size:24px;color:#fff;margin-bottom:20px;">무엇을 그릴까요?</div>
-    <div class="slot-wrap"><div class="slot-hl"></div><div class="slot-track" id="cTrack"></div></div>
-    <div class="dial-btns">
-      <button class="btn-reroll" onclick="spinDial()">🎲 무작위 단어 뽑기</button>
+    <div class="font-black" style="font-size:26px; color:#fff; margin-bottom:24px;">무엇을 그릴까요?</div>
+    <div class="slot-wrap">
+      <div class="slot-hl"></div>
+      <div class="slot-track" id="cTrack"></div>
+    </div>
+    <div style="width:100%; max-width:340px; display:flex; flex-direction:column; gap:12px;">
+      <button class="btn-bk" style="width:100%; height:54px; font-weight:800; border-radius:16px;" onclick="spinDial()">🎲 무작위 단어 뽑기</button>
       <button class="btn-go" id="cBtnGo" onclick="startCDraw()">그리기 시작!</button>
     </div>
   </div>
 </div>
 
 <div id="s-draw" class="screen">
-  <div class="draw-hdr" style="background:#111120; padding:10px 14px; display:flex; align-items:center; gap:10px;">
-    <button class="btn-bk" onclick="confirmEndGame()" style="font-size:13px;width:auto;padding:0 10px">종료</button>
-    <div class="draw-word" id="cDrawWord" style="flex:1; text-align:center; font-family:'Black Han Sans',sans-serif; font-size:24px; color:var(--acc);">---</div>
+  <div class="canvas-hdr">
+    <button class="btn-bk" onclick="confirmEndGame()">종료</button>
+    <div class="hdr-ttl" id="cDrawWord" style="color:var(--acc); font-size:24px;">---</div>
     <div class="timer-tag" id="cTimer">01:00</div>
   </div>
-  <canvas id="cCanvas" style="flex:1;width:100%;cursor:crosshair;"></canvas>
+  <div class="flex-1" style="display:flex; flex-direction:column; background:#fff;">
+    <canvas id="cCanvas" style="flex:1; width:100%;"></canvas>
+  </div>
   <div class="tools-wrap">
     <div class="tools-top">
       <button class="ti on" id="cPen" onclick="cSetTool('pencil')">✏️</button>
@@ -199,29 +232,29 @@ canvas{touch-action:none;display:block;background:#fff}
         <button class="sz-btn" id="cSzM" onclick="cSetSize('M')"><div class="sz-dot" style="width:10px;height:10px"></div></button>
         <button class="sz-btn" id="cSzL" onclick="cSetSize('L')"><div class="sz-dot" style="width:16px;height:16px"></div></button>
       </div>
-      <button class="ti ml" onclick="cUndo()">↩️</button>
+      <button class="ti" style="margin-left:auto" onclick="cUndo()">↩️</button>
       <button class="ti" onclick="cClear()">🗑️</button>
     </div>
     <div class="palette" id="cPalette"></div>
-    <button class="btn-sub" onclick="submitCDraw()">그림 다 그렸음! (완성) 🎨</button>
+    <button class="btn-primary" style="margin-top:14px; height:54px; border-radius:16px;" onclick="submitCDraw()">그림 다 그렸음! (완성) 🎨</button>
   </div>
 </div>
 
 <div id="s-view" class="screen">
-  <div class="hdr" style="background:#13132A; border-bottom:1px solid var(--bdr);">
+  <div class="hdr hdr-glass">
     <div class="hdr-sp"></div>
     <div class="hdr-ttl" id="vTitle" style="color:#fff;">상대방에게 보여주세요</div>
-    <button class="btn-bk" onclick="confirmEndGame()" style="font-size:13px;width:auto;padding:0 10px">홈</button>
+    <button class="btn-bk" onclick="confirmEndGame()">홈</button>
   </div>
   <div class="view-img-wrap">
     <img id="cResultImg">
     <div class="preview-ans-badge" id="cPreviewAns">정답: ---</div>
   </div>
   <div class="view-bot">
-    <div class="stopwatch-box" id="cStopwatchBox">⏱️ 정답 측정 중: <span id="cStopwatch">0.0</span>초</div>
+    <div class="stopwatch-box" id="cStopwatchBox">⏱️ 기록 측정 중: <span id="cStopwatch">0.0</span>초</div>
     <button class="btn-pu" id="cBtnStartMatch" onclick="startMatch()">🖼️ 그림 보여주기 (기록 시작!)</button>
     <div id="cMatchActions" style="display:none">
-        <div style="font-size:13px; color:var(--mut); margin-bottom:14px; font-weight:700;">상대방이 정답을 맞췄나요?</div>
+        <div style="font-size:13px; color:var(--mut); margin-bottom:14px; font-weight:800;">상대방이 정답을 맞췄나요?</div>
         <div class="btn-row">
             <button class="btn-yes" onclick="finishMatch(true)">정답! YES ✅</button>
             <button class="btn-no" onclick="finishMatch(false)">아직.. NO ❌</button>
@@ -231,20 +264,20 @@ canvas{touch-action:none;display:block;background:#fff}
 </div>
 
 <div id="s-g-menu" class="screen">
-  <div class="hdr hdr-pu"><button class="btn-bk-pu" onclick="showScreen('s-main')">←</button><div class="hdr-ttl-pu">갈틱폰</div><div class="hdr-sp"></div></div>
-  <div class="g-menu-inner scrollable">
+  <div class="hdr hdr-pu"><button class="btn-bk" onclick="showScreen('s-main')">←</button><div class="hdr-ttl">갈틱폰</div><div class="hdr-sp"></div></div>
+  <div class="flex-1 scrollable" style="padding:40px 24px;">
     <div class="g-mode-card gmc-compete" onclick="selectGMode('compete')">
-      <div class="gmc-tag">NEW</div><div class="gmc-icon">⚔️</div><div class="gmc-title">팀 경쟁 모드</div><div class="gmc-desc">두 팀이 똑같은 제시어로 시작하여 AI의 평가를 받습니다.</div>
+      <div class="gmc-tag">NEW 배틀</div><div class="gmc-icon">⚔️</div><div class="gmc-title" style="color:#fff">팀 경쟁 모드</div><div class="gmc-desc">두 팀이 똑같은 제시어로 시작하여 AI의 냉정한 평가를 받습니다.</div>
     </div>
     <div class="g-mode-card gmc-draw" onclick="selectGMode('draw')">
-      <div class="gmc-icon">🎨</div><div class="gmc-title">그리기&설명 모드</div><div class="gmc-desc">단어 → 그림 → 설명 순으로 전달하는 협동 모드입니다.</div>
+      <div class="gmc-icon">🎨</div><div class="gmc-title" style="color:#fff">그리기&설명 모드</div><div class="gmc-desc">단어 → 그림 → 설명 순으로 전달하는 가장 인기있는 협동 모드입니다.</div>
     </div>
   </div>
 </div>
 
 <div id="s-g-setup" class="screen">
-  <div class="hdr hdr-pu"><button class="btn-bk-pu" onclick="showScreen('s-g-menu')">←</button><div class="hdr-ttl-pu" id="setupModeTitle">설정</div><div class="hdr-sp"></div></div>
-  <div class="g-setup-body scrollable">
+  <div class="hdr hdr-pu"><button class="btn-bk" onclick="showScreen('s-g-menu')">←</button><div class="hdr-ttl" id="setupModeTitle">설정</div><div class="hdr-sp"></div></div>
+  <div class="g-setup-body scrollable flex-1">
     
     <div class="g-section" id="startModeSection">
       <div class="g-section-title">시작 방식 선택 (1단계)</div>
@@ -252,14 +285,14 @@ canvas{touch-action:none;display:block;background:#fff}
         <button class="photo-opt sel" id="smWord" onclick="setStartMode('word')">✏️ 글로 시작하기</button>
         <button class="photo-opt" id="smDraw" onclick="setStartMode('draw')">🎨 그림으로 시작하기</button>
       </div>
-      <div class="pc-label" style="margin-top:8px" id="smDesc">첫 플레이어가 긴 문장이나 영어로 단어를 묘사하며 시작합니다.</div>
+      <div style="font-size:13px; color:var(--mut); margin-top:10px; text-align:center;" id="smDesc">첫 플레이어가 긴 문장이나 영어로 단어를 묘사하며 시작합니다.</div>
     </div>
 
     <div class="g-section">
       <div class="g-section-title" id="pcTitle">인원 수</div>
       <div class="player-count-row">
         <button class="pc-btn" onclick="adjPlayers(-1)">−</button>
-        <div style="flex:1;text-align:center"><div class="pc-num" id="pcNum">2</div></div>
+        <div class="pc-num" id="pcNum">2</div>
         <button class="pc-btn" onclick="adjPlayers(1)">+</button>
       </div>
     </div>
@@ -277,44 +310,46 @@ canvas{touch-action:none;display:block;background:#fff}
       <div class="name-list" id="nameList"></div>
     </div>
     
-    <button class="btn-pu" style="margin-top:20px" onclick="startGartic()">게임 시작! 🎲</button>
+    <button class="btn-pu" style="margin-top:10px" onclick="startGartic()">게임 시작! 🎲</button>
   </div>
 </div>
 
 <div id="s-g-pass" class="screen">
   <div class="pass-inner">
     <div class="pass-icon" id="passIcon">📱</div>
-    <div class="pass-to" id="passTeamBadge" style="font-size:14px; font-weight:800; letter-spacing:2px; margin-bottom:8px">NEXT PLAYER</div>
-    <div class="pass-name" id="passName" style="font-family:'Black Han Sans',sans-serif; font-size:46px; color:#fff; margin-bottom:8px">---</div>
-    <div class="pass-task" id="passTask" style="font-size:15px; color:#c4b5fd; margin-bottom:40px">---</div>
-    <button class="pass-ready-btn" style="width:100%;height:66px;border-radius:22px;border:none;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-family:'Black Han Sans',sans-serif;font-size:24px;cursor:pointer;" onclick="readyForTask()">준비 됐어요! 👍</button>
+    <div id="passTeamBadge" style="font-size:14px; font-weight:900; letter-spacing:2px; margin-bottom:10px;">NEXT PLAYER</div>
+    <div id="passName" style="font-family:'Black Han Sans',sans-serif; font-size:48px; color:#fff; margin-bottom:10px; line-height:1;">---</div>
+    <div id="passTask" style="font-size:16px; color:#c4b5fd; margin-bottom:48px;">---</div>
+    <button class="btn-pu" style="height:68px; font-size:24px; border-radius:24px;" onclick="readyForTask()">준비 됐어요! 👍</button>
   </div>
 </div>
 
 <div id="s-g-write" class="screen">
-    <div class="hdr hdr-pu" style="padding:10px 14px; display:flex; align-items:center;">
+    <div class="hdr hdr-pu">
         <div class="hdr-sp"></div>
-        <div class="hdr-ttl-pu" id="gwTitle" style="flex:1; text-align:center;">입력</div>
-        <button class="btn-bk" onclick="confirmEndGame()" style="font-size:13px;width:auto;padding:0 10px">종료</button>
+        <div class="hdr-ttl" id="gwTitle">입력</div>
+        <button class="btn-bk" onclick="confirmEndGame()">종료</button>
     </div>
-    <div class="gw-body" style="flex:1; display:flex; flex-direction:column; padding:16px; gap:14px; overflow-y:auto; background:var(--bg2)">
-        <div class="gw-prev" id="gwPrev" style="display:none; background:var(--card); border-radius:16px; overflow:hidden; border:1.5px solid var(--bdr);"></div>
-        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-            <div style="font-size:13px; font-weight:700; color:var(--mut);" id="gwInputLbl">제시어를 입력하세요</div>
-            <button id="btnMic" onclick="toggleMic()" style="background:rgba(255,255,255,0.08); border:1px solid var(--bdr); border-radius:12px; color:var(--txt); padding:6px 12px; font-size:13px; cursor:pointer; font-weight:700;">🎙️ 음성 입력</button>
+    <div class="gw-body">
+        <div class="gw-prev" id="gwPrev" style="display:none"></div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:4px;">
+            <div style="font-size:14px; font-weight:800; color:var(--mut);" id="gwInputLbl">제시어를 입력하세요</div>
+            <button id="btnMic" class="btn-mic" onclick="toggleMic()">🎙️ 음성 입력</button>
         </div>
-        <textarea id="gwInput" placeholder="긴 문장이나 영어 묘사도 AI가 찰떡같이 알아듣습니다!" style="flex:1; min-height:80px; background:var(--card); border:1.5px solid var(--bdr); border-radius:14px; color:var(--txt); font-size:16px; font-weight:700; padding:14px; resize:none; outline:none;" oninput="gwCheck()"></textarea>
-        <button id="gwSubmit" onclick="submitWrite()" disabled style="height:54px; border-radius:18px; border:none; background:linear-gradient(135deg,#7C3AED,#2563EB); color:#fff; font-family:'Black Han Sans',sans-serif; font-size:18px; cursor:pointer;">제출 →</button>
+        <textarea class="gw-textarea" id="gwInput" placeholder="긴 문장이나 영어 묘사도 AI가 찰떡같이 알아듣습니다!" oninput="gwCheck()"></textarea>
+        <button class="btn-pu" id="gwSubmit" onclick="submitWrite()" disabled style="height:56px; margin-top:auto;">제출 →</button>
     </div>
 </div>
 
 <div id="s-g-draw" class="screen">
-    <div class="g-draw-hdr" style="padding:10px 14px; display:flex; align-items:center; background:#0e0e1e; border-bottom:1px solid rgba(255,255,255,0.07)">
+    <div class="canvas-hdr">
+        <button class="btn-bk" onclick="confirmEndGame()">종료</button>
+        <div id="gPrevWord" class="hdr-ttl" style="color:#c4b5fd;">---</div>
         <div class="hdr-sp"></div>
-        <div class="g-prev-word" id="gPrevWord" style="flex:1; text-align:center; font-family:'Black Han Sans',sans-serif; font-size:18px; color:#c4b5fd;">---</div>
-        <button class="btn-bk" onclick="confirmEndGame()" style="font-size:13px;width:auto;padding:0 10px">종료</button>
     </div>
-    <canvas id="gCvs" style="flex:1; width:100%; background:#fff; touch-action:none;"></canvas>
+    <div class="flex-1" style="display:flex; flex-direction:column; background:#fff;">
+      <canvas id="gCvs" style="flex:1; width:100%;"></canvas>
+    </div>
     <div class="tools-wrap">
         <div class="tools-top">
             <button class="ti on" id="gPen" onclick="gSetTool('pencil')">✏️</button>
@@ -324,49 +359,51 @@ canvas{touch-action:none;display:block;background:#fff}
               <button class="sz-btn" id="gSzM" onclick="gSetSize('M')"><div class="sz-dot" style="width:10px;height:10px"></div></button>
               <button class="sz-btn" id="gSzL" onclick="gSetSize('L')"><div class="sz-dot" style="width:16px;height:16px"></div></button>
             </div>
-            <button class="ti ml" onclick="gUndo()">↩️</button>
+            <button class="ti" style="margin-left:auto" onclick="gUndo()">↩️</button>
             <button class="ti" onclick="gClear()">🗑️</button>
         </div>
         <div class="palette" id="gPalette"></div>
-        <button class="btn-sub" onclick="submitGDraw()">제출 →</button>
+        <button class="btn-pu" style="margin-top:14px; height:54px; border-radius:16px;" onclick="submitGDraw()">제출 →</button>
     </div>
 </div>
 
 <div id="s-g-results" class="screen">
-    <div class="hdr hdr-pu"><div class="hdr-sp"></div><div class="hdr-ttl-pu">라운드 완료!</div><button class="btn-bk-pu" onclick="showScreen('s-main')" style="font-size:13px;width:auto;padding:0 10px">홈</button></div>
-    <div class="gres-body scrollable" style="flex:1;">
-        <div class="gres-header">
-            <div class="gres-title">🎉 결과 확인</div>
-            <div class="gres-sub" id="gResSub">방금 완료된 라운드 결과입니다</div>
+    <div class="hdr hdr-pu">
+        <div class="hdr-sp"></div><div class="hdr-ttl">라운드 완료!</div><button class="btn-bk" onclick="showScreen('s-main')">홈</button>
+    </div>
+    <div class="gres-body scrollable flex-1">
+        <div class="text-center" style="padding:24px 0 32px;">
+            <div class="font-black" style="font-size:36px; color:#fff; margin-bottom:6px;">🎉 결과 확인</div>
+            <div style="font-size:14px; color:var(--mut);" id="gResSub">방금 완료된 라운드 결과입니다</div>
         </div>
         <div id="gResultChains"></div>
-        <div class="gres-actions">
-            <button class="btn-ai" onclick="runAiEval()">🤖 AI 상세 평가 및 판정</button>
-            <button class="btn-pu" id="btnNextChain" onclick="nextChain()">다음 진행</button>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:32px;">
+            <button class="btn-pu" style="background:linear-gradient(135deg,#7C3AED,#2563EB);" onclick="runAiEval()">🤖 AI 상세 평가 및 판정</button>
+            <button class="btn-bk" style="width:100%; height:60px; border-radius:var(--r); background:var(--card);" id="btnNextChain" onclick="nextChain()">다음 진행</button>
         </div>
     </div>
 </div>
 
 <div class="ov" id="ov-end-confirm">
   <div class="ov-card">
-    <div class="ov-title">🏁 종료 확인</div>
-    <div class="ov-sub">메인 화면으로 이동할까요?</div>
-    <button class="btn-pu" onclick="closeOv('ov-end-confirm'); showScreen('s-main')" style="margin-bottom:10px">그만하기</button>
-    <button class="btn-close" onclick="closeOv('ov-end-confirm')">계속하기</button>
+    <div class="font-black" style="font-size:24px; margin-bottom:8px; text-align:center;">🏁 종료 확인</div>
+    <div style="font-size:14px; color:var(--mut); text-align:center; margin-bottom:24px;">메인 화면으로 이동할까요?</div>
+    <button class="btn-pu" style="background:var(--acc2); margin-bottom:12px;" onclick="closeOv('ov-end-confirm'); showScreen('s-main')">그만하기</button>
+    <button class="btn-bk" style="width:100%; height:54px; border-radius:18px;" onclick="closeOv('ov-end-confirm')">계속하기</button>
   </div>
 </div>
 
 <div class="ov-bot" id="ov-ai-eval">
     <div class="ov-sheet">
-        <div style="font-family:'Black Han Sans',sans-serif;font-size:20px;margin-bottom:4px;text-align:center;">🤖 깐깐한 AI 평론가</div>
-        <div style="font-size:13px;color:var(--mut);margin-bottom:16px;text-align:center;" id="aiEvalDesc">긴 영어 문장도 핵심을 파악하여 평가합니다</div>
+        <div class="font-black" style="font-size:24px; margin-bottom:6px; text-align:center;">🤖 깐깐한 AI 평론가</div>
+        <div style="font-size:13px; color:var(--mut); margin-bottom:24px; text-align:center;" id="aiEvalDesc">긴 영어 문장도 핵심을 파악하여 평가합니다</div>
         <div id="aiEvalContent"></div>
-        <button class="btn-close" onclick="closeOv('ov-ai-eval')">닫기</button>
+        <button class="btn-bk" style="width:100%; height:54px; margin-top:20px; border-radius:16px;" onclick="closeOv('ov-ai-eval')">닫기</button>
     </div>
 </div>
 
 <script>
-// 📋 단어장
+// 📋 단어장 100개
 const W = [
   {w:"냉장고"},{w:"소방차"},{w:"사과"},{w:"강아지"},{w:"자동차"},{w:"피자"},{w:"무지개"},{w:"눈사람"},{w:"고래"},{w:"피아노"},
   {w:"비행기"},{w:"축구공"},{w:"나비"},{w:"달팽이"},{w:"펭귄"},{w:"트럭"},{w:"아이스크림"},{w:"구름"},{w:"풍선"},{w:"장미"},
@@ -399,9 +436,10 @@ function spinDial() {
   let words = []; for(let i=0; i<30; i++) words.push(W[Math.floor(Math.random()*W.length)].w); cWord = words[29];
   words.forEach((w, i) => { track.innerHTML += `<div class="slot-item ${i===29?'ctr':''}">${w}</div>`; });
   track.style.transition = 'none'; track.style.transform = 'translateY(0)';
-  setTimeout(() => { track.style.transition = 'transform 3s cubic-bezier(0.15, 1.1, 0.2, 1)'; track.style.transform = `translateY(-${62 * 29}px)`; }, 50);
+  setTimeout(() => { track.style.transition = 'transform 3s cubic-bezier(0.15, 1.1, 0.2, 1)'; track.style.transform = `translateY(-${68 * 29}px)`; }, 50);
   setTimeout(() => { btnGo.classList.add('vis'); }, 3000);
 }
+
 let cCvs, cCtx, cDrawing=false, cLastP=null, cTool='pencil', cClr='#111', cSz='S', cSnaps=[];
 function startCDraw() {
   document.getElementById('cDrawWord').textContent = cWord; cTimeLeft = cLimitMin * 60; updateTimerUI(); showScreen('s-draw');
@@ -414,7 +452,7 @@ function initCCvs() {
   cCvs.width = Math.round(r.width*dpr); cCvs.height = Math.round(r.height*dpr); cCtx = cCvs.getContext('2d'); cCtx.scale(dpr,dpr); cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,r.width,r.height);
   cSnaps = [cCvs.toDataURL()]; cCvs.addEventListener('pointerdown', cdDown); cCvs.addEventListener('pointermove', cdMove); window.addEventListener('pointerup', cdUp);
   const pal = document.getElementById('cPalette'); pal.innerHTML = '';
-  CLRS.forEach(c => { const el = document.createElement('div'); el.className = 'clr'+(c.h===cClr?' on':''); el.style.background = c.h; el.onclick = () => { cClr = c.h; cTool='pencil'; document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on'); document.querySelectorAll('#cPalette .clr').forEach(x => x.classList.remove('on')); el.classList.add('on'); }; pal.appendChild(el); });
+  CLRS.forEach(c => { const el = document.createElement('div'); el.className = 'clr'+(c.h===cClr?' on':''); el.style.background = c.h; if(c.h==='#fff') el.style.border = '3px solid #ccc'; el.onclick = () => { cClr = c.h; cTool='pencil'; document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on'); document.querySelectorAll('#cPalette .clr').forEach(x => x.classList.remove('on')); el.classList.add('on'); }; pal.appendChild(el); });
 }
 function cGetP(e){ const r = cCvs.getBoundingClientRect(); return {x: e.clientX-r.left, y: e.clientY-r.top}; }
 function cdDown(e){ cDrawing=true; const p=cGetP(e); cLastP=p; cCtx.beginPath(); cCtx.arc(p.x,p.y,cBr()/2,0,Math.PI*2); cCtx.fillStyle=cTool==='eraser'?'#fff':cClr; cCtx.fill(); }
@@ -443,22 +481,18 @@ function finishMatch(isYes) {
    GARTIC LOGIC
 ══════════════════════════════════════════════════ */
 const G = { mode: 'draw', players: [], chains: [], cIdx: 0, sIdx: 0 };
-let gStartMode = 'word'; // 'word' or 'draw'
+let gStartMode = 'word';
 
-// 💡 셋업 및 모드 선택 강화
 function setStartMode(m){
   gStartMode = m;
   document.getElementById('smWord').classList.toggle('sel', m==='word');
   document.getElementById('smDraw').classList.toggle('sel', m==='draw');
-  document.getElementById('smDesc').textContent = m === 'word' 
-    ? "첫 플레이어가 긴 문장이나 영어로 단어를 묘사하며 시작합니다." 
-    : "시스템이 무작위 단어를 주면, 첫 플레이어가 그림을 그리며 시작합니다.";
+  document.getElementById('smDesc').textContent = m === 'word' ? "첫 플레이어가 긴 문장이나 영어로 단어를 묘사하며 시작합니다." : "시스템이 무작위 단어를 주면, 첫 플레이어가 그림을 그리며 시작합니다.";
 }
 
 function selectGMode(m){
   G.mode = m;
   document.getElementById('setupModeTitle').textContent = m === 'compete' ? '팀 경쟁 모드 (배틀)' : '그리기&설명 모드';
-  
   if(m === 'compete'){
     document.getElementById('pcTitle').textContent = '팀 당 인원 수';
     document.getElementById('setupNormal').style.display = 'none';
@@ -470,10 +504,8 @@ function selectGMode(m){
     document.getElementById('setupTeamA').style.display = 'none';
     document.getElementById('setupTeamB').style.display = 'none';
   }
-  
   G.numPlayers = m === 'compete' ? 1 : 2;
-  adjPlayers(0); 
-  showScreen('s-g-setup');
+  adjPlayers(0); showScreen('s-g-setup');
 }
 
 function adjPlayers(d){
@@ -485,7 +517,6 @@ function adjPlayers(d){
     const nl = document.getElementById(id); nl.innerHTML = '';
     for(let i=0; i<n; i++) nl.innerHTML += `<div class="name-row"><div class="name-num">${i+1}</div><input class="name-input" id="${prefix}${i}" placeholder="${prefix} 플레이어 ${i+1}"></div>`;
   };
-
   if(G.mode === 'compete'){ buildList('nameListA', '팀1_'); buildList('nameListB', '팀2_'); }
   else { buildList('nameList', 'P_'); }
 }
@@ -516,7 +547,6 @@ function startGartic() {
 function showGPass() {
   document.getElementById('passIcon').textContent = gStepType()==='draw' ? '🎨' : '✏️';
   document.getElementById('passName').textContent = gPlayerName();
-  
   if(G.sIdx===0 && gStartMode==='word') document.getElementById('passTask').textContent = '자유롭게 긴 문장이나 영어로 제시어를 적어보세요!';
   else if(gStepType()==='draw') document.getElementById('passTask').textContent = '설명을 보고 그림을 그려주세요';
   else document.getElementById('passTask').textContent = '그림을 보고 무엇인지 글로 설명해주세요';
@@ -533,7 +563,6 @@ function showGPass() {
 
 function readyForTask(){ if(gStepType()==='draw') showGDraw(); else showGWrite(); }
 
-// STT
 let mediaRecorder = null; let audioChunks = []; let isRecording = false;
 async function toggleMic() {
   const btn = document.getElementById('btnMic');
@@ -549,7 +578,7 @@ async function toggleMic() {
       isRecording = false; btn.innerHTML = '⏳ 변환 중...'; btn.disabled = true; stream.getTracks().forEach(t => t.stop()); 
       const ext = mimeType.includes('webm') ? 'webm' : 'm4a';
       const audioBlob = new Blob(audioChunks, { type: mimeType });
-      const formData = new FormData(); formData.append('file', audioBlob, `recording.${ext}`); formData.append('model', 'whisper-1');
+      const formData = new FormData(); formData.append('file', audioBlob, `recording.${ext}`); formData.append('model', 'whisper-1'); formData.append('language', 'ko');
       try {
         const response = await fetch('/api/stt', { method: 'POST', body: formData });
         const data = await response.json().catch(() => null);
@@ -567,7 +596,7 @@ function showGWrite(){
   const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].steps.length-1];
   document.getElementById('gwInput').value = ''; gwCheck();
   const prevEl = document.getElementById('gwPrev'); prevEl.style.display = 'none';
-  if(G.sIdx > 0 && prev && prev.type==='draw'){ prevEl.innerHTML = `<img src="${prev.content}" style="width:100%;max-height:220px;object-fit:contain;background:#fff;display:block">`; prevEl.style.display = 'block'; }
+  if(G.sIdx > 0 && prev && prev.type==='draw'){ prevEl.innerHTML = `<img src="${prev.content}" style="width:100%;max-height:260px;object-fit:contain;background:#fff;display:block">`; prevEl.style.display = 'block'; }
   document.getElementById('gwInputLbl').textContent = G.sIdx===0 ? '무엇을 전달할까요? (영어 묘사 가능)' : '그림을 보고 묘사해주세요';
   showScreen('s-g-write');
 }
@@ -643,7 +672,7 @@ function showBattleResult(){
 }
 
 /* ══════════════════════════════════════════════════
-   🤖 AI EVALUATION (핵심 명사 도출 프롬프트 추가)
+   🤖 AI EVALUATION
 ══════════════════════════════════════════════════ */
 async function fetchEval(messages) {
   const res = await fetch('/api/eval', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages }) });
@@ -653,7 +682,7 @@ async function fetchEval(messages) {
 }
 
 async function runAiEval(){
-  document.getElementById('aiEvalContent').innerHTML = `<div class="ai-loading"><div class="spinner"></div><div>깐깐한 AI 평론가가 디테일을 조목조목 뜯어보는 중입니다...<br><small>(핵심 명사 도출 중)</small></div></div>`;
+  document.getElementById('aiEvalContent').innerHTML = `<div style="text-align:center; padding:40px; color:var(--mut);">깐깐한 AI 평론가가 디테일을 분석 중입니다...<br><br><small>(핵심 명사 도출 중)</small></div>`;
   openOv('ov-ai-eval');
 
   try {
@@ -663,7 +692,6 @@ async function runAiEval(){
       const origA = gStartMode === 'draw' ? G.chains[0].systemWord : G.chains[0].steps[0].content;
       const origB = gStartMode === 'draw' ? G.chains[1].systemWord : G.chains[1].steps[0].content;
 
-      // 💡 영어 문장도 파악하도록 핵심 프롬프트 추가!
       let messages = [{
         role: "system", 
         content: "너는 아주 깐깐하고 말 많은 미술 평론가이자 갈틱폰 심사위원이야. 팀 A와 팀 B의 원본 제시어가 긴 문장이나 영어 묘사로 되어 있다면, 먼저 그 문장이 가리키는 '핵심 대상(명사)'을 한국어로 도출해라(예: 'A yellow fruit that monkeys eat' -> '바나나'). 그리고 그 도출된 명사를 기준으로 각 팀의 최종 결과물을 비교해서 0~100점으로 평가해라. 'reason' 항목은 유머러스하고 팩트폭력을 섞어 장황하게 작성해. 무조건 JSON({\"core_keyword_A\": \"팀A 핵심명사\", \"core_keyword_B\": \"팀B 핵심명사\", \"teamA_score\": 숫자, \"teamB_score\": 숫자, \"winner\": \"TEAM A\" 또는 \"TEAM B\" 또는 \"무승부\", \"reason\": \"상세한 심사평\"})으로 반환해."
@@ -697,7 +725,7 @@ async function runAiEval(){
           <div class="compare-item" style="border-color:${result.winner.includes('A')?'var(--acc2)':'var(--bdr)'}"><div class="compare-lbl">TEAM A (점수: ${result.teamA_score})</div>${htmlA}</div>
           <div class="compare-item" style="border-color:${result.winner.includes('B')?'#38BDF8':'var(--bdr)'}"><div class="compare-lbl">TEAM B (점수: ${result.teamB_score})</div>${htmlB}</div>
         </div>
-        <div style="text-align:center;"><span class="winner-badge" style="background:${result.winner.includes('A')?'var(--acc2)':(result.winner.includes('B')?'#38BDF8':'var(--mut)')}; color:#fff;">🏆 승리: ${result.winner}</span></div>
+        <div style="text-align:center;"><span class="winner-badge" style="background:${result.winner.includes('A')?'var(--acc2)':(result.winner.includes('B')?'#38BDF8':'var(--mut)')}; color:#fff; font-size:16px; padding:8px 24px;">🏆 승리: ${result.winner}</span></div>
         <div class="ai-reason">${result.reason}</div>
       `;
 
@@ -730,7 +758,7 @@ async function runAiEval(){
           <div class="compare-item"><div class="compare-lbl">최종 도달 결과</div>${lastHTML}</div>
           <div class="compare-item" style="flex:0.5; display:flex; flex-direction:column; align-items:center; justify-content:center;">
              <div style="font-size:11px; color:var(--mut); font-weight:800; margin-bottom:4px">유사도 점수</div>
-             <div style="font-family:'Black Han Sans',sans-serif; font-size:36px; color:#fff;">${result.score}<span style="font-size:14px; color:var(--mut)">점</span></div>
+             <div class="font-black" style="font-size:42px; color:#fff;">${result.score}<span style="font-size:14px; color:var(--mut)">점</span></div>
           </div>
         </div>
         <div class="ai-reason">${result.reason}</div>
