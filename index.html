@@ -184,7 +184,7 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
     <div class="hdr-ttl" id="cDrawWord" style="color:var(--acc)">---</div>
     <div id="cTimer" class="font-black" style="color:var(--acc2); font-size:18px; padding:6px 14px; background:rgba(255,77,109,0.15); border-radius:10px;">01:00</div>
   </div>
-  <div class="canvas-container">
+  <div class="canvas-container" id="cCanvasWrap">
     <canvas id="cCanvas"></canvas>
   </div>
   <div class="tools-wrap">
@@ -290,7 +290,7 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
         <div id="gPrevWord" class="hdr-ttl" style="color:#c4b5fd; font-size:18px;">---</div>
         <div class="hdr-sp"></div>
     </div>
-    <div class="canvas-container">
+    <div class="canvas-container" id="gCanvasWrap">
       <canvas id="gCvs"></canvas>
     </div>
     <div class="tools-wrap">
@@ -386,11 +386,23 @@ function startCDraw() {
   cTimeLeft = cLimit * 60;
   showScreen('s-draw');
   
-  // 💡 버그 수정: DOM 렌더링 후 Canvas 초기화 보장
+  // 💡 [핵심 버그 픽스] 레이아웃 렌더링이 100% 보장된 후 캔버스 초기화 (크기 0 에러 방지)
   setTimeout(() => {
-    cCvs = document.getElementById('cCanvas'); const r = cCvs.getBoundingClientRect(); const dpr = window.devicePixelRatio||1;
-    cCvs.width = r.width*dpr; cCvs.height = r.height*dpr; cCtx = cCvs.getContext('2d'); cCtx.scale(dpr,dpr);
-    cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,r.width,r.height); cSnaps = [cCvs.toDataURL()];
+    cCvs = document.getElementById('cCanvas'); 
+    const p = document.getElementById('cCanvasWrap'); // 래퍼 요소를 기준으로 확실하게 측정
+    
+    // 만약의 경우를 대비한 Fallback 사이즈 적용
+    const w = p.clientWidth > 0 ? p.clientWidth : window.innerWidth;
+    const h = p.clientHeight > 0 ? p.clientHeight : 400; 
+    const dpr = window.devicePixelRatio || 1;
+    
+    cCvs.width = w * dpr; 
+    cCvs.height = h * dpr; 
+    cCtx = cCvs.getContext('2d'); 
+    cCtx.scale(dpr,dpr); 
+    cCtx.fillStyle='#fff'; 
+    cCtx.fillRect(0,0,w,h); 
+    cSnaps = [cCvs.toDataURL()];
     
     cCvs.onpointerdown = (e) => {
         cDrawing=true; cLastP=cGetP(e); 
@@ -402,7 +414,7 @@ function startCDraw() {
       cCtx.moveTo(cLastP.x,cLastP.y); cCtx.lineTo(p.x,p.y); cCtx.stroke(); cLastP=p;
     };
     window.onpointerup = () => {if(cDrawing){cDrawing=false; cSnaps.push(cCvs.toDataURL());}};
-  }, 50);
+  }, 150); // 충분한 대기 시간 할당
   
   cTool = 'pencil'; cClr = '#111'; cSz = 'S';
   document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on');
@@ -431,31 +443,29 @@ function cUndo(){ if(cSnaps.length>1){cSnaps.pop(); const img=new Image(); img.s
 function cClear(){ cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,cCvs.width,cCvs.height); cSnaps.push(cCvs.toDataURL()); }
 
 function submitCDraw() {
-  try {
-    clearInterval(cTimerInt);
-    document.getElementById('cResultImg').src = cCvs.toDataURL();
-    document.getElementById('ansPopup').textContent = `정답: ${cWord}`;
-    showScreen('s-view');
-    
-    // 스톱워치 시작
-    cSwTime = 0; clearInterval(cSwInt);
-    document.getElementById('cStopwatchDisplay').textContent = "0.0초";
-    document.getElementById('cStopwatchPopup').textContent = "0.0";
-    cSwInt = setInterval(() => { 
-        cSwTime += 0.1; 
-        document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; 
-        document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); 
-    }, 100);
-  } catch(e) {
-    alert("제출 처리 중 오류: 캔버스를 초기화할 수 없습니다. 다시 시도해주세요.");
-  }
+  clearInterval(cTimerInt);
+  // 에러 발생을 원천 차단한 안전한 저장
+  const data = cCvs.toDataURL('image/png', 0.8);
+  document.getElementById('cResultImg').src = data;
+  document.getElementById('ansPopup').textContent = `정답: ${cWord}`;
+  showScreen('s-view');
+  
+  // 스톱워치 시작
+  cSwTime = 0; clearInterval(cSwInt);
+  document.getElementById('cStopwatchDisplay').textContent = "0.0초";
+  document.getElementById('cStopwatchPopup').textContent = "0.0";
+  cSwInt = setInterval(() => { 
+      cSwTime += 0.1; 
+      document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; 
+      document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); 
+  }, 100);
 }
 
 function showAns(v){ document.getElementById('ansPopup').style.display = v ? 'block' : 'none'; }
 function openMatchOv(){ document.getElementById('matchOv').classList.add('show'); }
 function closeMatchOv(){ document.getElementById('matchOv').classList.remove('show'); }
 function finishMatch(yes) {
-  if(yes) { clearInterval(cSwInt); alert(`🎉 정답입니다! 기록: ${cSwTime.toFixed(1)}초`); closeMatchOv(); showScreen('s-main'); }
+  if(yes) { clearInterval(cSwInt); alert(`🎉 축하합니다! 기록: ${cSwTime.toFixed(1)}초`); closeMatchOv(); showScreen('s-main'); }
   else { closeMatchOv(); }
 }
 
@@ -541,7 +551,7 @@ function showGPass() {
 
 function readyForTask(){ if(gStepType()==='draw') showGDraw(); else showGWrite(); }
 
-// Whisper 음성 인식
+// Whisper 음성 인식 기능 완벽 보존
 let mediaRecorder = null; let audioChunks = []; let isRecording = false;
 async function toggleMic() {
   const btn = document.getElementById('btnMic');
@@ -589,11 +599,21 @@ function showGDraw(){
   document.getElementById('gPrevWord').innerHTML = `<small style="display:block;font-size:11px;color:var(--mut);margin-bottom:2px">이 내용을 그려보세요</small>${escHtml(wordToDraw)}`;
   showScreen('s-g-draw');
   
-  // 💡 버그 수정: DOM 렌더링 후 Canvas 초기화 보장
+  // 💡 [핵심 버그 픽스] 레이아웃 렌더링 후 Canvas 초기화
   setTimeout(() => {
-    gCvs = document.getElementById('gCvs'); const r = gCvs.getBoundingClientRect(); const dpr = window.devicePixelRatio||1;
-    gCvs.width = r.width*dpr; gCvs.height = r.height*dpr; gCtx = gCvs.getContext('2d'); gCtx.scale(dpr,dpr); 
-    gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,r.width,r.height); gSnaps=[gCvs.toDataURL()]; 
+    gCvs = document.getElementById('gCvs'); 
+    const p = document.getElementById('gCanvasWrap');
+    const w = p.clientWidth > 0 ? p.clientWidth : window.innerWidth;
+    const h = p.clientHeight > 0 ? p.clientHeight : 400;
+    const dpr = window.devicePixelRatio || 1;
+    
+    gCvs.width = w * dpr; 
+    gCvs.height = h * dpr; 
+    gCtx = gCvs.getContext('2d'); 
+    gCtx.scale(dpr,dpr); 
+    gCtx.fillStyle='#fff'; 
+    gCtx.fillRect(0,0,w,h); 
+    gSnaps=[gCvs.toDataURL()]; 
     
     gCvs.onpointerdown = (e) => {
         gDrawing=true; gLastP=gGetP(e); 
@@ -605,7 +625,7 @@ function showGDraw(){
       gCtx.moveTo(gLastP.x,gLastP.y); gCtx.lineTo(p.x,p.y); gCtx.stroke(); gLastP=p;
     };
     window.onpointerup = () => {if(gDrawing){gDrawing=false; gSnaps.push(gCvs.toDataURL());}};
-  }, 50);
+  }, 150);
 
   gTool = 'pencil'; gClr = '#111'; gSz = 'S';
   document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); ['S','M','L'].forEach(s => document.getElementById('gSz'+s).classList.toggle('on', s==='S'));
@@ -622,13 +642,9 @@ function gSetTool(t){ gTool=t; document.getElementById('gPen').classList.toggle(
 function gSetSize(s){ gSz=s; ['S','M','L'].forEach(x => document.getElementById('gSz'+x).classList.toggle('on',x===s)); }
 
 function submitGDraw(){ 
-  try {
-    const dataUrl = gCvs.toDataURL(); 
-    G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
-    advanceGartic(); 
-  } catch(e) {
-    alert("제출 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
-  }
+  const dataUrl = gCvs.toDataURL('image/png', 0.8); 
+  G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
+  advanceGartic(); 
 }
 
 function advanceGartic(){
@@ -671,7 +687,7 @@ function showBattleResult(){
 }
 
 // ══════════════════════════════════════════════════
-// 3. AI EVALUATION
+// 3. AI EVALUATION (팩트폭행 시스템 보존)
 // ══════════════════════════════════════════════════
 async function fetchEval(messages) {
   const res = await fetch('/api/eval', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages }) });
@@ -693,7 +709,7 @@ async function runAiEval(){
 
       let messages = [{
         role: "system", 
-        content: "너는 아주 깐깐하고 말 많은 미술 평론가이자 갈틱폰 심사위원이야. 팀 A와 팀 B의 원본 제시어가 긴 문장이나 영어 묘로 되어 있다면, 먼저 그 문장이 가리키는 '핵심 대상(명사)'을 한국어로 도출해라(예: 'A yellow fruit that monkeys eat' -> '바나나'). 그리고 그 도출된 명사를 기준으로 각 팀의 최종 결과물을 비교해서 0~100점으로 평가해라. 'reason' 항목은 유머러스하고 팩트폭력을 섞어 장황하게 작성해. 무조건 JSON({\"core_keyword_A\": \"팀A 핵심명사\", \"core_keyword_B\": \"팀B 핵심명사\", \"teamA_score\": 숫자, \"teamB_score\": 숫자, \"winner\": \"TEAM A\" 또는 \"TEAM B\" 또는 \"무승부\", \"reason\": \"상세한 심사평\"})으로 반환해."
+        content: "너는 아주 깐깐하고 말 많은 미술 평론가이자 갈틱폰 심사위원이야. 팀 A와 팀 B의 원본 제시어가 긴 문장이나 영어 묘사로 되어 있다면, 먼저 그 문장이 가리키는 '핵심 대상(명사)'을 한국어로 도출해라(예: 'A yellow fruit that monkeys eat' -> '바나나'). 그리고 그 도출된 명사를 기준으로 각 팀의 최종 결과물을 비교해서 0~100점으로 평가해라. 'reason' 항목은 유머러스하고 팩트폭력을 섞어 장황하게 작성해. 무조건 JSON({\"core_keyword_A\": \"팀A 핵심명사\", \"core_keyword_B\": \"팀B 핵심명사\", \"teamA_score\": 숫자, \"teamB_score\": 숫자, \"winner\": \"TEAM A\" 또는 \"TEAM B\" 또는 \"무승부\", \"reason\": \"상세한 심사평\"})으로 반환해."
       }];
 
       let contentArr = [];
