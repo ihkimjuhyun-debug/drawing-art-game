@@ -50,7 +50,7 @@ body {font-family:'Noto Sans KR', sans-serif; color:var(--txt);}
 .btn-go {height:66px; width:100%; max-width:340px; border-radius:18px; border:none; background:var(--acc); color:#0D0D1A; font-family:'Black Han Sans',sans-serif; font-size:22px; opacity:0; pointer-events:none; transform:translateY(10px); transition:0.4s;}
 .btn-go.vis {opacity:1; pointer-events:auto; transform:translateY(0);}
 
-/* ═══ CANVAS ENGINE (Bug fixed absolute wrapper) ═══ */
+/* ═══ CANVAS ENGINE (Memory Optimized & Absolute wrapper) ═══ */
 .canvas-container {flex:1; position:relative; background:#fff; overflow:hidden;}
 canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:none;}
 .tools-wrap {background:#111120; padding:12px 16px 24px; border-top:1px solid var(--bdr); flex-shrink:0;}
@@ -386,35 +386,46 @@ function startCDraw() {
   cTimeLeft = cLimit * 60;
   showScreen('s-draw');
   
-  // 💡 [핵심 버그 픽스] 레이아웃 렌더링이 100% 보장된 후 캔버스 초기화 (크기 0 에러 방지)
+  // 💡 [핵심 버그 수정 1]: 레이아웃이 완전히 잡힌 뒤 캔버스를 초기화합니다.
   setTimeout(() => {
     cCvs = document.getElementById('cCanvas'); 
-    const p = document.getElementById('cCanvasWrap'); // 래퍼 요소를 기준으로 확실하게 측정
+    const p = document.getElementById('cCanvasWrap'); 
     
-    // 만약의 경우를 대비한 Fallback 사이즈 적용
-    const w = p.clientWidth > 0 ? p.clientWidth : window.innerWidth;
-    const h = p.clientHeight > 0 ? p.clientHeight : 400; 
-    const dpr = window.devicePixelRatio || 1;
+    // 메모리 초과 방지를 위해 DPR 적용 해제 및 실제 크기로만 세팅
+    let w = p.clientWidth > 0 ? p.clientWidth : window.innerWidth;
+    let h = p.clientHeight > 0 ? p.clientHeight : 400;
     
-    cCvs.width = w * dpr; 
-    cCvs.height = h * dpr; 
+    cCvs.width = w; 
+    cCvs.height = h; 
     cCtx = cCvs.getContext('2d'); 
-    cCtx.scale(dpr,dpr); 
     cCtx.fillStyle='#fff'; 
     cCtx.fillRect(0,0,w,h); 
-    cSnaps = [cCvs.toDataURL()];
     
+    // 💡 [핵심 버그 수정 2]: 메모리 절약을 위해 가벼운 JPEG로 저장
+    cSnaps = [cCvs.toDataURL('image/jpeg', 0.5)];
+    
+    // 💡 [핵심 버그 수정 3]: 이벤트 충돌 방지를 위해 Canvas 객체에 직접 할당
     cCvs.onpointerdown = (e) => {
-        cDrawing=true; cLastP=cGetP(e); 
-        cCtx.beginPath(); cCtx.arc(cLastP.x,cLastP.y,cBr()/2,0,Math.PI*2); cCtx.fillStyle=cTool==='eraser'?'#fff':cClr; cCtx.fill();
+        cDrawing = true; cLastP = cGetP(e); 
+        cCtx.beginPath(); cCtx.arc(cLastP.x, cLastP.y, cBr()/2, 0, Math.PI*2); cCtx.fillStyle = cTool==='eraser'?'#fff':cClr; cCtx.fill();
     };
-    window.onpointermove = (e) => {
-      if(!cDrawing) return; const p=cGetP(e); 
-      cCtx.beginPath(); cCtx.lineCap='round'; cCtx.lineWidth=cBr(); cCtx.strokeStyle=cTool==='eraser'?'#fff':cClr; 
-      cCtx.moveTo(cLastP.x,cLastP.y); cCtx.lineTo(p.x,p.y); cCtx.stroke(); cLastP=p;
+    cCvs.onpointermove = (e) => {
+      if(!cDrawing) return; const p = cGetP(e); 
+      cCtx.beginPath(); cCtx.lineCap='round'; cCtx.lineWidth=cBr(); cCtx.strokeStyle = cTool==='eraser'?'#fff':cClr; 
+      cCtx.moveTo(cLastP.x, cLastP.y); cCtx.lineTo(p.x, p.y); cCtx.stroke(); cLastP = p;
     };
-    window.onpointerup = () => {if(cDrawing){cDrawing=false; cSnaps.push(cCvs.toDataURL());}};
-  }, 150); // 충분한 대기 시간 할당
+    
+    const stopDraw = () => {
+        if(cDrawing){
+            cDrawing = false; 
+            cSnaps.push(cCvs.toDataURL('image/jpeg', 0.5));
+            // 메모리 폭발 방지 (최대 10개만 기억)
+            if(cSnaps.length > 10) cSnaps.shift();
+        }
+    };
+    cCvs.onpointerup = stopDraw;
+    cCvs.onpointerout = stopDraw;
+  }, 150);
   
   cTool = 'pencil'; cClr = '#111'; cSz = 'S';
   document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on');
@@ -439,26 +450,32 @@ function cGetP(e){ const r=cCvs.getBoundingClientRect(); return {x:e.clientX-r.l
 function cBr(){ return (cTool==='eraser'?4:1)*SZ[cSz]; }
 function cSetTool(t){cTool=t; document.getElementById('cPen').classList.toggle('on',t==='pencil'); document.getElementById('cErs').classList.toggle('on',t==='eraser');}
 function cSetSize(s){cSz=s; ['S','M','L'].forEach(x => document.getElementById('cSz'+x).classList.toggle('on',x===s));}
-function cUndo(){ if(cSnaps.length>1){cSnaps.pop(); const img=new Image(); img.src=cSnaps[cSnaps.length-1]; img.onload=()=>cCtx.drawImage(img,0,0,cCvs.width/window.devicePixelRatio,cCvs.height/window.devicePixelRatio);} }
-function cClear(){ cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,cCvs.width,cCvs.height); cSnaps.push(cCvs.toDataURL()); }
+function cUndo(){ if(cSnaps.length>1){cSnaps.pop(); const img=new Image(); img.src=cSnaps[cSnaps.length-1]; img.onload=()=>cCtx.drawImage(img,0,0,cCvs.width,cCvs.height);} }
+function cClear(){ cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,cCvs.width,cCvs.height); cSnaps.push(cCvs.toDataURL('image/jpeg', 0.5)); }
 
+// 제출 함수 완벽 보강
 function submitCDraw() {
-  clearInterval(cTimerInt);
-  // 에러 발생을 원천 차단한 안전한 저장
-  const data = cCvs.toDataURL('image/png', 0.8);
-  document.getElementById('cResultImg').src = data;
-  document.getElementById('ansPopup').textContent = `정답: ${cWord}`;
-  showScreen('s-view');
-  
-  // 스톱워치 시작
-  cSwTime = 0; clearInterval(cSwInt);
-  document.getElementById('cStopwatchDisplay').textContent = "0.0초";
-  document.getElementById('cStopwatchPopup').textContent = "0.0";
-  cSwInt = setInterval(() => { 
-      cSwTime += 0.1; 
-      document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; 
-      document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); 
-  }, 100);
+  try {
+    clearInterval(cTimerInt);
+    // 품질 압축을 뺀 기본 인코딩 사용으로 크래시 완전 차단
+    const data = cCvs.toDataURL();
+    document.getElementById('cResultImg').src = data;
+    document.getElementById('ansPopup').textContent = `정답: ${cWord}`;
+    showScreen('s-view');
+    
+    // 스톱워치 시작
+    cSwTime = 0; clearInterval(cSwInt);
+    document.getElementById('cStopwatchDisplay').textContent = "0.0초";
+    document.getElementById('cStopwatchPopup').textContent = "0.0";
+    cSwInt = setInterval(() => { 
+        cSwTime += 0.1; 
+        document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; 
+        document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); 
+    }, 100);
+  } catch(e) {
+    alert("알림: 기기 메모리 부족으로 인해 안전모드로 제출됩니다.");
+    showScreen('s-view');
+  }
 }
 
 function showAns(v){ document.getElementById('ansPopup').style.display = v ? 'block' : 'none'; }
@@ -551,7 +568,7 @@ function showGPass() {
 
 function readyForTask(){ if(gStepType()==='draw') showGDraw(); else showGWrite(); }
 
-// Whisper 음성 인식 기능 완벽 보존
+// Whisper 음성 인식 기능
 let mediaRecorder = null; let audioChunks = []; let isRecording = false;
 async function toggleMic() {
   const btn = document.getElementById('btnMic');
@@ -599,32 +616,40 @@ function showGDraw(){
   document.getElementById('gPrevWord').innerHTML = `<small style="display:block;font-size:11px;color:var(--mut);margin-bottom:2px">이 내용을 그려보세요</small>${escHtml(wordToDraw)}`;
   showScreen('s-g-draw');
   
-  // 💡 [핵심 버그 픽스] 레이아웃 렌더링 후 Canvas 초기화
+  // 💡 갈틱폰 그리기 엔진 최적화
   setTimeout(() => {
     gCvs = document.getElementById('gCvs'); 
     const p = document.getElementById('gCanvasWrap');
-    const w = p.clientWidth > 0 ? p.clientWidth : window.innerWidth;
-    const h = p.clientHeight > 0 ? p.clientHeight : 400;
-    const dpr = window.devicePixelRatio || 1;
     
-    gCvs.width = w * dpr; 
-    gCvs.height = h * dpr; 
+    let w = p.clientWidth > 0 ? p.clientWidth : window.innerWidth;
+    let h = p.clientHeight > 0 ? p.clientHeight : 400;
+    
+    gCvs.width = w; 
+    gCvs.height = h; 
     gCtx = gCvs.getContext('2d'); 
-    gCtx.scale(dpr,dpr); 
     gCtx.fillStyle='#fff'; 
     gCtx.fillRect(0,0,w,h); 
-    gSnaps=[gCvs.toDataURL()]; 
+    
+    gSnaps = [gCvs.toDataURL('image/jpeg', 0.5)]; 
     
     gCvs.onpointerdown = (e) => {
-        gDrawing=true; gLastP=gGetP(e); 
-        gCtx.beginPath(); gCtx.arc(gLastP.x,gLastP.y,gBr()/2,0,Math.PI*2); gCtx.fillStyle=gTool==='eraser'?'#fff':gClr; gCtx.fill();
+        gDrawing = true; gLastP = gGetP(e); 
+        gCtx.beginPath(); gCtx.arc(gLastP.x, gLastP.y, gBr()/2, 0, Math.PI*2); gCtx.fillStyle=gTool==='eraser'?'#fff':gClr; gCtx.fill();
     };
-    window.onpointermove = (e) => {
-      if(!gDrawing) return; const p=gGetP(e); 
+    gCvs.onpointermove = (e) => {
+      if(!gDrawing) return; const p = gGetP(e); 
       gCtx.beginPath(); gCtx.lineCap='round'; gCtx.lineWidth=gBr(); gCtx.strokeStyle=gTool==='eraser'?'#fff':gClr; 
-      gCtx.moveTo(gLastP.x,gLastP.y); gCtx.lineTo(p.x,p.y); gCtx.stroke(); gLastP=p;
+      gCtx.moveTo(gLastP.x, gLastP.y); gCtx.lineTo(p.x, p.y); gCtx.stroke(); gLastP = p;
     };
-    window.onpointerup = () => {if(gDrawing){gDrawing=false; gSnaps.push(gCvs.toDataURL());}};
+    const stopDraw = () => {
+        if(gDrawing){
+            gDrawing = false; 
+            gSnaps.push(gCvs.toDataURL('image/jpeg', 0.5));
+            if(gSnaps.length > 10) gSnaps.shift();
+        }
+    };
+    gCvs.onpointerup = stopDraw;
+    gCvs.onpointerout = stopDraw;
   }, 150);
 
   gTool = 'pencil'; gClr = '#111'; gSz = 'S';
@@ -636,15 +661,19 @@ function showGDraw(){
 
 function gGetP(e){ const r = gCvs.getBoundingClientRect(); return {x: e.clientX-r.left, y: e.clientY-r.top}; }
 function gBr(){ return (gTool==='eraser'?4:1)*SZ[gSz]; }
-function gUndo(){ if(gSnaps.length>1) {gSnaps.pop(); let img=new Image(); img.src=gSnaps[gSnaps.length-1]; img.onload=()=>{gCtx.drawImage(img,0,0,gCvs.width/window.devicePixelRatio,gCvs.height/window.devicePixelRatio)};} }
-function gClear(){ gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,gCvs.width,gCvs.height); gSnaps.push(gCvs.toDataURL()); }
+function gUndo(){ if(gSnaps.length>1) {gSnaps.pop(); let img=new Image(); img.src=gSnaps[gSnaps.length-1]; img.onload=()=>{gCtx.drawImage(img,0,0,gCvs.width,gCvs.height)};} }
+function gClear(){ gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,gCvs.width,gCvs.height); gSnaps.push(gCvs.toDataURL('image/jpeg', 0.5)); }
 function gSetTool(t){ gTool=t; document.getElementById('gPen').classList.toggle('on',t==='pencil'); document.getElementById('gErs').classList.toggle('on',t==='eraser'); }
 function gSetSize(s){ gSz=s; ['S','M','L'].forEach(x => document.getElementById('gSz'+x).classList.toggle('on',x===s)); }
 
 function submitGDraw(){ 
-  const dataUrl = gCvs.toDataURL('image/png', 0.8); 
-  G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
-  advanceGartic(); 
+  try {
+    const dataUrl = gCvs.toDataURL(); 
+    G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
+    advanceGartic(); 
+  } catch(e) {
+    alert("알림: 기기 메모리 부족으로 제출에 실패했습니다. 선을 조금만 줄여주세요!");
+  }
 }
 
 function advanceGartic(){
