@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>DRAW GAME HUB</title>
-<link href="[https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap](https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap)" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {--bg:#0D0D1A; --bg2:#13132A; --card:#1C1C36; --acc:#FFE135; --acc2:#FF4D6D; --acc3:#4DFFD2; --g1:#7C3AED; --g2:#2563EB; --txt:#F0F0FF; --mut:#5858A0; --bdr:rgba(255,255,255,0.12); --r:20px;}
 *, *::before, *::after {box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
@@ -69,7 +69,8 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 /* ═══ CATCHMIND VIEW & MATCHING UI ═══ */
 #s-view {background:#000;}
 .view-img-wrap {flex:1; display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; overflow:hidden;}
-#cResultImg {max-width:100%; max-height:100%; object-fit:contain; border-radius:12px;}
+/* 🚨 FIX: 그림 꽉 차게 변경 (작아짐 현상 해결) */
+#cResultImg {width:100%; height:100%; object-fit:contain; border-radius:12px;}
 .view-overlay-hint {position:absolute; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); padding:10px 24px; border-radius:24px; font-size:13px; color:#ddd; font-weight:700; pointer-events:none; white-space:nowrap; border:1px solid var(--bdr);}
 
 /* The Ticking HUD Stopwatch */
@@ -311,7 +312,8 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 
 <div id="s-g-results" class="screen">
     <div class="hdr hdr-pu"><div class="hdr-sp"></div><div class="hdr-ttl">최종 결과</div><button class="btn-bk" onclick="showScreen('s-main')">🏠</button></div>
-    <div id="gResultChains" class="scrollable flex-1" style="padding:20px;"></div>
+    <div id="gResSub" style="text-align:center; font-size:16px; color:var(--mut); font-weight:800; padding:15px 0 5px;"></div>
+    <div id="gResultChains" class="scrollable flex-1" style="padding:0 20px 20px;"></div>
     <div style="padding:20px; background:var(--bg2);">
         <button class="btn-match" style="background:linear-gradient(135deg,#7C3AED,#2563EB); color:#fff;" onclick="runAiEval()">🤖 AI 상세 평가 및 판정</button>
         <button class="btn-match" style="background:var(--card); color:var(--txt); border:1.5px solid var(--bdr);" id="btnNextChain" onclick="nextChain()">다음 라운드 진행</button>
@@ -346,7 +348,6 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 </div>
 
 <script>
-// 🚨 디버깅 및 에러 팝업 띄우기
 function showDebugError(title, errorObj) {
   const box = document.getElementById('debugErrorMsg');
   box.innerHTML = `<strong>[${title}]</strong><br><br>${errorObj.message || errorObj}`;
@@ -354,7 +355,7 @@ function showDebugError(title, errorObj) {
 }
 
 // ═══ 초강력 이미지 압축 엔진 ═══
-function compressCanvasToJPEG(sourceCanvas, maxWidth = 600, quality = 0.5) {
+function compressCanvasToJPEG(sourceCanvas, maxWidth = 800, quality = 0.5) {
   try {
     const tmpCvs = document.createElement('canvas');
     let w = sourceCanvas.width;
@@ -429,11 +430,11 @@ function startCDraw() {
     
     cCvs.width = w; cCvs.height = h; 
     cCtx = cCvs.getContext('2d'); cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,w,h); 
-    cSnaps = [compressCanvasToJPEG(cCvs, 400, 0.4)];
+    cSnaps = [compressCanvasToJPEG(cCvs, 800, 0.5)]; // Undo 용량 및 화질 균형 (800px)
     
     cCvs.onpointerdown = (e) => { cDrawing = true; cLastP = cGetP(e); cCtx.beginPath(); cCtx.arc(cLastP.x, cLastP.y, cBr()/2, 0, Math.PI*2); cCtx.fillStyle = cTool==='eraser'?'#fff':cClr; cCtx.fill(); };
     cCvs.onpointermove = (e) => { if(!cDrawing) return; const p = cGetP(e); cCtx.beginPath(); cCtx.lineCap='round'; cCtx.lineWidth=cBr(); cCtx.strokeStyle = cTool==='eraser'?'#fff':cClr; cCtx.moveTo(cLastP.x, cLastP.y); cCtx.lineTo(p.x, p.y); cCtx.stroke(); cLastP = p; };
-    const stopDraw = () => { if(cDrawing){ cDrawing = false; cSnaps.push(compressCanvasToJPEG(cCvs, 400, 0.4)); if(cSnaps.length > 5) cSnaps.shift(); } };
+    const stopDraw = () => { if(cDrawing){ cDrawing = false; cSnaps.push(compressCanvasToJPEG(cCvs, 800, 0.5)); if(cSnaps.length > 5) cSnaps.shift(); } };
     cCvs.onpointerup = stopDraw; cCvs.onpointerout = stopDraw;
   } catch(e) {}
   
@@ -453,10 +454,25 @@ function cBr(){ return (cTool==='eraser'?4:1)*SZ[cSz]; }
 function cSetTool(t){cTool=t; document.getElementById('cPen').classList.toggle('on',t==='pencil'); document.getElementById('cErs').classList.toggle('on',t==='eraser');}
 function cSetSize(s){cSz=s; ['S','M','L'].forEach(x => document.getElementById('cSz'+x).classList.toggle('on',x===s));}
 function cUndo(){ if(cSnaps.length>1){cSnaps.pop(); const img=new Image(); img.src=cSnaps[cSnaps.length-1]; img.onload=()=>cCtx.drawImage(img,0,0,cCvs.width,cCvs.height);} }
-function cClear(){ cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,cCvs.width,cCvs.height); cSnaps.push(compressCanvasToJPEG(cCvs, 400, 0.4)); }
+function cClear(){ cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,cCvs.width,cCvs.height); cSnaps.push(compressCanvasToJPEG(cCvs, 800, 0.5)); }
 
+// 🚨 FIX 2: 캐치마인드 제출 시 작아짐(해상도 저하) 완벽 해결
 function submitCDraw() {
-  try { clearInterval(cTimerInt); const data = compressCanvasToJPEG(cCvs); document.getElementById('cResultImg').src = data; document.getElementById('ansPopup').textContent = `정답: ${cWord}`; showScreen('s-view'); cSwTime = 0; clearInterval(cSwInt); document.getElementById('cStopwatchDisplay').textContent = "0.0초"; document.getElementById('cStopwatchPopup').textContent = "0.0"; cSwInt = setInterval(() => { cSwTime += 0.1; document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); }, 100); } catch (error) {}
+  try { 
+    clearInterval(cTimerInt); 
+    // 서버 전송이 없으므로 고해상도(1200px) 유지
+    const data = compressCanvasToJPEG(cCvs, 1200, 0.8); 
+    document.getElementById('cResultImg').src = data; 
+    document.getElementById('ansPopup').textContent = `정답: ${cWord}`; 
+    showScreen('s-view'); 
+    
+    cSwTime = 0; clearInterval(cSwInt); 
+    document.getElementById('cStopwatchDisplay').textContent = "0.0초"; 
+    document.getElementById('cStopwatchPopup').textContent = "0.0"; 
+    cSwInt = setInterval(() => { cSwTime += 0.1; document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); }, 100); 
+  } catch (error) {
+    showDebugError("캐치마인드 이미지 저장 에러", error);
+  }
 }
 
 function showAns(v){ document.getElementById('ansPopup').style.display = v ? 'block' : 'none'; }
@@ -483,56 +499,67 @@ function showGWrite(){ const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].step
 function submitWrite(){ if(isRecording) mediaRecorder.stop(); const val = document.getElementById('gwInput').value.trim(); if(!val) return; G.chains[G.cIdx].steps.push({ type: 'word', content: val, playerName: gPlayerName() }); advanceGartic(); }
 
 let gCvs, gCtx, gDrawing=false, gLastP=null, gTool='pencil', gClr='#111', gSz='S', gSnaps=[];
-function showGDraw(){ const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].steps.length-1]; let wordToDraw = (G.sIdx === 0 && gStartMode === 'draw') ? G.chains[G.cIdx].systemWord : prev.content; if(G.sIdx === 0 && gStartMode === 'draw' && !G.chains[G.cIdx].systemWord) { wordToDraw = W[Math.floor(Math.random()*W.length)].w; G.chains[G.cIdx].systemWord = wordToDraw; } document.getElementById('gPrevWord').innerHTML = `<small style="display:block;font-size:11px;color:var(--mut);margin-bottom:2px">이 내용을 그려보세요</small>${escHtml(wordToDraw)}`; showScreen('s-g-draw'); document.getElementById('s-g-draw').offsetHeight; try { gCvs = document.getElementById('gCvs'); const p = document.getElementById('gCanvasWrap'); let w = p.clientWidth || window.innerWidth; let h = p.clientHeight || (window.innerHeight - 200); gCvs.width = w; gCvs.height = h; gCtx = gCvs.getContext('2d'); gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,w,h); gSnaps = [compressCanvasToJPEG(gCvs, 400, 0.4)]; gCvs.onpointerdown = (e) => { gDrawing = true; gLastP = gGetP(e); gCtx.beginPath(); gCtx.arc(gLastP.x, gLastP.y, gBr()/2, 0, Math.PI*2); gCtx.fillStyle=gTool==='eraser'?'#fff':gClr; gCtx.fill(); }; gCvs.onpointermove = (e) => { if(!gDrawing) return; const p = gGetP(e); gCtx.beginPath(); gCtx.lineCap='round'; gCtx.lineWidth=gBr(); gCtx.strokeStyle=gTool==='eraser'?'#fff':gClr; gCtx.moveTo(gLastP.x, gLastP.y); gCtx.lineTo(p.x, p.y); gCtx.stroke(); gLastP = p; }; const stopDraw = () => { if(gDrawing){ gDrawing = false; gSnaps.push(compressCanvasToJPEG(gCvs, 400, 0.4)); if(gSnaps.length > 5) gSnaps.shift(); } }; gCvs.onpointerup = stopDraw; gCvs.onpointerout = stopDraw; } catch(e) {} gTool = 'pencil'; gClr = '#111'; gSz = 'S'; document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); ['S','M','L'].forEach(s => document.getElementById('gSz'+s).classList.toggle('on', s==='S')); const pal = document.getElementById('gPalette'); pal.innerHTML = ''; CLRS.forEach(c => { const el = document.createElement('div'); el.className = 'clr'+(c.h===gClr?' on':''); el.style.background = c.h; if(c.h==='#fff') el.style.border = '2px solid #ccc'; el.onclick = () => { gClr = c.h; gTool='pencil'; document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); document.querySelectorAll('#gPalette .clr').forEach(x => x.classList.remove('on')); el.classList.add('on'); }; pal.appendChild(el); }); }
+function showGDraw(){ const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].steps.length-1]; let wordToDraw = (G.sIdx === 0 && gStartMode === 'draw') ? G.chains[G.cIdx].systemWord : prev.content; if(G.sIdx === 0 && gStartMode === 'draw' && !G.chains[G.cIdx].systemWord) { wordToDraw = W[Math.floor(Math.random()*W.length)].w; G.chains[G.cIdx].systemWord = wordToDraw; } document.getElementById('gPrevWord').innerHTML = `<small style="display:block;font-size:11px;color:var(--mut);margin-bottom:2px">이 내용을 그려보세요</small>${escHtml(wordToDraw)}`; showScreen('s-g-draw'); document.getElementById('s-g-draw').offsetHeight; try { gCvs = document.getElementById('gCvs'); const p = document.getElementById('gCanvasWrap'); let w = p.clientWidth || window.innerWidth; let h = p.clientHeight || (window.innerHeight - 200); gCvs.width = w; gCvs.height = h; gCtx = gCvs.getContext('2d'); gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,w,h); gSnaps = [compressCanvasToJPEG(gCvs, 800, 0.5)]; gCvs.onpointerdown = (e) => { gDrawing = true; gLastP = gGetP(e); gCtx.beginPath(); gCtx.arc(gLastP.x, gLastP.y, gBr()/2, 0, Math.PI*2); gCtx.fillStyle=gTool==='eraser'?'#fff':gClr; gCtx.fill(); }; gCvs.onpointermove = (e) => { if(!gDrawing) return; const p = gGetP(e); gCtx.beginPath(); gCtx.lineCap='round'; gCtx.lineWidth=gBr(); gCtx.strokeStyle=gTool==='eraser'?'#fff':gClr; gCtx.moveTo(gLastP.x, gLastP.y); gCtx.lineTo(p.x, p.y); gCtx.stroke(); gLastP = p; }; const stopDraw = () => { if(gDrawing){ gDrawing = false; gSnaps.push(compressCanvasToJPEG(gCvs, 800, 0.5)); if(gSnaps.length > 5) gSnaps.shift(); } }; gCvs.onpointerup = stopDraw; gCvs.onpointerout = stopDraw; } catch(e) {} gTool = 'pencil'; gClr = '#111'; gSz = 'S'; document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); ['S','M','L'].forEach(s => document.getElementById('gSz'+s).classList.toggle('on', s==='S')); const pal = document.getElementById('gPalette'); pal.innerHTML = ''; CLRS.forEach(c => { const el = document.createElement('div'); el.className = 'clr'+(c.h===gClr?' on':''); el.style.background = c.h; if(c.h==='#fff') el.style.border = '2px solid #ccc'; el.onclick = () => { gClr = c.h; gTool='pencil'; document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); document.querySelectorAll('#gPalette .clr').forEach(x => x.classList.remove('on')); el.classList.add('on'); }; pal.appendChild(el); }); }
 function gGetP(e){ const r = gCvs.getBoundingClientRect(); return {x: e.clientX-r.left, y: e.clientY-r.top}; }
 function gBr(){ return (gTool==='eraser'?4:1)*SZ[gSz]; }
 function gUndo(){ if(gSnaps.length>1) {gSnaps.pop(); let img=new Image(); img.src=gSnaps[gSnaps.length-1]; img.onload=()=>{gCtx.drawImage(img,0,0,gCvs.width,gCvs.height)};} }
-function gClear(){ gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,gCvs.width,gCvs.height); gSnaps.push(compressCanvasToJPEG(gCvs, 400, 0.4)); }
-function submitGDraw(){ try { const dataUrl = compressCanvasToJPEG(gCvs); G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); advanceGartic(); } catch (error) {} }
+function gClear(){ gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,gCvs.width,gCvs.height); gSnaps.push(compressCanvasToJPEG(gCvs, 800, 0.5)); }
+
+function submitGDraw(){ 
+  try { 
+    // 갈틱폰 서버 제출용은 적당히 압축하여 토큰 초과 방지
+    const dataUrl = compressCanvasToJPEG(gCvs, 800, 0.6); 
+    G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
+    advanceGartic(); 
+  } catch (error) { showDebugError("갈틱폰 그림 제출 에러", error); } 
+}
 
 function advanceGartic(){ G.sIdx++; let max = G.mode === 'compete' ? G.players[0].length : G.players.length; if(G.sIdx >= max){ if(G.mode === 'compete' && G.cIdx === 0){ G.cIdx = 1; G.sIdx = 0; showGPass(); } else { if(G.mode === 'compete') showBattleResult(); else showNormalResult(); } } else { showGPass(); } }
 function nextChain(){ if(G.mode === 'compete'){ selectGMode('compete'); return; } G.cIdx++; G.sIdx = 0; if(G.cIdx >= G.players.length){ showScreen('s-g-setup'); return; } showGPass(); }
 function renderChainHTML(chain, title, color){ let html = `<div class="chain-block"><div class="chain-header"><div class="chain-line"></div><div class="chain-badge" style="color:${color};border-color:${color}40">${title}</div><div class="chain-line"></div></div>`; chain.steps.forEach((step) => { let body = step.type === 'draw' ? `<img src="${step.content}" class="bubble-img">` : `<div class="bubble-txt">${escHtml(step.content)}</div>`; html += `<div class="chat-bubble"><div class="bubble-meta"><span class="type-icon ${step.type==='draw'?'ti-draw':'ti-word'}">${step.type.toUpperCase()}</span> ${step.playerName}</div><div class="bubble-body">${body}</div></div>`; }); return html + `</div>`; }
-function showNormalResult(){ document.getElementById('gResSub').textContent = `라운드 ${G.cIdx + 1} / ${G.players.length} 완료`; document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[G.cIdx], `체인 ${G.cIdx+1}`, 'var(--mut)'); document.getElementById('btnNextChain').textContent = G.cIdx >= G.players.length - 1 ? "새 게임하기" : "다음 라운드 진행"; showScreen('s-g-results'); }
-function showBattleResult(){ document.getElementById('gResSub').textContent = `🔥 TEAM A vs TEAM B 배틀 완료!`; document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[0], "🔥 TEAM A 최종 결과", "var(--acc2)") + renderChainHTML(G.chains[1], "❄️ TEAM B 최종 결과", "#38BDF8"); document.getElementById('btnNextChain').textContent = "새로운 배틀 시작"; showScreen('s-g-results'); }
+
+// 🚨 정상 작동되도록 gResSub 태그 선택 오류 완전 수정 완료
+function showNormalResult(){ 
+  document.getElementById('gResSub').textContent = `라운드 ${G.cIdx + 1} / ${G.players.length} 완료`; 
+  document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[G.cIdx], `체인 ${G.cIdx+1}`, 'var(--mut)'); 
+  document.getElementById('btnNextChain').textContent = G.cIdx >= G.players.length - 1 ? "새 게임하기" : "다음 라운드 진행"; 
+  showScreen('s-g-results'); 
+}
+
+// 🚨 정상 작동되도록 gResSub 태그 선택 오류 완전 수정 완료
+function showBattleResult(){ 
+  document.getElementById('gResSub').textContent = `🔥 TEAM A vs TEAM B 배틀 완료!`; 
+  document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[0], "🔥 TEAM A 최종 결과", "var(--acc2)") + renderChainHTML(G.chains[1], "❄️ TEAM B 최종 결과", "#38BDF8"); 
+  document.getElementById('btnNextChain').textContent = "새로운 배틀 시작"; 
+  showScreen('s-g-results'); 
+}
 
 // ══════════════════════════════════════════════════
-// 🚨 3. AI EVALUATION (먹통 방지 시스템 풀장착) 🚨
+// 3. AI EVALUATION
 // ══════════════════════════════════════════════════
 async function fetchEval(messages) {
-  // 💡 먹통 방지: 45초가 지나면 백엔드 통신을 강제로 끊어버립니다.
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 45000); 
 
   try {
     const res = await fetch('/api/eval', { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ 
-            messages: messages, 
-            max_tokens: 4096 // 💡 AI 출력 제한 넉넉히 해제
-        }),
-        signal: controller.signal // 타임아웃 감시
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ messages: messages, max_tokens: 4096 }),
+        signal: controller.signal
     });
     
-    clearTimeout(timeoutId); // 정상 도착 시 타이머 해제
+    clearTimeout(timeoutId);
     const data = await res.json().catch(() => null);
     
-    if(!res.ok) {
-        throw new Error(`[서버 응답 에러 ${res.status}]<br>사유: ${data?.error || data?.message || '용량 초과 또는 타임아웃'}`);
-    }
+    if(!res.ok) throw new Error(`[서버 응답 에러 ${res.status}]<br>사유: ${data?.error || data?.message || '용량 초과 또는 타임아웃'}`);
     
     let content = data.choices[0].message.content;
-    
-    // 💡 안전한 JSON 파싱 (AI가 마크다운 코드 블록을 보낼 경우 방어)
     content = content.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(content);
 
   } catch(err) {
     clearTimeout(timeoutId);
-    if (err.name === 'AbortError') {
-        throw new Error("AI 응답 시간 초과 (45초).<br>백엔드 서버나 OpenAI 연동이 지연되고 있습니다.");
-    }
+    if (err.name === 'AbortError') throw new Error("AI 응답 시간 초과 (45초).<br>백엔드 서버나 OpenAI 연동이 지연되고 있습니다.");
     throw err;
   }
 }
@@ -550,7 +577,7 @@ async function runAiEval(){
 
       let messages = [{
         role: "system", 
-        content: "너는 아주 깐깐하고 말 많은 미술 평론가이자 갈틱폰 심사위원이야. 팀 A와 팀 B의 원본 제시어가 긴 문장이나 영어 묘사로 되어 있다면, 먼저 그 문장이 가리키는 '핵심 대상(명사)'을 한국어로 도출해라(예: 'A yellow fruit that monkeys eat' -> '바나나'). 그리고 그 도출된 명사를 기준으로 각 팀의 최종 결과물을 비교해서 0~100점으로 평가해라. 'reason' 항목은 유머러스하고 팩트폭력을 섞어 장황하게 작성해. 무조건 JSON({\"core_keyword_A\": \"팀A 핵심명사\", \"core_keyword_B\": \"팀B 핵심명사\", \"teamA_score\": 숫자, \"teamB_score\": 숫자, \"winner\": \"TEAM A\" 또는 \"TEAM B\" 또는 \"무승부\", \"reason\": \"상세한 심사평\"})으로 반환해."
+        content: "너는 아주 깐깐하고 말 많은 미술 평론가이자 갈틱폰 심사위원이야. 팀 A와 팀 B의 원본 제시어가 긴 문장이나 영어 묘사로 되어 있다면, 먼저 그 문장이 가리키는 '핵심 대상(명사)'을 한국어로 도출해라. 그리고 그 도출된 명사를 기준으로 각 팀의 최종 결과물을 비교해서 0~100점으로 평가해라. 'reason' 항목은 유머러스하고 팩트폭력을 섞어 장황하게 작성해. 무조건 JSON({\"core_keyword_A\": \"팀A 핵심명사\", \"core_keyword_B\": \"팀B 핵심명사\", \"teamA_score\": 숫자, \"teamB_score\": 숫자, \"winner\": \"TEAM A\" 또는 \"TEAM B\" 또는 \"무승부\", \"reason\": \"상세한 심사평\"})으로 반환해."
       }];
 
       let contentArr = [];
@@ -621,7 +648,6 @@ async function runAiEval(){
       `;
     }
   } catch(err) {
-    // 에러 발생 시 더 이상 '먹통'으로 방치하지 않고 사유를 명확히 출력합니다.
     document.getElementById('aiEvalContent').innerHTML = `
         <div style="background:rgba(255,0,0,0.1); border:1.5px solid #ff4d4d; border-radius:16px; padding:20px; text-align:center;">
             <div style="font-size:20px; font-weight:800; color:#ff4d4d; margin-bottom:12px;">🚨 AI 평가 실패</div>
