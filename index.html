@@ -25,7 +25,7 @@ body {font-family:'Noto Sans KR', sans-serif; color:var(--txt);}
 .btn-match {width:100%; height:64px; border-radius:18px; border:none; font-family:'Black Han Sans',sans-serif; font-size:20px; margin-bottom:12px; cursor:pointer; transition:0.15s;}
 .btn-match:active {transform:scale(0.96);}
 
-/* ═══ HEADER (Glassmorphism) ═══ */
+/* ═══ HEADER ═══ */
 .hdr {display:flex; align-items:center; padding:12px 16px; gap:12px; flex-shrink:0; z-index:100; background:rgba(19, 19, 42, 0.7); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px); border-bottom:1px solid var(--bdr);}
 .hdr-ttl {flex:1; text-align:center; font-family:'Black Han Sans',sans-serif; font-size:20px; color:#fff;}
 .hdr-sp {width:42px; flex-shrink:0;}
@@ -117,7 +117,7 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 .type-icon {display:inline-block; font-size:10px; font-weight:800; letter-spacing:1.5px; padding:2px 8px; border-radius:10px; margin-bottom:4px;}
 
 /* ═══ OVERLAYS ═══ */
-.ov {display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.7); backdrop-filter:blur(10px); place-items:center; padding:24px;}
+.ov {display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); place-items:center; padding:24px;}
 .ov.show {display:grid;}
 .ov-card {background:var(--card); border-radius:28px; padding:32px 24px; width:100%; max-width:380px; border:1.5px solid var(--bdr); text-align:center;}
 .ov-bot {display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.7); backdrop-filter:blur(10px); align-items:flex-end; justify-content:center;}
@@ -129,6 +129,9 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 .ai-reason {font-size:15px; line-height:1.7; background:var(--card); border-radius:16px; padding:22px; border:1.5px solid var(--bdr); text-align:left; margin-top:20px;}
 .compare-row {display:flex; gap:12px; margin-bottom:16px;}
 .compare-item {flex:1; background:var(--card); border-radius:14px; overflow:hidden; border:1.5px solid var(--bdr);}
+
+/* 🚨 디버깅 전용 스타일 */
+.debug-msg-box { background: rgba(255,0,0,0.1); border: 2px solid #ff4d4d; color: #ffcccc; padding: 16px; border-radius: 12px; font-family: monospace; text-align: left; word-break: break-all; margin-bottom: 20px; font-size: 12px; line-height: 1.5; max-height: 150px; overflow-y: auto;}
 </style>
 </head>
 <body>
@@ -326,6 +329,15 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
   </div>
 </div>
 
+<div class="ov" id="ov-debug-error">
+  <div class="ov-card" style="border-color:#ff4d4d;">
+    <div class="font-black" style="font-size:24px; color:#ff4d4d; margin-bottom:8px; text-align:center;">🚨 제출 실패 진단</div>
+    <div style="font-size:13px; color:var(--mut); text-align:center; margin-bottom:16px;">아래의 에러 메시지를 캡쳐해서 알려주세요!</div>
+    <div class="debug-msg-box" id="debugErrorMsg">에러 내용이 여기에 표시됩니다.</div>
+    <button class="btn-bk" style="width:100%; height:54px; border-radius:18px;" onclick="closeOv('ov-debug-error')">확인 (닫기)</button>
+  </div>
+</div>
+
 <div class="ov-bot" id="ov-ai-eval">
     <div class="ov-sheet">
         <div class="font-black" style="font-size:24px; margin-bottom:6px; text-align:center;">🤖 깐깐한 AI 평론가</div>
@@ -336,14 +348,23 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 </div>
 
 <script>
+// 🚨 디버깅 진단용 출력 함수
+function showDebugError(title, errorObj) {
+  const box = document.getElementById('debugErrorMsg');
+  box.innerHTML = `<strong>[${title}]</strong><br><br>${errorObj.message || errorObj}<br><br><span style="color:#888;">[상세 스택]<br>${errorObj.stack || '정보 없음'}</span>`;
+  openOv('ov-debug-error');
+}
+
 // ═══ 초강력 이미지 압축 엔진 (데이터 폭파 원천 차단) ═══
 function compressCanvasToJPEG(sourceCanvas, maxWidth = 600, quality = 0.5) {
   try {
+    if(!sourceCanvas) throw new Error("원본 캔버스를 찾을 수 없습니다.");
+    if(sourceCanvas.width === 0 || sourceCanvas.height === 0) throw new Error(`캔버스 크기가 0입니다. (W:${sourceCanvas.width}, H:${sourceCanvas.height}) - 렌더링 타이밍 버그`);
+
     const tmpCvs = document.createElement('canvas');
     let w = sourceCanvas.width;
     let h = sourceCanvas.height;
     
-    // 최대 폭 600px로 제한하여 해상도 축소
     if (w > maxWidth) {
       h = Math.floor(h * (maxWidth / w));
       w = maxWidth;
@@ -353,23 +374,19 @@ function compressCanvasToJPEG(sourceCanvas, maxWidth = 600, quality = 0.5) {
     tmpCvs.height = h;
     const tCtx = tmpCvs.getContext('2d');
     
-    // 배경을 흰색으로 채움 (PNG 투명 영역 방지)
     tCtx.fillStyle = '#ffffff';
     tCtx.fillRect(0, 0, w, h);
-    
-    // 원본 캔버스를 축소된 사이즈로 그림
     tCtx.drawImage(sourceCanvas, 0, 0, w, h);
     
-    // JPEG 포맷 + 50% 화질 압축으로 Base64 변환
-    return tmpCvs.toDataURL('image/jpeg', quality);
+    const resultUrl = tmpCvs.toDataURL('image/jpeg', quality);
+    if(resultUrl === 'data:,') throw new Error("toDataURL 변환 결과가 비어있습니다. 메모리 부족(OOM) 증상입니다.");
+    
+    return resultUrl;
   } catch (err) {
-    console.error("압축 중 오류 발생:", err);
-    // 최악의 경우를 대비한 Fallback
-    return sourceCanvas.toDataURL('image/jpeg', 0.2); 
+    throw err; // 에러를 위로 던져서 catch블록에서 잡히게 만듦
   }
 }
 
-// 📋 단어 데이터 (100개)
 const W = [{w:"냉장고"},{w:"소방차"},{w:"사과"},{w:"강아지"},{w:"자동차"},{w:"피자"},{w:"무지개"},{w:"눈사람"},{w:"고래"},{w:"피아노"},{w:"비행기"},{w:"축구공"},{w:"나비"},{w:"달팽이"},{w:"펭귄"},{w:"트럭"},{w:"아이스크림"},{w:"구름"},{w:"풍선"},{w:"장미"},{w:"잠수함"},{w:"문어"},{w:"선인장"},{w:"드래곤"},{w:"수박"},{w:"오리"},{w:"거북이"},{w:"화산"},{w:"호랑이"},{w:"코끼리"},{w:"컴퓨터"},{w:"전화기"},{w:"안경"},{w:"모자"},{w:"우산"},{w:"운동화"},{w:"치킨"},{w:"햄버거"},{w:"콜라"},{w:"커피"},{w:"기린"},{w:"치타"},{w:"원숭이"},{w:"토끼"},{w:"다람쥐"},{w:"캥거루"},{w:"판다"},{w:"여우"},{w:"늑대"},{w:"사자"},{w:"포크"},{w:"숟가락"},{w:"냄비"},{w:"가위"},{w:"연필"},{w:"지우개"},{w:"책상"},{w:"의자"},{w:"침대"},{w:"티비"},{w:"에어컨"},{w:"선풍기"},{w:"청소기"},{w:"세탁기"},{w:"다리미"},{w:"시계"},{w:"거울"},{w:"빗"},{w:"비누"},{w:"치약"},{w:"축구"},{w:"농구"},{w:"야구"},{w:"수영"},{w:"태권도"},{w:"발레"},{w:"요리사"},{w:"경찰관"},{w:"의사"},{w:"선생님"},{w:"우주선"},{w:"외계인"},{w:"로봇"},{w:"유령"},{w:"공룡"},{w:"성"},{w:"궁전"},{w:"보물상자"},{w:"지도"},{w:"나침반"},{w:"카메라"},{w:"기타"},{w:"바이올린"},{w:"드럼"},{w:"전등"},{w:"열쇠"},{w:"자물쇠"},{w:"망치"},{w:"드라이버"},{w:"텐트"}];
 const CLRS = [{h:'#111'},{h:'#fff'},{h:'#EF4444'},{h:'#F97316'},{h:'#FACC15'},{h:'#22C55E'},{h:'#3B82F6'},{h:'#8B5CF6'},{h:'#EC4899'},{h:'#92400E'}];
 const SZ = {S:3, M:8, L:18};
@@ -414,14 +431,19 @@ let cCvs, cCtx, cDrawing=false, cLastP=null, cTool='pencil', cClr='#111', cSz='S
 function startCDraw() {
   document.getElementById('cDrawWord').textContent = cWord;
   cTimeLeft = cLimit * 60;
-  showScreen('s-draw');
   
-  setTimeout(() => {
+  showScreen('s-draw');
+  document.getElementById('s-draw').offsetHeight; // 강제 Reflow 발생 (화면 크기 확정)
+  
+  try {
     cCvs = document.getElementById('cCanvas'); 
     const p = document.getElementById('cCanvasWrap'); 
     
-    let w = p.clientWidth > 0 ? p.clientWidth : window.innerWidth;
-    let h = p.clientHeight > 0 ? p.clientHeight : 400;
+    // 강제 크기 보정
+    let w = p.clientWidth || window.innerWidth;
+    let h = p.clientHeight || (window.innerHeight - 200);
+    
+    if (w === 0 || h === 0) throw new Error(`화면 크기를 계산할 수 없습니다. W:${w}, H:${h}`);
     
     cCvs.width = w; 
     cCvs.height = h; 
@@ -429,7 +451,6 @@ function startCDraw() {
     cCtx.fillStyle='#fff'; 
     cCtx.fillRect(0,0,w,h); 
     
-    // 메모리 최적화를 위해 Undo 스냅샷도 압축하여 저장
     cSnaps = [compressCanvasToJPEG(cCvs, 400, 0.4)];
     
     cCvs.onpointerdown = (e) => {
@@ -441,18 +462,18 @@ function startCDraw() {
       cCtx.beginPath(); cCtx.lineCap='round'; cCtx.lineWidth=cBr(); cCtx.strokeStyle = cTool==='eraser'?'#fff':cClr; 
       cCtx.moveTo(cLastP.x, cLastP.y); cCtx.lineTo(p.x, p.y); cCtx.stroke(); cLastP = p;
     };
-    
     const stopDraw = () => {
         if(cDrawing){
             cDrawing = false; 
             cSnaps.push(compressCanvasToJPEG(cCvs, 400, 0.4));
-            // 메모리 폭발 방지 (최대 5개만 기억)
             if(cSnaps.length > 5) cSnaps.shift();
         }
     };
     cCvs.onpointerup = stopDraw;
     cCvs.onpointerout = stopDraw;
-  }, 150);
+  } catch(e) {
+    showDebugError("캔버스 렌더링 실패", e);
+  }
   
   cTool = 'pencil'; cClr = '#111'; cSz = 'S';
   document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on');
@@ -469,7 +490,7 @@ function startCDraw() {
   cTimerInt = setInterval(() => {
     cTimeLeft--; const m=Math.floor(cTimeLeft/60), s=cTimeLeft%60;
     document.getElementById('cTimer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    if(cTimeLeft<=0){clearInterval(cTimerInt); submitCDraw();}
+    if(cTimeLeft<=0){ clearInterval(cTimerInt); submitCDraw(); }
   }, 1000);
 }
 
@@ -480,23 +501,27 @@ function cSetSize(s){cSz=s; ['S','M','L'].forEach(x => document.getElementById('
 function cUndo(){ if(cSnaps.length>1){cSnaps.pop(); const img=new Image(); img.src=cSnaps[cSnaps.length-1]; img.onload=()=>cCtx.drawImage(img,0,0,cCvs.width,cCvs.height);} }
 function cClear(){ cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,cCvs.width,cCvs.height); cSnaps.push(compressCanvasToJPEG(cCvs, 400, 0.4)); }
 
+// 🚨 제출 실패 블랙박스 적용 🚨
 function submitCDraw() {
-  clearInterval(cTimerInt);
-  // 💡 제출 시 초강력 압축 엔진 사용
-  const data = compressCanvasToJPEG(cCvs);
-  
-  document.getElementById('cResultImg').src = data;
-  document.getElementById('ansPopup').textContent = `정답: ${cWord}`;
-  showScreen('s-view');
-  
-  cSwTime = 0; clearInterval(cSwInt);
-  document.getElementById('cStopwatchDisplay').textContent = "0.0초";
-  document.getElementById('cStopwatchPopup').textContent = "0.0";
-  cSwInt = setInterval(() => { 
-      cSwTime += 0.1; 
-      document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; 
-      document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); 
-  }, 100);
+  try {
+    clearInterval(cTimerInt);
+    const data = compressCanvasToJPEG(cCvs); // 압축 엔진 시도
+    
+    document.getElementById('cResultImg').src = data;
+    document.getElementById('ansPopup').textContent = `정답: ${cWord}`;
+    showScreen('s-view');
+    
+    cSwTime = 0; clearInterval(cSwInt);
+    document.getElementById('cStopwatchDisplay').textContent = "0.0초";
+    document.getElementById('cStopwatchPopup').textContent = "0.0";
+    cSwInt = setInterval(() => { 
+        cSwTime += 0.1; 
+        document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; 
+        document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); 
+    }, 100);
+  } catch (error) {
+    showDebugError("캐치마인드 이미지 저장 에러", error); // 에러 발생 시 UI로 토해냄
+  }
 }
 
 function showAns(v){ document.getElementById('ansPopup').style.display = v ? 'block' : 'none'; }
@@ -628,20 +653,25 @@ function showGWrite(){
 function submitWrite(){ if(isRecording) mediaRecorder.stop(); const val = document.getElementById('gwInput').value.trim(); if(!val) return; G.chains[G.cIdx].steps.push({ type: 'word', content: val, playerName: gPlayerName() }); advanceGartic(); }
 
 let gCvs, gCtx, gDrawing=false, gLastP=null, gTool='pencil', gClr='#111', gSz='S', gSnaps=[];
+
 function showGDraw(){
   const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].steps.length-1];
   let wordToDraw = (G.sIdx === 0 && gStartMode === 'draw') ? G.chains[G.cIdx].systemWord : prev.content;
   if(G.sIdx === 0 && gStartMode === 'draw' && !G.chains[G.cIdx].systemWord) { wordToDraw = W[Math.floor(Math.random()*W.length)].w; G.chains[G.cIdx].systemWord = wordToDraw; }
   
   document.getElementById('gPrevWord').innerHTML = `<small style="display:block;font-size:11px;color:var(--mut);margin-bottom:2px">이 내용을 그려보세요</small>${escHtml(wordToDraw)}`;
-  showScreen('s-g-draw');
   
-  setTimeout(() => {
+  showScreen('s-g-draw');
+  document.getElementById('s-g-draw').offsetHeight; // 강제 Reflow
+
+  try {
     gCvs = document.getElementById('gCvs'); 
     const p = document.getElementById('gCanvasWrap');
     
-    let w = p.clientWidth > 0 ? p.clientWidth : window.innerWidth;
-    let h = p.clientHeight > 0 ? p.clientHeight : 400;
+    let w = p.clientWidth || window.innerWidth;
+    let h = p.clientHeight || (window.innerHeight - 200);
+    
+    if (w === 0 || h === 0) throw new Error(`화면 크기를 계산할 수 없습니다. W:${w}, H:${h}`);
     
     gCvs.width = w; 
     gCvs.height = h; 
@@ -669,7 +699,9 @@ function showGDraw(){
     };
     gCvs.onpointerup = stopDraw;
     gCvs.onpointerout = stopDraw;
-  }, 150);
+  } catch(e) {
+    showDebugError("갈틱폰 캔버스 렌더링 실패", e);
+  }
 
   gTool = 'pencil'; gClr = '#111'; gSz = 'S';
   document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); ['S','M','L'].forEach(s => document.getElementById('gSz'+s).classList.toggle('on', s==='S'));
@@ -683,11 +715,15 @@ function gBr(){ return (gTool==='eraser'?4:1)*SZ[gSz]; }
 function gUndo(){ if(gSnaps.length>1) {gSnaps.pop(); let img=new Image(); img.src=gSnaps[gSnaps.length-1]; img.onload=()=>{gCtx.drawImage(img,0,0,gCvs.width,gCvs.height)};} }
 function gClear(){ gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,gCvs.width,gCvs.height); gSnaps.push(compressCanvasToJPEG(gCvs, 400, 0.4)); }
 
+// 🚨 제출 실패 블랙박스 적용 🚨
 function submitGDraw(){ 
-  // 💡 제출 시 초강력 압축 엔진 사용
-  const dataUrl = compressCanvasToJPEG(gCvs);
-  G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
-  advanceGartic(); 
+  try {
+    const dataUrl = compressCanvasToJPEG(gCvs);
+    G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
+    advanceGartic(); 
+  } catch (error) {
+    showDebugError("갈틱폰 그림 제출 에러", error);
+  }
 }
 
 function advanceGartic(){
