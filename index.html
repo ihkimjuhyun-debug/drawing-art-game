@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>DRAW GAME HUB</title>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="[https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap](https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap)" rel="stylesheet">
 <style>
 :root {--bg:#0D0D1A; --bg2:#13132A; --card:#1C1C36; --acc:#FFE135; --acc2:#FF4D6D; --acc3:#4DFFD2; --g1:#7C3AED; --g2:#2563EB; --txt:#F0F0FF; --mut:#5858A0; --bdr:rgba(255,255,255,0.12); --r:20px;}
 *, *::before, *::after {box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
@@ -129,8 +129,6 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 .ai-reason {font-size:15px; line-height:1.7; background:var(--card); border-radius:16px; padding:22px; border:1.5px solid var(--bdr); text-align:left; margin-top:20px;}
 .compare-row {display:flex; gap:12px; margin-bottom:16px;}
 .compare-item {flex:1; background:var(--card); border-radius:14px; overflow:hidden; border:1.5px solid var(--bdr);}
-
-/* 🚨 디버깅 전용 스타일 */
 .debug-msg-box { background: rgba(255,0,0,0.1); border: 2px solid #ff4d4d; color: #ffcccc; padding: 16px; border-radius: 12px; font-family: monospace; text-align: left; word-break: break-all; margin-bottom: 20px; font-size: 12px; line-height: 1.5; max-height: 150px; overflow-y: auto;}
 </style>
 </head>
@@ -331,9 +329,9 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 
 <div class="ov" id="ov-debug-error">
   <div class="ov-card" style="border-color:#ff4d4d;">
-    <div class="font-black" style="font-size:24px; color:#ff4d4d; margin-bottom:8px; text-align:center;">🚨 제출 실패 진단</div>
-    <div style="font-size:13px; color:var(--mut); text-align:center; margin-bottom:16px;">아래의 에러 메시지를 캡쳐해서 알려주세요!</div>
-    <div class="debug-msg-box" id="debugErrorMsg">에러 내용이 여기에 표시됩니다.</div>
+    <div class="font-black" style="font-size:24px; color:#ff4d4d; margin-bottom:8px; text-align:center;">🚨 시스템 에러 발생</div>
+    <div style="font-size:13px; color:var(--mut); text-align:center; margin-bottom:16px;">AI 서버 응답 지연 또는 데이터 오류입니다.</div>
+    <div class="debug-msg-box" id="debugErrorMsg">에러 내용</div>
     <button class="btn-bk" style="width:100%; height:54px; border-radius:18px;" onclick="closeOv('ov-debug-error')">확인 (닫기)</button>
   </div>
 </div>
@@ -348,19 +346,16 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 </div>
 
 <script>
-// 🚨 디버깅 진단용 출력 함수
+// 🚨 디버깅 및 에러 팝업 띄우기
 function showDebugError(title, errorObj) {
   const box = document.getElementById('debugErrorMsg');
-  box.innerHTML = `<strong>[${title}]</strong><br><br>${errorObj.message || errorObj}<br><br><span style="color:#888;">[상세 스택]<br>${errorObj.stack || '정보 없음'}</span>`;
+  box.innerHTML = `<strong>[${title}]</strong><br><br>${errorObj.message || errorObj}`;
   openOv('ov-debug-error');
 }
 
-// ═══ 초강력 이미지 압축 엔진 (데이터 폭파 원천 차단) ═══
+// ═══ 초강력 이미지 압축 엔진 ═══
 function compressCanvasToJPEG(sourceCanvas, maxWidth = 600, quality = 0.5) {
   try {
-    if(!sourceCanvas) throw new Error("원본 캔버스를 찾을 수 없습니다.");
-    if(sourceCanvas.width === 0 || sourceCanvas.height === 0) throw new Error(`캔버스 크기가 0입니다. (W:${sourceCanvas.width}, H:${sourceCanvas.height}) - 렌더링 타이밍 버그`);
-
     const tmpCvs = document.createElement('canvas');
     let w = sourceCanvas.width;
     let h = sourceCanvas.height;
@@ -378,12 +373,9 @@ function compressCanvasToJPEG(sourceCanvas, maxWidth = 600, quality = 0.5) {
     tCtx.fillRect(0, 0, w, h);
     tCtx.drawImage(sourceCanvas, 0, 0, w, h);
     
-    const resultUrl = tmpCvs.toDataURL('image/jpeg', quality);
-    if(resultUrl === 'data:,') throw new Error("toDataURL 변환 결과가 비어있습니다. 메모리 부족(OOM) 증상입니다.");
-    
-    return resultUrl;
+    return tmpCvs.toDataURL('image/jpeg', quality);
   } catch (err) {
-    throw err; // 에러를 위로 던져서 catch블록에서 잡히게 만듦
+    throw err;
   }
 }
 
@@ -397,11 +389,7 @@ function closeOv(id){document.getElementById(id).classList.remove('show')}
 function confirmEndGame(){ openOv('ov-end-confirm'); }
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ══════════════════════════════════════════════════
-// 1. CATCHMIND 로직
-// ══════════════════════════════════════════════════
 let cLimit = 1, cTimeLeft = 60, cTimerInt = null, cWord = "", cSwInt = null, cSwTime = 0;
-
 function cSetLimit(m, btn){ cLimit=m; document.querySelectorAll('#s-intro .photo-opt').forEach(b=>b.classList.remove('sel')); btn.classList.add('sel'); }
 
 function initDial() {
@@ -427,71 +415,37 @@ function spinDial() {
 }
 
 let cCvs, cCtx, cDrawing=false, cLastP=null, cTool='pencil', cClr='#111', cSz='S', cSnaps=[];
-
 function startCDraw() {
   document.getElementById('cDrawWord').textContent = cWord;
   cTimeLeft = cLimit * 60;
-  
   showScreen('s-draw');
-  document.getElementById('s-draw').offsetHeight; // 강제 Reflow 발생 (화면 크기 확정)
+  document.getElementById('s-draw').offsetHeight; 
   
   try {
     cCvs = document.getElementById('cCanvas'); 
     const p = document.getElementById('cCanvasWrap'); 
-    
-    // 강제 크기 보정
     let w = p.clientWidth || window.innerWidth;
     let h = p.clientHeight || (window.innerHeight - 200);
     
-    if (w === 0 || h === 0) throw new Error(`화면 크기를 계산할 수 없습니다. W:${w}, H:${h}`);
-    
-    cCvs.width = w; 
-    cCvs.height = h; 
-    cCtx = cCvs.getContext('2d'); 
-    cCtx.fillStyle='#fff'; 
-    cCtx.fillRect(0,0,w,h); 
-    
+    cCvs.width = w; cCvs.height = h; 
+    cCtx = cCvs.getContext('2d'); cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,w,h); 
     cSnaps = [compressCanvasToJPEG(cCvs, 400, 0.4)];
     
-    cCvs.onpointerdown = (e) => {
-        cDrawing = true; cLastP = cGetP(e); 
-        cCtx.beginPath(); cCtx.arc(cLastP.x, cLastP.y, cBr()/2, 0, Math.PI*2); cCtx.fillStyle = cTool==='eraser'?'#fff':cClr; cCtx.fill();
-    };
-    cCvs.onpointermove = (e) => {
-      if(!cDrawing) return; const p = cGetP(e); 
-      cCtx.beginPath(); cCtx.lineCap='round'; cCtx.lineWidth=cBr(); cCtx.strokeStyle = cTool==='eraser'?'#fff':cClr; 
-      cCtx.moveTo(cLastP.x, cLastP.y); cCtx.lineTo(p.x, p.y); cCtx.stroke(); cLastP = p;
-    };
-    const stopDraw = () => {
-        if(cDrawing){
-            cDrawing = false; 
-            cSnaps.push(compressCanvasToJPEG(cCvs, 400, 0.4));
-            if(cSnaps.length > 5) cSnaps.shift();
-        }
-    };
-    cCvs.onpointerup = stopDraw;
-    cCvs.onpointerout = stopDraw;
-  } catch(e) {
-    showDebugError("캔버스 렌더링 실패", e);
-  }
+    cCvs.onpointerdown = (e) => { cDrawing = true; cLastP = cGetP(e); cCtx.beginPath(); cCtx.arc(cLastP.x, cLastP.y, cBr()/2, 0, Math.PI*2); cCtx.fillStyle = cTool==='eraser'?'#fff':cClr; cCtx.fill(); };
+    cCvs.onpointermove = (e) => { if(!cDrawing) return; const p = cGetP(e); cCtx.beginPath(); cCtx.lineCap='round'; cCtx.lineWidth=cBr(); cCtx.strokeStyle = cTool==='eraser'?'#fff':cClr; cCtx.moveTo(cLastP.x, cLastP.y); cCtx.lineTo(p.x, p.y); cCtx.stroke(); cLastP = p; };
+    const stopDraw = () => { if(cDrawing){ cDrawing = false; cSnaps.push(compressCanvasToJPEG(cCvs, 400, 0.4)); if(cSnaps.length > 5) cSnaps.shift(); } };
+    cCvs.onpointerup = stopDraw; cCvs.onpointerout = stopDraw;
+  } catch(e) {}
   
   cTool = 'pencil'; cClr = '#111'; cSz = 'S';
   document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on');
   ['S','M','L'].forEach(s => document.getElementById('cSz'+s).classList.toggle('on', s==='S'));
 
   const pal = document.getElementById('cPalette'); pal.innerHTML = '';
-  CLRS.forEach(c => {
-    const el = document.createElement('div'); el.className = 'clr'+(c.h===cClr?' on':''); el.style.background = c.h; if(c.h==='#fff') el.style.border='2px solid #ccc';
-    el.onclick = () => {cClr=c.h; cTool='pencil'; document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on'); document.querySelectorAll('#cPalette .clr').forEach(x=>x.classList.remove('on')); el.classList.add('on')};
-    pal.appendChild(el);
-  });
+  CLRS.forEach(c => { const el = document.createElement('div'); el.className = 'clr'+(c.h===cClr?' on':''); el.style.background = c.h; if(c.h==='#fff') el.style.border='2px solid #ccc'; el.onclick = () => {cClr=c.h; cTool='pencil'; document.getElementById('cPen').classList.add('on'); document.getElementById('cErs').classList.remove('on'); document.querySelectorAll('#cPalette .clr').forEach(x=>x.classList.remove('on')); el.classList.add('on')}; pal.appendChild(el); });
   
   clearInterval(cTimerInt);
-  cTimerInt = setInterval(() => {
-    cTimeLeft--; const m=Math.floor(cTimeLeft/60), s=cTimeLeft%60;
-    document.getElementById('cTimer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    if(cTimeLeft<=0){ clearInterval(cTimerInt); submitCDraw(); }
-  }, 1000);
+  cTimerInt = setInterval(() => { cTimeLeft--; const m=Math.floor(cTimeLeft/60), s=cTimeLeft%60; document.getElementById('cTimer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; if(cTimeLeft<=0){ clearInterval(cTimerInt); submitCDraw(); } }, 1000);
 }
 
 function cGetP(e){ const r=cCvs.getBoundingClientRect(); return {x:e.clientX-r.left, y:e.clientY-r.top}; }
@@ -501,278 +455,86 @@ function cSetSize(s){cSz=s; ['S','M','L'].forEach(x => document.getElementById('
 function cUndo(){ if(cSnaps.length>1){cSnaps.pop(); const img=new Image(); img.src=cSnaps[cSnaps.length-1]; img.onload=()=>cCtx.drawImage(img,0,0,cCvs.width,cCvs.height);} }
 function cClear(){ cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,cCvs.width,cCvs.height); cSnaps.push(compressCanvasToJPEG(cCvs, 400, 0.4)); }
 
-// 🚨 제출 실패 블랙박스 적용 🚨
 function submitCDraw() {
-  try {
-    clearInterval(cTimerInt);
-    const data = compressCanvasToJPEG(cCvs); // 압축 엔진 시도
-    
-    document.getElementById('cResultImg').src = data;
-    document.getElementById('ansPopup').textContent = `정답: ${cWord}`;
-    showScreen('s-view');
-    
-    cSwTime = 0; clearInterval(cSwInt);
-    document.getElementById('cStopwatchDisplay').textContent = "0.0초";
-    document.getElementById('cStopwatchPopup').textContent = "0.0";
-    cSwInt = setInterval(() => { 
-        cSwTime += 0.1; 
-        document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; 
-        document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); 
-    }, 100);
-  } catch (error) {
-    showDebugError("캐치마인드 이미지 저장 에러", error); // 에러 발생 시 UI로 토해냄
-  }
+  try { clearInterval(cTimerInt); const data = compressCanvasToJPEG(cCvs); document.getElementById('cResultImg').src = data; document.getElementById('ansPopup').textContent = `정답: ${cWord}`; showScreen('s-view'); cSwTime = 0; clearInterval(cSwInt); document.getElementById('cStopwatchDisplay').textContent = "0.0초"; document.getElementById('cStopwatchPopup').textContent = "0.0"; cSwInt = setInterval(() => { cSwTime += 0.1; document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); }, 100); } catch (error) {}
 }
 
 function showAns(v){ document.getElementById('ansPopup').style.display = v ? 'block' : 'none'; }
 function openMatchOv(){ document.getElementById('matchOv').classList.add('show'); }
 function closeMatchOv(){ document.getElementById('matchOv').classList.remove('show'); }
-function finishMatch(yes) {
-  if(yes) { clearInterval(cSwInt); alert(`🎉 축하합니다! 기록: ${cSwTime.toFixed(1)}초`); closeMatchOv(); showScreen('s-main'); }
-  else { closeMatchOv(); }
-}
+function finishMatch(yes) { if(yes) { clearInterval(cSwInt); alert(`🎉 축하합니다! 기록: ${cSwTime.toFixed(1)}초`); closeMatchOv(); showScreen('s-main'); } else { closeMatchOv(); } }
 
-// ══════════════════════════════════════════════════
-// 2. GARTIC PHONE 로직
-// ══════════════════════════════════════════════════
 const G = { mode: 'draw', players: [], chains: [], cIdx: 0, sIdx: 0 };
 let gStartMode = 'word'; 
-
-function setStartMode(m){
-  gStartMode = m;
-  document.getElementById('smWord').classList.toggle('sel', m==='word');
-  document.getElementById('smDraw').classList.toggle('sel', m==='draw');
-}
-
-function selectGMode(m){
-  G.mode = m;
-  document.getElementById('setupModeTitle').textContent = m === 'compete' ? '팀 경쟁 모드 (배틀)' : '그리기&설명 모드';
-  if(m === 'compete'){
-    document.getElementById('setupNormal').style.display = 'none';
-    document.getElementById('setupTeamA').style.display = 'block';
-    document.getElementById('setupTeamB').style.display = 'block';
-  } else {
-    document.getElementById('setupNormal').style.display = 'block';
-    document.getElementById('setupTeamA').style.display = 'none';
-    document.getElementById('setupTeamB').style.display = 'none';
-  }
-  adjPlayers(0); showScreen('s-g-setup');
-}
-
-function adjPlayers(d){
-  let n = parseInt(document.getElementById('pcNum').textContent) + d;
-  n = Math.max(G.mode==='compete'?1:2, Math.min(G.mode==='compete'?8:16, n));
-  document.getElementById('pcNum').textContent = n;
-  
-  const buildList = (id, prefix) => {
-    const nl = document.getElementById(id); nl.innerHTML = '';
-    for(let i=0; i<n; i++) nl.innerHTML += `<div class="name-row"><div class="name-num">${i+1}</div><input class="name-input" id="${prefix}${i}" placeholder="${prefix} 플레이어 ${i+1}"></div>`;
-  };
-  if(G.mode === 'compete'){ buildList('nameListA', '팀1_'); buildList('nameListB', '팀2_'); }
-  else { buildList('nameList', 'P_'); }
-}
-
-function gPlayerName(){
-  if(G.mode==='compete') return G.players[G.cIdx][G.sIdx] || `팀${G.cIdx+1} 플레이어${G.sIdx+1}`;
-  return G.players[(G.cIdx + G.sIdx) % G.players.length] || `플레이어 ${(G.cIdx + G.sIdx) % G.players.length + 1}`;
-}
+function setStartMode(m){ gStartMode = m; document.getElementById('smWord').classList.toggle('sel', m==='word'); document.getElementById('smDraw').classList.toggle('sel', m==='draw'); }
+function selectGMode(m){ G.mode = m; document.getElementById('setupModeTitle').textContent = m === 'compete' ? '팀 경쟁 모드 (배틀)' : '그리기&설명 모드'; if(m === 'compete'){ document.getElementById('setupNormal').style.display = 'none'; document.getElementById('setupTeamA').style.display = 'block'; document.getElementById('setupTeamB').style.display = 'block'; } else { document.getElementById('setupNormal').style.display = 'block'; document.getElementById('setupTeamA').style.display = 'none'; document.getElementById('setupTeamB').style.display = 'none'; } adjPlayers(0); showScreen('s-g-setup'); }
+function adjPlayers(d){ let n = parseInt(document.getElementById('pcNum').textContent) + d; n = Math.max(G.mode==='compete'?1:2, Math.min(G.mode==='compete'?8:16, n)); document.getElementById('pcNum').textContent = n; const buildList = (id, prefix) => { const nl = document.getElementById(id); nl.innerHTML = ''; for(let i=0; i<n; i++) nl.innerHTML += `<div class="name-row"><div class="name-num">${i+1}</div><input class="name-input" id="${prefix}${i}" placeholder="${prefix} 플레이어 ${i+1}"></div>`; }; if(G.mode === 'compete'){ buildList('nameListA', '팀1_'); buildList('nameListB', '팀2_'); } else { buildList('nameList', 'P_'); } }
+function gPlayerName(){ if(G.mode==='compete') return G.players[G.cIdx][G.sIdx] || `팀${G.cIdx+1} 플레이어${G.sIdx+1}`; return G.players[(G.cIdx + G.sIdx) % G.players.length] || `플레이어 ${(G.cIdx + G.sIdx) % G.players.length + 1}`; }
 function gStepType(){ return (G.sIdx % 2 === 0) ? (gStartMode==='draw'?'draw':'word') : (gStartMode==='draw'?'word':'draw'); }
 
-function startGartic() {
-  G.players = []; G.chains = []; G.cIdx = 0; G.sIdx = 0;
-  let n = parseInt(document.getElementById('pcNum').textContent);
-
-  if(G.mode==='compete'){
-    const tA = [], tB = [];
-    for(let i=0; i<n; i++){ tA.push(document.getElementById('팀1_'+i).value || `A-${i+1}`); tB.push(document.getElementById('팀2_'+i).value || `B-${i+1}`); }
-    G.players = [tA, tB];
-    const randWord = W[Math.floor(Math.random()*W.length)].w;
-    G.chains = [{steps:[], systemWord:randWord}, {steps:[], systemWord:randWord}];
-  } else {
-    for(let i=0; i<n; i++) G.players.push(document.getElementById('P_'+i).value || `P${i+1}`);
-    G.chains = Array.from({length: n}, ()=>({steps:[]}));
-  }
-  showGPass();
-}
-
-function showGPass() {
-  document.getElementById('passIcon').textContent = gStepType()==='draw' ? '🎨' : '✏️';
-  document.getElementById('passName').textContent = gPlayerName();
-  if(G.sIdx===0 && gStartMode==='word') document.getElementById('passTask').textContent = '자유롭게 긴 문장이나 영어로 제시어를 적어보세요!';
-  else if(gStepType()==='draw') document.getElementById('passTask').textContent = '설명을 보고 그림을 그려주세요';
-  else document.getElementById('passTask').textContent = '그림을 보고 무엇인지 글로 설명해주세요';
-
-  if(G.mode==='compete'){
-    document.getElementById('passTeamBadge').textContent = G.cIdx===0 ? "🔥 TEAM A TURN" : "❄️ TEAM B TURN";
-    document.getElementById('passTeamBadge').style.color = G.cIdx===0 ? "var(--acc2)" : "#38BDF8";
-  } else {
-    document.getElementById('passTeamBadge').textContent = "NEXT PLAYER";
-    document.getElementById('passTeamBadge').style.color = "var(--mut)";
-  }
-  showScreen('s-g-pass');
-}
-
+function startGartic() { G.players = []; G.chains = []; G.cIdx = 0; G.sIdx = 0; let n = parseInt(document.getElementById('pcNum').textContent); if(G.mode==='compete'){ const tA = [], tB = []; for(let i=0; i<n; i++){ tA.push(document.getElementById('팀1_'+i).value || `A-${i+1}`); tB.push(document.getElementById('팀2_'+i).value || `B-${i+1}`); } G.players = [tA, tB]; const randWord = W[Math.floor(Math.random()*W.length)].w; G.chains = [{steps:[], systemWord:randWord}, {steps:[], systemWord:randWord}]; } else { for(let i=0; i<n; i++) G.players.push(document.getElementById('P_'+i).value || `P${i+1}`); G.chains = Array.from({length: n}, ()=>({steps:[]})); } showGPass(); }
+function showGPass() { document.getElementById('passIcon').textContent = gStepType()==='draw' ? '🎨' : '✏️'; document.getElementById('passName').textContent = gPlayerName(); if(G.sIdx===0 && gStartMode==='word') document.getElementById('passTask').textContent = '자유롭게 긴 문장이나 영어로 제시어를 적어보세요!'; else if(gStepType()==='draw') document.getElementById('passTask').textContent = '설명을 보고 그림을 그려주세요'; else document.getElementById('passTask').textContent = '그림을 보고 무엇인지 글로 설명해주세요'; if(G.mode==='compete'){ document.getElementById('passTeamBadge').textContent = G.cIdx===0 ? "🔥 TEAM A TURN" : "❄️ TEAM B TURN"; document.getElementById('passTeamBadge').style.color = G.cIdx===0 ? "var(--acc2)" : "#38BDF8"; } else { document.getElementById('passTeamBadge').textContent = "NEXT PLAYER"; document.getElementById('passTeamBadge').style.color = "var(--mut)"; } showScreen('s-g-pass'); }
 function readyForTask(){ if(gStepType()==='draw') showGDraw(); else showGWrite(); }
 
 let mediaRecorder = null; let audioChunks = []; let isRecording = false;
-async function toggleMic() {
-  const btn = document.getElementById('btnMic');
-  if (isRecording) { mediaRecorder.stop(); return; }
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
-    mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType }); audioChunks = [];
-    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.onstart = () => { isRecording = true; btn.style.color = 'var(--acc2)'; btn.style.borderColor = 'var(--acc2)'; btn.innerHTML = '🔴 듣는 중 (종료)'; };
-    mediaRecorder.onstop = async () => {
-      isRecording = false; btn.innerHTML = '⏳ 변환 중...'; btn.disabled = true; stream.getTracks().forEach(t => t.stop()); 
-      const ext = mimeType.includes('webm') ? 'webm' : 'm4a';
-      const audioBlob = new Blob(audioChunks, { type: mimeType });
-      const formData = new FormData(); formData.append('file', audioBlob, `recording.${ext}`); formData.append('model', 'whisper-1'); formData.append('language', 'ko');
-      try {
-        const response = await fetch('/api/stt', { method: 'POST', body: formData });
-        const data = await response.json().catch(() => null);
-        if (!response.ok) throw new Error(`[${response.status}] ${data?.error?.message || '서버 오류'}`);
-        const inp = document.getElementById('gwInput'); inp.value = (inp.value + " " + data.text).trim(); gwCheck();
-      } catch (err) { alert("음성 변환 실패: " + err.message); } 
-      finally { btn.innerHTML = '🎙️ 음성 입력'; btn.style.color = 'var(--txt)'; btn.style.borderColor = 'var(--bdr)'; btn.disabled = false; }
-    };
-    mediaRecorder.start();
-  } catch (err) { alert("마이크 접근을 허용해주세요."); }
-}
-
+async function toggleMic() { const btn = document.getElementById('btnMic'); if (isRecording) { mediaRecorder.stop(); return; } try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4'; mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType }); audioChunks = []; mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); }; mediaRecorder.onstart = () => { isRecording = true; btn.style.color = 'var(--acc2)'; btn.style.borderColor = 'var(--acc2)'; btn.innerHTML = '🔴 듣는 중 (종료)'; }; mediaRecorder.onstop = async () => { isRecording = false; btn.innerHTML = '⏳ 변환 중...'; btn.disabled = true; stream.getTracks().forEach(t => t.stop()); const ext = mimeType.includes('webm') ? 'webm' : 'm4a'; const audioBlob = new Blob(audioChunks, { type: mimeType }); const formData = new FormData(); formData.append('file', audioBlob, `recording.${ext}`); formData.append('model', 'whisper-1'); formData.append('language', 'ko'); try { const response = await fetch('/api/stt', { method: 'POST', body: formData }); const data = await response.json().catch(() => null); if (!response.ok) throw new Error(`[${response.status}] ${data?.error?.message || '서버 오류'}`); const inp = document.getElementById('gwInput'); inp.value = (inp.value + " " + data.text).trim(); gwCheck(); } catch (err) { alert("음성 변환 실패: " + err.message); } finally { btn.innerHTML = '🎙️ 음성 입력'; btn.style.color = 'var(--txt)'; btn.style.borderColor = 'var(--bdr)'; btn.disabled = false; } }; mediaRecorder.start(); } catch (err) { alert("마이크 접근을 허용해주세요."); } }
 function gwCheck(){ document.getElementById('gwSubmit').disabled = document.getElementById('gwInput').value.trim().length < 1; }
-function showGWrite(){
-  const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].steps.length-1];
-  document.getElementById('gwInput').value = ''; gwCheck();
-  const prevEl = document.getElementById('gwPrev'); prevEl.style.display = 'none';
-  if(G.sIdx > 0 && prev && prev.type==='draw'){ prevEl.innerHTML = `<img src="${prev.content}" style="width:100%;max-height:260px;object-fit:contain;background:#fff;display:block;padding:10px;">`; prevEl.style.display = 'block'; }
-  document.getElementById('gwInputLbl').textContent = G.sIdx===0 ? '무엇을 전달할까요?' : '그림을 보고 묘사해주세요';
-  showScreen('s-g-write');
-}
+function showGWrite(){ const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].steps.length-1]; document.getElementById('gwInput').value = ''; gwCheck(); const prevEl = document.getElementById('gwPrev'); prevEl.style.display = 'none'; if(G.sIdx > 0 && prev && prev.type==='draw'){ prevEl.innerHTML = `<img src="${prev.content}" style="width:100%;max-height:260px;object-fit:contain;background:#fff;display:block;padding:10px;">`; prevEl.style.display = 'block'; } document.getElementById('gwInputLbl').textContent = G.sIdx===0 ? '무엇을 전달할까요?' : '그림을 보고 묘사해주세요'; showScreen('s-g-write'); }
 function submitWrite(){ if(isRecording) mediaRecorder.stop(); const val = document.getElementById('gwInput').value.trim(); if(!val) return; G.chains[G.cIdx].steps.push({ type: 'word', content: val, playerName: gPlayerName() }); advanceGartic(); }
 
 let gCvs, gCtx, gDrawing=false, gLastP=null, gTool='pencil', gClr='#111', gSz='S', gSnaps=[];
-
-function showGDraw(){
-  const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].steps.length-1];
-  let wordToDraw = (G.sIdx === 0 && gStartMode === 'draw') ? G.chains[G.cIdx].systemWord : prev.content;
-  if(G.sIdx === 0 && gStartMode === 'draw' && !G.chains[G.cIdx].systemWord) { wordToDraw = W[Math.floor(Math.random()*W.length)].w; G.chains[G.cIdx].systemWord = wordToDraw; }
-  
-  document.getElementById('gPrevWord').innerHTML = `<small style="display:block;font-size:11px;color:var(--mut);margin-bottom:2px">이 내용을 그려보세요</small>${escHtml(wordToDraw)}`;
-  
-  showScreen('s-g-draw');
-  document.getElementById('s-g-draw').offsetHeight; // 강제 Reflow
-
-  try {
-    gCvs = document.getElementById('gCvs'); 
-    const p = document.getElementById('gCanvasWrap');
-    
-    let w = p.clientWidth || window.innerWidth;
-    let h = p.clientHeight || (window.innerHeight - 200);
-    
-    if (w === 0 || h === 0) throw new Error(`화면 크기를 계산할 수 없습니다. W:${w}, H:${h}`);
-    
-    gCvs.width = w; 
-    gCvs.height = h; 
-    gCtx = gCvs.getContext('2d'); 
-    gCtx.fillStyle='#fff'; 
-    gCtx.fillRect(0,0,w,h); 
-    
-    gSnaps = [compressCanvasToJPEG(gCvs, 400, 0.4)]; 
-    
-    gCvs.onpointerdown = (e) => {
-        gDrawing = true; gLastP = gGetP(e); 
-        gCtx.beginPath(); gCtx.arc(gLastP.x, gLastP.y, gBr()/2, 0, Math.PI*2); gCtx.fillStyle=gTool==='eraser'?'#fff':gClr; gCtx.fill();
-    };
-    gCvs.onpointermove = (e) => {
-      if(!gDrawing) return; const p = gGetP(e); 
-      gCtx.beginPath(); gCtx.lineCap='round'; gCtx.lineWidth=gBr(); gCtx.strokeStyle=gTool==='eraser'?'#fff':gClr; 
-      gCtx.moveTo(gLastP.x, gLastP.y); gCtx.lineTo(p.x, p.y); gCtx.stroke(); gLastP = p;
-    };
-    const stopDraw = () => {
-        if(gDrawing){
-            gDrawing = false; 
-            gSnaps.push(compressCanvasToJPEG(gCvs, 400, 0.4));
-            if(gSnaps.length > 5) gSnaps.shift();
-        }
-    };
-    gCvs.onpointerup = stopDraw;
-    gCvs.onpointerout = stopDraw;
-  } catch(e) {
-    showDebugError("갈틱폰 캔버스 렌더링 실패", e);
-  }
-
-  gTool = 'pencil'; gClr = '#111'; gSz = 'S';
-  document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); ['S','M','L'].forEach(s => document.getElementById('gSz'+s).classList.toggle('on', s==='S'));
-  
-  const pal = document.getElementById('gPalette'); pal.innerHTML = '';
-  CLRS.forEach(c => { const el = document.createElement('div'); el.className = 'clr'+(c.h===gClr?' on':''); el.style.background = c.h; if(c.h==='#fff') el.style.border = '2px solid #ccc'; el.onclick = () => { gClr = c.h; gTool='pencil'; document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); document.querySelectorAll('#gPalette .clr').forEach(x => x.classList.remove('on')); el.classList.add('on'); }; pal.appendChild(el); });
-}
-
+function showGDraw(){ const prev = G.chains[G.cIdx].steps[G.chains[G.cIdx].steps.length-1]; let wordToDraw = (G.sIdx === 0 && gStartMode === 'draw') ? G.chains[G.cIdx].systemWord : prev.content; if(G.sIdx === 0 && gStartMode === 'draw' && !G.chains[G.cIdx].systemWord) { wordToDraw = W[Math.floor(Math.random()*W.length)].w; G.chains[G.cIdx].systemWord = wordToDraw; } document.getElementById('gPrevWord').innerHTML = `<small style="display:block;font-size:11px;color:var(--mut);margin-bottom:2px">이 내용을 그려보세요</small>${escHtml(wordToDraw)}`; showScreen('s-g-draw'); document.getElementById('s-g-draw').offsetHeight; try { gCvs = document.getElementById('gCvs'); const p = document.getElementById('gCanvasWrap'); let w = p.clientWidth || window.innerWidth; let h = p.clientHeight || (window.innerHeight - 200); gCvs.width = w; gCvs.height = h; gCtx = gCvs.getContext('2d'); gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,w,h); gSnaps = [compressCanvasToJPEG(gCvs, 400, 0.4)]; gCvs.onpointerdown = (e) => { gDrawing = true; gLastP = gGetP(e); gCtx.beginPath(); gCtx.arc(gLastP.x, gLastP.y, gBr()/2, 0, Math.PI*2); gCtx.fillStyle=gTool==='eraser'?'#fff':gClr; gCtx.fill(); }; gCvs.onpointermove = (e) => { if(!gDrawing) return; const p = gGetP(e); gCtx.beginPath(); gCtx.lineCap='round'; gCtx.lineWidth=gBr(); gCtx.strokeStyle=gTool==='eraser'?'#fff':gClr; gCtx.moveTo(gLastP.x, gLastP.y); gCtx.lineTo(p.x, p.y); gCtx.stroke(); gLastP = p; }; const stopDraw = () => { if(gDrawing){ gDrawing = false; gSnaps.push(compressCanvasToJPEG(gCvs, 400, 0.4)); if(gSnaps.length > 5) gSnaps.shift(); } }; gCvs.onpointerup = stopDraw; gCvs.onpointerout = stopDraw; } catch(e) {} gTool = 'pencil'; gClr = '#111'; gSz = 'S'; document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); ['S','M','L'].forEach(s => document.getElementById('gSz'+s).classList.toggle('on', s==='S')); const pal = document.getElementById('gPalette'); pal.innerHTML = ''; CLRS.forEach(c => { const el = document.createElement('div'); el.className = 'clr'+(c.h===gClr?' on':''); el.style.background = c.h; if(c.h==='#fff') el.style.border = '2px solid #ccc'; el.onclick = () => { gClr = c.h; gTool='pencil'; document.getElementById('gPen').classList.add('on'); document.getElementById('gErs').classList.remove('on'); document.querySelectorAll('#gPalette .clr').forEach(x => x.classList.remove('on')); el.classList.add('on'); }; pal.appendChild(el); }); }
 function gGetP(e){ const r = gCvs.getBoundingClientRect(); return {x: e.clientX-r.left, y: e.clientY-r.top}; }
 function gBr(){ return (gTool==='eraser'?4:1)*SZ[gSz]; }
 function gUndo(){ if(gSnaps.length>1) {gSnaps.pop(); let img=new Image(); img.src=gSnaps[gSnaps.length-1]; img.onload=()=>{gCtx.drawImage(img,0,0,gCvs.width,gCvs.height)};} }
 function gClear(){ gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,gCvs.width,gCvs.height); gSnaps.push(compressCanvasToJPEG(gCvs, 400, 0.4)); }
+function submitGDraw(){ try { const dataUrl = compressCanvasToJPEG(gCvs); G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); advanceGartic(); } catch (error) {} }
 
-// 🚨 제출 실패 블랙박스 적용 🚨
-function submitGDraw(){ 
-  try {
-    const dataUrl = compressCanvasToJPEG(gCvs);
-    G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
-    advanceGartic(); 
-  } catch (error) {
-    showDebugError("갈틱폰 그림 제출 에러", error);
-  }
-}
-
-function advanceGartic(){
-  G.sIdx++;
-  let max = G.mode === 'compete' ? G.players[0].length : G.players.length;
-  if(G.sIdx >= max){
-    if(G.mode === 'compete' && G.cIdx === 0){ G.cIdx = 1; G.sIdx = 0; showGPass(); } 
-    else { if(G.mode === 'compete') showBattleResult(); else showNormalResult(); }
-  } else { showGPass(); }
-}
-
-function nextChain(){
-  if(G.mode === 'compete'){ selectGMode('compete'); return; }
-  G.cIdx++; G.sIdx = 0;
-  if(G.cIdx >= G.players.length){ showScreen('s-g-setup'); return; }
-  showGPass();
-}
-
-function renderChainHTML(chain, title, color){
-  let html = `<div class="chain-block"><div class="chain-header"><div class="chain-line"></div><div class="chain-badge" style="color:${color};border-color:${color}40">${title}</div><div class="chain-line"></div></div>`;
-  chain.steps.forEach((step) => {
-    let body = step.type === 'draw' ? `<img src="${step.content}" class="bubble-img">` : `<div class="bubble-txt">${escHtml(step.content)}</div>`;
-    html += `<div class="chat-bubble"><div class="bubble-meta"><span class="type-icon ${step.type==='draw'?'ti-draw':'ti-word'}">${step.type.toUpperCase()}</span> ${step.playerName}</div><div class="bubble-body">${body}</div></div>`;
-  });
-  return html + `</div>`;
-}
-
-function showNormalResult(){
-  document.getElementById('gResSub').textContent = `라운드 ${G.cIdx + 1} / ${G.players.length} 완료`;
-  document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[G.cIdx], `체인 ${G.cIdx+1}`, 'var(--mut)');
-  document.getElementById('btnNextChain').textContent = G.cIdx >= G.players.length - 1 ? "새 게임하기" : "다음 라운드 진행";
-  showScreen('s-g-results');
-}
-
-function showBattleResult(){
-  document.getElementById('gResSub').textContent = `🔥 TEAM A vs TEAM B 배틀 완료!`;
-  document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[0], "🔥 TEAM A 최종 결과", "var(--acc2)") + renderChainHTML(G.chains[1], "❄️ TEAM B 최종 결과", "#38BDF8");
-  document.getElementById('btnNextChain').textContent = "새로운 배틀 시작";
-  showScreen('s-g-results');
-}
+function advanceGartic(){ G.sIdx++; let max = G.mode === 'compete' ? G.players[0].length : G.players.length; if(G.sIdx >= max){ if(G.mode === 'compete' && G.cIdx === 0){ G.cIdx = 1; G.sIdx = 0; showGPass(); } else { if(G.mode === 'compete') showBattleResult(); else showNormalResult(); } } else { showGPass(); } }
+function nextChain(){ if(G.mode === 'compete'){ selectGMode('compete'); return; } G.cIdx++; G.sIdx = 0; if(G.cIdx >= G.players.length){ showScreen('s-g-setup'); return; } showGPass(); }
+function renderChainHTML(chain, title, color){ let html = `<div class="chain-block"><div class="chain-header"><div class="chain-line"></div><div class="chain-badge" style="color:${color};border-color:${color}40">${title}</div><div class="chain-line"></div></div>`; chain.steps.forEach((step) => { let body = step.type === 'draw' ? `<img src="${step.content}" class="bubble-img">` : `<div class="bubble-txt">${escHtml(step.content)}</div>`; html += `<div class="chat-bubble"><div class="bubble-meta"><span class="type-icon ${step.type==='draw'?'ti-draw':'ti-word'}">${step.type.toUpperCase()}</span> ${step.playerName}</div><div class="bubble-body">${body}</div></div>`; }); return html + `</div>`; }
+function showNormalResult(){ document.getElementById('gResSub').textContent = `라운드 ${G.cIdx + 1} / ${G.players.length} 완료`; document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[G.cIdx], `체인 ${G.cIdx+1}`, 'var(--mut)'); document.getElementById('btnNextChain').textContent = G.cIdx >= G.players.length - 1 ? "새 게임하기" : "다음 라운드 진행"; showScreen('s-g-results'); }
+function showBattleResult(){ document.getElementById('gResSub').textContent = `🔥 TEAM A vs TEAM B 배틀 완료!`; document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[0], "🔥 TEAM A 최종 결과", "var(--acc2)") + renderChainHTML(G.chains[1], "❄️ TEAM B 최종 결과", "#38BDF8"); document.getElementById('btnNextChain').textContent = "새로운 배틀 시작"; showScreen('s-g-results'); }
 
 // ══════════════════════════════════════════════════
-// 3. AI EVALUATION
+// 🚨 3. AI EVALUATION (먹통 방지 시스템 풀장착) 🚨
 // ══════════════════════════════════════════════════
 async function fetchEval(messages) {
-  const res = await fetch('/api/eval', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages }) });
-  const data = await res.json().catch(() => null);
-  if(!res.ok) throw new Error(`에러코드 [${res.status}]: ${data?.error || res.statusText}`);
-  return JSON.parse(data.choices[0].message.content);
+  // 💡 먹통 방지: 45초가 지나면 백엔드 통신을 강제로 끊어버립니다.
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 45000); 
+
+  try {
+    const res = await fetch('/api/eval', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ 
+            messages: messages, 
+            max_tokens: 4096 // 💡 AI 출력 제한 넉넉히 해제
+        }),
+        signal: controller.signal // 타임아웃 감시
+    });
+    
+    clearTimeout(timeoutId); // 정상 도착 시 타이머 해제
+    const data = await res.json().catch(() => null);
+    
+    if(!res.ok) {
+        throw new Error(`[서버 응답 에러 ${res.status}]<br>사유: ${data?.error || data?.message || '용량 초과 또는 타임아웃'}`);
+    }
+    
+    let content = data.choices[0].message.content;
+    
+    // 💡 안전한 JSON 파싱 (AI가 마크다운 코드 블록을 보낼 경우 방어)
+    content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+    return JSON.parse(content);
+
+  } catch(err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+        throw new Error("AI 응답 시간 초과 (45초).<br>백엔드 서버나 OpenAI 연동이 지연되고 있습니다.");
+    }
+    throw err;
+  }
 }
 
 async function runAiEval(){
@@ -859,7 +621,13 @@ async function runAiEval(){
       `;
     }
   } catch(err) {
-    document.getElementById('aiEvalContent').innerHTML = `<div style="color:var(--acc2);text-align:center;padding:20px;"><strong>오류가 발생했습니다.</strong><br><br><span style="color:var(--mut)">${err.message}</span></div>`;
+    // 에러 발생 시 더 이상 '먹통'으로 방치하지 않고 사유를 명확히 출력합니다.
+    document.getElementById('aiEvalContent').innerHTML = `
+        <div style="background:rgba(255,0,0,0.1); border:1.5px solid #ff4d4d; border-radius:16px; padding:20px; text-align:center;">
+            <div style="font-size:20px; font-weight:800; color:#ff4d4d; margin-bottom:12px;">🚨 AI 평가 실패</div>
+            <div style="font-size:13px; color:#ffcccc; word-break:keep-all;">${err.message}</div>
+        </div>
+    `;
   }
 }
 </script>
