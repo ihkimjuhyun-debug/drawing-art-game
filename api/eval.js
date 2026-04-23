@@ -1,4 +1,6 @@
 // 용량 제한을 10MB로 늘리는 Vercel 전용 설정
+// Next.js App Router 기준 (파일 최상단에 추가)
+export const maxDuration = 60; // 타임아웃을 60초로 넉넉하게 연장
 export const config = {
   api: {
     bodyParser: {
