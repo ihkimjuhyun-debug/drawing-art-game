@@ -69,7 +69,6 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 /* ═══ CATCHMIND VIEW & MATCHING UI ═══ */
 #s-view {background:#000;}
 .view-img-wrap {flex:1; display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; overflow:hidden;}
-/* 🚨 FIX: 그림 꽉 차게 변경 (작아짐 현상 해결) */
 #cResultImg {width:100%; height:100%; object-fit:contain; border-radius:12px;}
 .view-overlay-hint {position:absolute; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); padding:10px 24px; border-radius:24px; font-size:13px; color:#ddd; font-weight:700; pointer-events:none; white-space:nowrap; border:1px solid var(--bdr);}
 
@@ -102,7 +101,7 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 
 .pass-inner {text-align:center; width:100%; max-width:380px; margin:auto; padding:24px;}
 .gw-body {flex:1; display:flex; flex-direction:column; padding:20px; gap:16px; overflow-y:auto; background:var(--bg2);}
-.gw-textarea {flex:1; min-height:120px; background:var(--card); border:1.5px solid var(--bdr); border-radius:16px; color:var(--txt); font-size:16px; font-weight:700; padding:18px; resize:none; outline:none; line-height:1.6; transition:0.2s;}
+.gw-textarea {flex:1; min-height:120px; background:var(--card); border:1.5px solid var(--bdr); border-radius:16px; color:var(--txt); font-size:16px; font-weight:700; padding:18px; resize:none; outline:none; line-height:1.6; transition:0.2s; word-break:keep-all;}
 .gw-textarea:focus {border-color:var(--g1);}
 .btn-mic {background:rgba(255,255,255,0.08); border:1.5px solid var(--bdr); border-radius:14px; color:var(--txt); padding:8px 16px; font-size:13px; cursor:pointer; font-weight:800; display:inline-flex; align-items:center; gap:6px;}
 
@@ -113,7 +112,7 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 .chat-bubble {display:flex; flex-direction:column; margin-bottom:16px;}
 .bubble-meta {font-size:11px; color:var(--mut); font-weight:800; margin-bottom:6px; padding:0 6px;}
 .bubble-body {background:var(--card); border-radius:18px; overflow:hidden; border:1.5px solid var(--bdr); max-width:95%;}
-.bubble-txt {font-size:16px; font-weight:700; padding:16px 18px; line-height:1.6; color:var(--txt);}
+.bubble-txt {font-size:16px; font-weight:700; padding:16px 18px; line-height:1.6; color:var(--txt); word-break:keep-all;}
 .bubble-img {width:100%; max-height:260px; object-fit:contain; display:block; background:#fff;}
 .type-icon {display:inline-block; font-size:10px; font-weight:800; letter-spacing:1.5px; padding:2px 8px; border-radius:10px; margin-bottom:4px;}
 
@@ -125,11 +124,27 @@ canvas {position:absolute; top:0; left:0; width:100%; height:100%; touch-action:
 .ov-bot.show {display:flex;}
 .ov-sheet {background:var(--bg2); border-radius:28px 28px 0 0; padding:24px 24px 40px; width:100%; max-width:500px; border:1.5px solid var(--bdr); border-bottom:none; max-height:88vh; overflow-y:auto;}
 
-/* AI Eval */
-.ai-core-word-box {background:rgba(124,58,237,0.12); border:1.5px solid rgba(124,58,237,0.4); border-radius:16px; padding:16px; margin-bottom:20px; text-align:center;}
-.ai-reason {font-size:15px; line-height:1.7; background:var(--card); border-radius:16px; padding:22px; border:1.5px solid var(--bdr); text-align:left; margin-top:20px;}
+/* 🚨 AI Eval 레이아웃 및 텍스트 깨짐 수정 */
+.ai-core-word-box {background:rgba(124,58,237,0.12); border:1.5px solid rgba(124,58,237,0.4); border-radius:16px; padding:16px; margin-bottom:20px; text-align:center; word-break:keep-all;}
+.ai-reason {font-size:15px; line-height:1.7; background:var(--card); border-radius:16px; padding:22px; border:1.5px solid var(--bdr); text-align:left; margin-top:20px; word-break:keep-all;}
 .compare-row {display:flex; gap:12px; margin-bottom:16px;}
-.compare-item {flex:1; background:var(--card); border-radius:14px; overflow:hidden; border:1.5px solid var(--bdr);}
+.compare-item {flex:1; background:var(--card); border-radius:14px; overflow:hidden; border:1.5px solid var(--bdr); display:flex; flex-direction:column;}
+
+/* 🚨 그림 및 텍스트 박스 고정 (이미지 넘침 방지) */
+.compare-img {width:100%; height:160px; object-fit:contain; background:#fff; display:block; border-radius:8px;}
+.compare-val {font-size:16px; font-weight:700; padding:15px; text-align:center; word-break:keep-all; display:flex; align-items:center; justify-content:center; height:160px;}
+
+/* 🚨 형광색 네온 점수 강조 */
+.score-neon {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 36px;
+    color: #39FF14; /* 형광 그린 */
+    text-shadow: 0 0 15px rgba(57, 255, 20, 0.7);
+    line-height: 1.2;
+    display: inline-block;
+    margin-top: 5px;
+}
+
 .debug-msg-box { background: rgba(255,0,0,0.1); border: 2px solid #ff4d4d; color: #ffcccc; padding: 16px; border-radius: 12px; font-family: monospace; text-align: left; word-break: break-all; margin-bottom: 20px; font-size: 12px; line-height: 1.5; max-height: 150px; overflow-y: auto;}
 </style>
 </head>
@@ -430,7 +445,7 @@ function startCDraw() {
     
     cCvs.width = w; cCvs.height = h; 
     cCtx = cCvs.getContext('2d'); cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,w,h); 
-    cSnaps = [compressCanvasToJPEG(cCvs, 800, 0.5)]; // Undo 용량 및 화질 균형 (800px)
+    cSnaps = [compressCanvasToJPEG(cCvs, 800, 0.5)]; 
     
     cCvs.onpointerdown = (e) => { cDrawing = true; cLastP = cGetP(e); cCtx.beginPath(); cCtx.arc(cLastP.x, cLastP.y, cBr()/2, 0, Math.PI*2); cCtx.fillStyle = cTool==='eraser'?'#fff':cClr; cCtx.fill(); };
     cCvs.onpointermove = (e) => { if(!cDrawing) return; const p = cGetP(e); cCtx.beginPath(); cCtx.lineCap='round'; cCtx.lineWidth=cBr(); cCtx.strokeStyle = cTool==='eraser'?'#fff':cClr; cCtx.moveTo(cLastP.x, cLastP.y); cCtx.lineTo(p.x, p.y); cCtx.stroke(); cLastP = p; };
@@ -456,11 +471,9 @@ function cSetSize(s){cSz=s; ['S','M','L'].forEach(x => document.getElementById('
 function cUndo(){ if(cSnaps.length>1){cSnaps.pop(); const img=new Image(); img.src=cSnaps[cSnaps.length-1]; img.onload=()=>cCtx.drawImage(img,0,0,cCvs.width,cCvs.height);} }
 function cClear(){ cCtx.fillStyle='#fff'; cCtx.fillRect(0,0,cCvs.width,cCvs.height); cSnaps.push(compressCanvasToJPEG(cCvs, 800, 0.5)); }
 
-// 🚨 FIX 2: 캐치마인드 제출 시 작아짐(해상도 저하) 완벽 해결
 function submitCDraw() {
   try { 
     clearInterval(cTimerInt); 
-    // 서버 전송이 없으므로 고해상도(1200px) 유지
     const data = compressCanvasToJPEG(cCvs, 1200, 0.8); 
     document.getElementById('cResultImg').src = data; 
     document.getElementById('ansPopup').textContent = `정답: ${cWord}`; 
@@ -470,9 +483,7 @@ function submitCDraw() {
     document.getElementById('cStopwatchDisplay').textContent = "0.0초"; 
     document.getElementById('cStopwatchPopup').textContent = "0.0"; 
     cSwInt = setInterval(() => { cSwTime += 0.1; document.getElementById('cStopwatchDisplay').textContent = cSwTime.toFixed(1) + "초"; document.getElementById('cStopwatchPopup').textContent = cSwTime.toFixed(1); }, 100); 
-  } catch (error) {
-    showDebugError("캐치마인드 이미지 저장 에러", error);
-  }
+  } catch (error) { showDebugError("캐치마인드 이미지 저장 에러", error); }
 }
 
 function showAns(v){ document.getElementById('ansPopup').style.display = v ? 'block' : 'none'; }
@@ -507,7 +518,6 @@ function gClear(){ gCtx.fillStyle='#fff'; gCtx.fillRect(0,0,gCvs.width,gCvs.heig
 
 function submitGDraw(){ 
   try { 
-    // 갈틱폰 서버 제출용은 적당히 압축하여 토큰 초과 방지
     const dataUrl = compressCanvasToJPEG(gCvs, 800, 0.6); 
     G.chains[G.cIdx].steps.push({ type: 'draw', content: dataUrl, playerName: gPlayerName() }); 
     advanceGartic(); 
@@ -518,7 +528,6 @@ function advanceGartic(){ G.sIdx++; let max = G.mode === 'compete' ? G.players[0
 function nextChain(){ if(G.mode === 'compete'){ selectGMode('compete'); return; } G.cIdx++; G.sIdx = 0; if(G.cIdx >= G.players.length){ showScreen('s-g-setup'); return; } showGPass(); }
 function renderChainHTML(chain, title, color){ let html = `<div class="chain-block"><div class="chain-header"><div class="chain-line"></div><div class="chain-badge" style="color:${color};border-color:${color}40">${title}</div><div class="chain-line"></div></div>`; chain.steps.forEach((step) => { let body = step.type === 'draw' ? `<img src="${step.content}" class="bubble-img">` : `<div class="bubble-txt">${escHtml(step.content)}</div>`; html += `<div class="chat-bubble"><div class="bubble-meta"><span class="type-icon ${step.type==='draw'?'ti-draw':'ti-word'}">${step.type.toUpperCase()}</span> ${step.playerName}</div><div class="bubble-body">${body}</div></div>`; }); return html + `</div>`; }
 
-// 🚨 정상 작동되도록 gResSub 태그 선택 오류 완전 수정 완료
 function showNormalResult(){ 
   document.getElementById('gResSub').textContent = `라운드 ${G.cIdx + 1} / ${G.players.length} 완료`; 
   document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[G.cIdx], `체인 ${G.cIdx+1}`, 'var(--mut)'); 
@@ -526,7 +535,6 @@ function showNormalResult(){
   showScreen('s-g-results'); 
 }
 
-// 🚨 정상 작동되도록 gResSub 태그 선택 오류 완전 수정 완료
 function showBattleResult(){ 
   document.getElementById('gResSub').textContent = `🔥 TEAM A vs TEAM B 배틀 완료!`; 
   document.getElementById('gResultChains').innerHTML = renderChainHTML(G.chains[0], "🔥 TEAM A 최종 결과", "var(--acc2)") + renderChainHTML(G.chains[1], "❄️ TEAM B 최종 결과", "#38BDF8"); 
@@ -535,7 +543,7 @@ function showBattleResult(){
 }
 
 // ══════════════════════════════════════════════════
-// 3. AI EVALUATION
+// 3. AI EVALUATION (텍스트/이미지 잘림 및 정렬 수정, 점수 네온사인 적용)
 // ══════════════════════════════════════════════════
 async function fetchEval(messages) {
   const controller = new AbortController();
@@ -590,23 +598,34 @@ async function runAiEval(){
       messages.push({ role: "user", content: contentArr });
       const result = await fetchEval(messages);
 
+      // 🚨 그림과 텍스트를 담는 박스 생성 (이미지 이탈 방지)
       let htmlA = lastA.type === 'draw' ? `<img src="${lastA.content}" class="compare-img">` : `<div class="compare-val">${escHtml(lastA.content)}</div>`;
       let htmlB = lastB.type === 'draw' ? `<img src="${lastB.content}" class="compare-img">` : `<div class="compare-val">${escHtml(lastB.content)}</div>`;
 
       document.getElementById('aiEvalContent').innerHTML = `
         <div style="display:flex; gap:10px; margin-bottom:16px;">
             <div class="ai-core-word-box" style="flex:1; border-color:var(--acc2);">
-                <div class="ai-core-label" style="color:var(--acc2)">TEAM A 파악 제시어</div>
-                <div class="ai-core-val">${result.core_keyword_A || origA}</div>
+                <div style="font-size:12px; font-weight:800; color:var(--acc2); margin-bottom:6px;">TEAM A 파악 제시어</div>
+                <div style="font-size:18px; font-weight:700; color:#fff;">${result.core_keyword_A || origA}</div>
             </div>
             <div class="ai-core-word-box" style="flex:1; border-color:#38BDF8;">
-                <div class="ai-core-label" style="color:#38BDF8">TEAM B 파악 제시어</div>
-                <div class="ai-core-val">${result.core_keyword_B || origB}</div>
+                <div style="font-size:12px; font-weight:800; color:#38BDF8; margin-bottom:6px;">TEAM B 파악 제시어</div>
+                <div style="font-size:18px; font-weight:700; color:#fff;">${result.core_keyword_B || origB}</div>
             </div>
         </div>
         <div class="compare-row">
-          <div class="compare-item" style="border-color:${result.winner.includes('A')?'var(--acc2)':'var(--bdr)'}"><div style="font-size:10px; font-weight:800; color:var(--mut); padding:8px 10px 0;">TEAM A (${result.teamA_score}점)</div>${htmlA}</div>
-          <div class="compare-item" style="border-color:${result.winner.includes('B')?'#38BDF8':'var(--bdr)'}"><div style="font-size:10px; font-weight:800; color:var(--mut); padding:8px 10px 0;">TEAM B (${result.teamB_score}점)</div>${htmlB}</div>
+          <div class="compare-item" style="border-color:${result.winner.includes('A')?'var(--acc2)':'var(--bdr)'}">
+             <div style="font-size:12px; font-weight:800; color:var(--mut); padding:12px 10px 4px; text-align:center;">
+                 TEAM A<br><span class="score-neon">${result.teamA_score}점</span>
+             </div>
+             <div style="flex:1; padding:10px;">${htmlA}</div>
+          </div>
+          <div class="compare-item" style="border-color:${result.winner.includes('B')?'#38BDF8':'var(--bdr)'}">
+             <div style="font-size:12px; font-weight:800; color:var(--mut); padding:12px 10px 4px; text-align:center;">
+                 TEAM B<br><span class="score-neon">${result.teamB_score}점</span>
+             </div>
+             <div style="flex:1; padding:10px;">${htmlB}</div>
+          </div>
         </div>
         <div style="text-align:center;"><span style="display:inline-block; background:${result.winner.includes('A')?'var(--acc2)':(result.winner.includes('B')?'#38BDF8':'var(--mut)')}; color:#fff; font-size:16px; font-weight:900; padding:8px 24px; border-radius:20px;">🏆 승리: ${result.winner}</span></div>
         <div class="ai-reason">${result.reason}</div>
@@ -630,18 +649,21 @@ async function runAiEval(){
       messages.push({ role: "user", content: contentArr });
       const result = await fetchEval(messages);
 
-      let lastHTML = last.type === 'draw' ? `<img src="${last.content}" class="compare-img">` : `<div style="font-size:14px; font-weight:700; padding:6px 10px 10px;">${escHtml(last.content)}</div>`;
+      let lastHTML = last.type === 'draw' ? `<img src="${last.content}" class="compare-img">` : `<div class="compare-val">${escHtml(last.content)}</div>`;
 
       document.getElementById('aiEvalContent').innerHTML = `
         <div class="ai-core-word-box">
-            <div style="font-size:11px; color:#c4b5fd; font-weight:800; margin-bottom:6px;">🎯 AI가 문맥으로 파악한 진짜 정답</div>
+            <div style="font-size:12px; color:#c4b5fd; font-weight:800; margin-bottom:6px;">🎯 AI가 문맥으로 파악한 진짜 정답</div>
             <div class="font-black" style="font-size:26px; color:var(--acc)">${result.core_keyword || origText}</div>
         </div>
         <div class="compare-row">
-          <div class="compare-item"><div style="font-size:10px; font-weight:800; color:var(--mut); padding:8px 10px 0;">최종 결과</div>${lastHTML}</div>
-          <div class="compare-item" style="flex:0.5; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-             <div style="font-size:11px; color:var(--mut); font-weight:800; margin-bottom:4px">유사도 점수</div>
-             <div class="font-black" style="font-size:42px; color:#fff;">${result.score}<span style="font-size:14px; color:var(--mut)">점</span></div>
+          <div class="compare-item">
+             <div style="font-size:12px; font-weight:800; color:var(--mut); padding:12px 10px 4px; text-align:center;">최종 결과</div>
+             <div style="flex:1; padding:10px;">${lastHTML}</div>
+          </div>
+          <div class="compare-item" style="flex:0.6; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+             <div style="font-size:12px; color:var(--mut); font-weight:800; margin-bottom:4px">유사도 점수</div>
+             <div class="score-neon" style="font-size:42px;">${result.score}<span style="font-size:18px; text-shadow:none; color:var(--mut);">점</span></div>
           </div>
         </div>
         <div class="ai-reason">${result.reason}</div>
